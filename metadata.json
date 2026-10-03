@@ -1,0 +1,6 @@
+{
+  "name": "VTU-FACULTY",
+  "description": "Swipe-based attendance, timetable management, student CSV import, and lecture logs for VTU faculty.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
