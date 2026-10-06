@@ -39,6 +39,7 @@ function DynamicRing() {
 
 export default function FreelanceWorkPage() {
   useEffect(() => {
+    window.scrollTo(0, 0);
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -53,7 +54,7 @@ export default function FreelanceWorkPage() {
 
   return (
     <main className="bg-black text-white min-h-screen font-sans overflow-x-hidden selection:bg-[#D90429] selection:text-white">
-      <Link href="/" className="fixed top-8 left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group">
+      <Link href="/#opportunities" className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group">
         <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
         <span className="text-xs font-bold tracking-widest uppercase">Back to Home</span>
       </Link>
@@ -78,19 +79,19 @@ export default function FreelanceWorkPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
         >
-          <h1 className="text-6xl md:text-[9rem] font-black mb-4 tracking-tighter text-white drop-shadow-2xl leading-none">
+          <h1 className="text-5xl sm:text-7xl md:text-[9rem] font-black mb-4 tracking-tighter text-white drop-shadow-2xl leading-none">
             FREELANCE
           </h1>
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D90429] to-transparent my-6 opacity-50" />
-          <p className="text-lg md:text-xl text-gray-400 font-bold tracking-[0.3em] uppercase">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D90429] to-transparent my-4 sm:my-6 opacity-50" />
+          <p className="text-sm sm:text-lg md:text-xl text-gray-400 font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase">
             Build. Deliver. <span className="text-[#D90429]">Get Paid.</span>
           </p>
         </motion.div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-32 px-6 md:px-16 max-w-7xl mx-auto">
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-20 text-center">The Network</h2>
+      <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-12 sm:mb-20 text-center">The Network</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[

@@ -50,6 +50,7 @@ export default function ProjectContestsPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -64,7 +65,7 @@ export default function ProjectContestsPage() {
 
   return (
     <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-x-hidden selection:bg-[#D90429] selection:text-white">
-      <Link href="/" className="fixed top-8 left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group">
+      <Link href="/#opportunities" className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group">
         <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
         <span className="text-xs font-bold tracking-widest uppercase">Back to Home</span>
       </Link>
@@ -90,17 +91,17 @@ export default function ProjectContestsPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
         >
-          <h1 className="text-6xl md:text-[9rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-[#D90429] drop-shadow-2xl leading-none uppercase">
+          <h1 className="text-4xl sm:text-6xl md:text-[9rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-[#D90429] drop-shadow-2xl leading-none uppercase">
             PROJECT<br/>CONTESTS
           </h1>
-          <p className="text-sm md:text-lg text-gray-400 font-bold tracking-[0.4em] uppercase mt-8">
+          <p className="text-xs sm:text-sm md:text-lg text-gray-400 font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase mt-6 sm:mt-8">
             Exhibition of Engineering.
           </p>
         </motion.div>
       </section>
 
-      <section className="py-32 px-6 md:px-16 max-w-7xl mx-auto">
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-20 text-center">The Standards</h2>
+      <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-12 sm:mb-20 text-center">The Standards</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[

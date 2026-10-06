@@ -17,8 +17,8 @@ export default function EventsPage() {
     if (events.length === 0) return null;
     return (
       <div className="mb-24">
-        <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-12 text-white border-b border-gray-800 pb-4 inline-block">{title}</h2>
-        <div className="relative border-l border-gray-800 ml-4 md:ml-12 pl-8 md:pl-16 space-y-16">
+        <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter uppercase mb-8 sm:mb-12 text-white border-b border-gray-800 pb-3 sm:pb-4 inline-block">{title}</h2>
+        <div className="relative border-l border-gray-800 ml-3 sm:ml-4 md:ml-12 pl-6 sm:pl-8 md:pl-16 space-y-10 sm:space-y-16">
           {events.map((ev, i) => (
             <motion.div 
               key={ev.id}
@@ -32,11 +32,11 @@ export default function EventsPage() {
               style={{ transformPerspective: 1200 }}
             >
               {/* Timeline Node */}
-              <div className={`absolute -left-[37px] md:-left-[69px] top-2 w-3 h-3 rounded-full transition-all duration-500 ${hoveredId === ev.id ? 'bg-[#FFD60A] scale-150 shadow-[0_0_20px_#FFD60A]' : 'bg-gray-700'}`} />
+              <div className={`absolute -left-[31px] sm:-left-[37px] md:-left-[69px] top-2 w-3 h-3 rounded-full transition-all duration-500 ${hoveredId === ev.id ? 'bg-[#FFD60A] scale-150 shadow-[0_0_20px_#FFD60A]' : 'bg-gray-700'}`} />
               
-              <div className="flex flex-col md:flex-row gap-6 md:gap-12">
+              <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-12">
                 <div className="md:w-1/4">
-                  <div className="text-sm font-bold tracking-widest text-gray-500 uppercase mb-2">
+                  <div className="text-xs sm:text-sm font-bold tracking-widest text-gray-500 uppercase mb-2">
                     {new Date(ev.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </div>
                   <div className={`text-xs font-bold tracking-widest px-3 py-1 rounded-full border inline-block ${ev.status === 'UPCOMING' ? 'border-green-500/50 text-green-400 bg-green-500/10' : ev.status === 'ONGOING' ? 'border-[#FFD60A]/50 text-[#FFD60A] bg-[#FFD60A]/10' : 'border-gray-600 text-gray-400 bg-gray-800/50'}`}>
@@ -44,14 +44,14 @@ export default function EventsPage() {
                   </div>
                 </div>
 
-                <div className="md:w-3/4 bg-black border border-gray-800 rounded-3xl p-8 hover:border-gray-500 hover:bg-[#0a0a0a] transition-all duration-500 relative overflow-hidden group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                <div className="md:w-3/4 bg-black border border-gray-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:border-gray-500 hover:bg-[#0a0a0a] transition-all duration-500 relative overflow-hidden group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
                   
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-3xl md:text-5xl font-black tracking-tighter text-white group-hover:text-[#FFD60A] transition-colors">
+                  <div className="flex flex-col sm:flex-row justify-between items-start mb-2 sm:mb-4 gap-2 sm:gap-4">
+                    <h3 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tighter text-white group-hover:text-[#FFD60A] transition-colors">
                       {ev.name}
                     </h3>
-                    <span className="text-sm font-mono text-gray-600 hidden md:block">{ev.category}</span>
+                    <span className="text-xs sm:text-sm font-mono text-gray-500 shrink-0">{ev.category}</span>
                   </div>
                 </div>
               </div>
@@ -67,15 +67,15 @@ export default function EventsPage() {
       {/* Background Gradient */}
       <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 pt-32 pb-24">
-        <Link href="/" className="inline-flex items-center text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 pt-24 sm:pt-32 pb-16 sm:pb-24">
+        <Link href="/" className="inline-flex items-center text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-8 sm:mb-16">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Base
         </Link>
 
-        <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter uppercase mb-6 text-white drop-shadow-2xl">
+        <h1 className="text-5xl sm:text-7xl md:text-[10rem] font-black tracking-tighter uppercase mb-4 sm:mb-6 text-white drop-shadow-2xl leading-none">
           The Timeline
         </h1>
-        <p className="text-xl md:text-3xl font-medium text-gray-400 max-w-3xl mb-24">
+        <p className="text-base sm:text-xl md:text-3xl font-medium text-gray-400 max-w-3xl mb-12 sm:mb-24 leading-relaxed">
           Where and when we gather. Synced up for the rest of the year.
         </p>
 

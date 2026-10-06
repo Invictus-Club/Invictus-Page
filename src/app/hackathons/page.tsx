@@ -44,6 +44,7 @@ export default function HackathonsPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -96,7 +97,7 @@ export default function HackathonsPage() {
 
   return (
     <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-hidden selection:bg-[#FFD60A] selection:text-black">
-      <Link href="/" className="fixed top-8 left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group mix-blend-difference">
+      <Link href="/#opportunities" className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group mix-blend-difference">
         <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
         <span className="text-xs font-bold tracking-widest uppercase">Back to Home</span>
       </Link>
@@ -124,52 +125,52 @@ export default function HackathonsPage() {
           <h1 className="text-[12vw] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-[#FFD60A] to-yellow-800 drop-shadow-2xl leading-[0.8] uppercase">
             HACKATHONS
           </h1>
-          <p className="text-sm md:text-lg text-gray-300 font-bold tracking-[0.4em] uppercase mt-8 mix-blend-difference">
+          <p className="text-xs sm:text-sm md:text-lg text-gray-300 font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase mt-6 sm:mt-8 mix-blend-difference">
             Code. Travel. Eat. Conquer.
           </p>
         </motion.div>
       </section>
 
       {/* STORY DRIVEN CONTENT (Travel, Food, Freedom) */}
-      <section className="py-32 px-6 md:px-16 max-w-7xl mx-auto space-y-40 massive-trigger">
+      <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto space-y-24 sm:space-y-40 massive-trigger">
         
         {/* Block 1: Travel & Freedom */}
-        <div className="flex flex-col md:flex-row gap-16 items-center">
-          <div className="w-full md:w-1/2 h-[60vh] relative overflow-hidden rounded-2xl group border border-gray-800">
+        <div className="flex flex-col md:flex-row gap-8 sm:gap-16 items-center">
+          <div className="w-full md:w-1/2 h-[35vh] sm:h-[45vh] md:h-[60vh] relative overflow-hidden rounded-2xl group border border-gray-800">
             <div className="absolute inset-0 bg-[#FFD60A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
             <img src="https://images.unsplash.com/photo-1473625247510-8ceb1760943f?q=80&w=2070&auto=format&fit=crop" alt="Roadtrip" className="parallax-img absolute w-full h-[120%] object-cover top-0" />
           </div>
           <div className="w-full md:w-1/2">
-            <h2 className="massive-text text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 leading-tight">The Road <br/> To Glory.</h2>
-            <p className="massive-text text-xl md:text-2xl text-gray-400 font-medium leading-relaxed">
+            <h2 className="massive-text text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4 sm:mb-6 leading-tight">The Road <br/> To Glory.</h2>
+            <p className="massive-text text-base sm:text-xl md:text-2xl text-gray-400 font-medium leading-relaxed">
               It’s not just an event. It’s a roadtrip with your best friends. It’s the independence of traveling to new cities, staying in bizarre Airbnb's, and exploring the world while you compete against top-tier talent.
             </p>
           </div>
         </div>
 
         {/* Block 2: Food & Culture */}
-        <div className="flex flex-col md:flex-row-reverse gap-16 items-center">
-          <div className="w-full md:w-1/2 h-[60vh] relative overflow-hidden rounded-2xl group border border-gray-800">
+        <div className="flex flex-col md:flex-row-reverse gap-8 sm:gap-16 items-center">
+          <div className="w-full md:w-1/2 h-[35vh] sm:h-[45vh] md:h-[60vh] relative overflow-hidden rounded-2xl group border border-gray-800">
             <div className="absolute inset-0 bg-[#FFD60A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
             <img src="https://images.unsplash.com/photo-1617196034183-421b4917c907?q=80&w=2088&auto=format&fit=crop" alt="Late night food" className="parallax-img absolute w-full h-[120%] object-cover top-0" />
           </div>
           <div className="w-full md:w-1/2 md:text-right">
-            <h2 className="massive-text text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 leading-tight text-[#FFD60A]">Cultures & <br/> Cravings.</h2>
-            <p className="massive-text text-xl md:text-2xl text-gray-400 font-medium leading-relaxed">
+            <h2 className="massive-text text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4 sm:mb-6 leading-tight text-[#FFD60A]">Cultures & <br/> Cravings.</h2>
+            <p className="massive-text text-base sm:text-xl md:text-2xl text-gray-400 font-medium leading-relaxed">
               Every city has a flavor. 3 AM shawarmas, local delicacies, and endless caffeine. You aren't just coding—you're experiencing the rich food cultures of every region you conquer.
             </p>
           </div>
         </div>
 
         {/* Block 3: The Code & Arena */}
-        <div className="flex flex-col md:flex-row gap-16 items-center">
-          <div className="w-full md:w-1/2 h-[60vh] relative overflow-hidden rounded-2xl group border border-gray-800">
+        <div className="flex flex-col md:flex-row gap-8 sm:gap-16 items-center">
+          <div className="w-full md:w-1/2 h-[35vh] sm:h-[45vh] md:h-[60vh] relative overflow-hidden rounded-2xl group border border-gray-800">
             <div className="absolute inset-0 bg-[#FFD60A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
             <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop" alt="The Arena" className="parallax-img absolute w-full h-[120%] object-cover top-0" />
           </div>
           <div className="w-full md:w-1/2">
-            <h2 className="massive-text text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 leading-tight">The <br/> Arena.</h2>
-            <p className="massive-text text-xl md:text-2xl text-gray-400 font-medium leading-relaxed">
+            <h2 className="massive-text text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4 sm:mb-6 leading-tight">The <br/> Arena.</h2>
+            <p className="massive-text text-base sm:text-xl md:text-2xl text-gray-400 font-medium leading-relaxed">
               Under the neon lights, adrenaline takes over. 24 hours to prove yourself. The roar of the crowd, the pressure of the deadline, and the electrifying feeling of a perfectly executed pitch.
             </p>
           </div>

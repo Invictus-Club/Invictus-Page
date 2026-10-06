@@ -23,7 +23,7 @@ function AutoSlider({ images, name }: { images: string[], name: string }) {
   if (!images || images.length === 0) return null;
 
   return (
-    <div className="relative w-full h-[300px] md:h-[450px] rounded-3xl overflow-hidden border border-gray-800 group mt-8">
+    <div className="relative w-full h-[220px] sm:h-[300px] md:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-800 group mt-6 sm:mt-8">
       <div 
         className="flex h-full transition-transform duration-1000 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -85,19 +85,19 @@ export default function WinsClient({ winsData }: { winsData: any[] }) {
         </Canvas>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 pt-32 pb-24">
-        <Link href="/" className="inline-flex items-center text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-[#FFD60A] transition-colors mb-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-16 pt-24 sm:pt-32 pb-16 sm:pb-24">
+        <Link href="/" className="inline-flex items-center text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-[#FFD60A] transition-colors mb-8 sm:mb-16">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Base
         </Link>
 
-        <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter uppercase mb-12 text-[#FFD60A] drop-shadow-[0_0_50px_rgba(255,214,10,0.3)]">
+        <h1 className="text-5xl sm:text-7xl md:text-[10rem] font-black tracking-tighter uppercase mb-6 sm:mb-12 text-[#FFD60A] drop-shadow-[0_0_50px_rgba(255,214,10,0.3)] leading-none">
           Hall of Fame
         </h1>
-        <p className="text-xl md:text-3xl font-medium text-gray-400 max-w-3xl mb-24">
+        <p className="text-base sm:text-xl md:text-3xl font-medium text-gray-400 max-w-3xl mb-12 sm:mb-24 leading-relaxed">
           We don&apos;t just participate. We dominate. A record of the battle scars and victories of the Invictus squad.
         </p>
 
-        <div className="space-y-24">
+        <div className="space-y-12 sm:space-y-24">
           {sortedWins.map((win, i) => (
             <motion.div 
               key={win.id}
@@ -105,32 +105,32 @@ export default function WinsClient({ winsData }: { winsData: any[] }) {
               whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.2, delay: i * 0.1, type: "spring", bounce: 0.35, damping: 15 }}
-              className="flex flex-col gap-8 transform-gpu"
+              className="flex flex-col gap-6 sm:gap-8 transform-gpu"
               style={{ transformPerspective: 1200 }}
             >
-              <div className="flex flex-col md:flex-row gap-8 items-start md:items-center p-8 md:p-12 border border-gray-800 bg-black/50 backdrop-blur-md rounded-3xl hover:border-[#FFD60A]/50 transition-all group">
+              <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center p-6 sm:p-8 md:p-12 border border-gray-800 bg-black/50 backdrop-blur-md rounded-3xl hover:border-[#FFD60A]/50 transition-all group">
                 <div className="md:w-1/4">
-                  <div className="text-4xl md:text-5xl font-black tracking-tighter text-gray-500 group-hover:text-white transition-colors">
+                  <div className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-gray-500 group-hover:text-white transition-colors">
                     {win.displayDate.split(' ').pop()}
                   </div>
-                  <div className="text-sm font-bold tracking-widest text-[#FFD60A] mt-2 uppercase">
+                  <div className="text-xs sm:text-sm font-bold tracking-widest text-[#FFD60A] mt-1 sm:mt-2 uppercase">
                     {win.displayDate.split(' ').slice(0, -1).join(' ')}
                   </div>
                 </div>
 
                 <div className="md:w-2/4">
-                  <h3 className="text-3xl md:text-4xl font-black tracking-tighter mb-4 text-white group-hover:text-[#FFD60A] transition-colors">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter mb-2 sm:mb-4 text-white group-hover:text-[#FFD60A] transition-colors">
                     {win.name}
                   </h3>
-                  <p className="text-gray-400 font-medium text-lg leading-relaxed">
+                  <p className="text-gray-400 font-medium text-sm sm:text-base md:text-lg leading-relaxed">
                     {win.location}
                   </p>
                 </div>
 
-                <div className="md:w-1/4 flex justify-end">
-                  <div className="flex flex-col items-center justify-center p-6 bg-gradient-to-br from-black to-[#111] border border-gray-800 rounded-full w-32 h-32 group-hover:shadow-[0_0_30px_rgba(255,214,10,0.2)] transition-shadow">
-                    <Trophy className={`w-10 h-10 mb-2 ${win.position.toLowerCase().includes('1st') || win.position.toLowerCase().includes('winner') ? 'text-[#FFD60A]' : 'text-gray-400'}`} />
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-center">{win.position}</span>
+                <div className="md:w-1/4 flex justify-start md:justify-end w-full md:w-auto mt-2 md:mt-0">
+                  <div className="flex flex-col items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-black to-[#111] border border-gray-800 rounded-full w-24 h-24 sm:w-32 sm:h-32 group-hover:shadow-[0_0_30px_rgba(255,214,10,0.2)] transition-shadow">
+                    <Trophy className={`w-8 h-8 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${win.position.toLowerCase().includes('1st') || win.position.toLowerCase().includes('winner') ? 'text-[#FFD60A]' : 'text-gray-400'}`} />
+                    <span className="text-[9px] sm:text-[10px] font-bold tracking-widest uppercase text-center">{win.position}</span>
                   </div>
                 </div>
               </div>

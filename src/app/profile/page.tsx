@@ -128,24 +128,24 @@ export default function Profile() {
   return (
     <main className="relative w-full h-screen bg-black overflow-hidden font-sans">
       {/* Floating Action Buttons overlaid on the iframe */}
-      <div className="absolute top-6 right-6 z-40 flex items-center gap-4">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-40 flex items-center gap-2 sm:gap-4">
         <button 
           onClick={() => router.push("/")}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-black border border-gray-800 text-white rounded hover:bg-gray-900 transition-colors shadow-xl"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-black/90 backdrop-blur-md border border-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors shadow-xl"
         >
           <ArrowLeft size={16} />
           <span className="text-xs font-bold tracking-widest hidden sm:block">HOME</span>
         </button>
         <button 
           onClick={handleSignOut}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-[#D90429] text-white rounded hover:bg-[#b00220] transition-colors shadow-xl"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-[#D90429] text-white rounded-lg hover:bg-[#b00220] transition-colors shadow-xl"
         >
           <LogOut size={16} />
           <span className="text-xs font-bold tracking-widest hidden sm:block">SIGN OUT</span>
         </button>
         <button 
           onClick={() => router.push("/create-profile")}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-[#FFD60A]/80 text-black rounded hover:bg-[#FFD60A] transition-colors shadow-xl"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-lg hover:bg-white transition-colors shadow-xl"
         >
           Edit Socials
         </button>

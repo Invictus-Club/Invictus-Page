@@ -138,9 +138,9 @@ export default function PublicProfile() {
   return (
     <main className="relative w-full h-screen bg-black overflow-hidden">
       {/* Floating Action Button */}
-      <div className="absolute top-6 right-6 z-40">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-40">
         <Link href="/">
-          <button className="flex items-center justify-center gap-2 px-4 py-2 bg-black border border-gray-800 text-white rounded hover:bg-gray-900 transition-colors shadow-xl">
+          <button className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-black/90 backdrop-blur-md border border-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors shadow-xl">
             <ArrowLeft size={16} />
             <span className="text-xs font-bold tracking-widest hidden sm:block">INVICTUS HOME</span>
           </button>

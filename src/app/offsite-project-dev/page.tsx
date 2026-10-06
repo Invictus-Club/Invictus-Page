@@ -66,6 +66,7 @@ export default function OffsiteProjectDevPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -107,7 +108,7 @@ export default function OffsiteProjectDevPage() {
 
   return (
     <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-hidden selection:bg-[#00FFCC] selection:text-black">
-      <Link href="/" className="fixed top-8 left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group mix-blend-difference">
+      <Link href="/#opportunities" className="fixed top-8 left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group mix-blend-difference">
         <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
         <span className="text-xs font-bold tracking-widest uppercase">Back to Home</span>
       </Link>
@@ -145,7 +146,7 @@ export default function OffsiteProjectDevPage() {
 
       {/* HORIZONTAL TRAVEL & CULTURE SCROLL */}
       <section className="travel-container h-screen bg-black overflow-hidden flex flex-nowrap w-[400vw] relative">
-        <div className="absolute top-12 left-12 z-20 text-[#00FFCC] font-bold tracking-widest uppercase text-sm mix-blend-difference">
+        <div className="absolute top-8 left-6 sm:top-12 sm:left-12 z-20 text-[#00FFCC] font-bold tracking-widest uppercase text-xs sm:text-sm mix-blend-difference">
           THE OFFSITE EXPERIENCE
         </div>
         
@@ -153,9 +154,9 @@ export default function OffsiteProjectDevPage() {
         <div className="travel-panel w-screen h-full relative flex items-center justify-center">
           <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-30" alt="Hacking Setup" />
           <div className="absolute inset-0 bg-black/60" />
-          <div className="relative z-10 max-w-4xl px-8">
-            <h2 className="text-7xl md:text-[8rem] font-black tracking-tighter uppercase mb-6 leading-none">Off The Grid.</h2>
-            <p className="text-2xl md:text-4xl font-medium text-gray-300 leading-tight">No campus noise. Just you, your squad, and deep work in uncharted territory.</p>
+          <div className="relative z-10 max-w-4xl px-6 sm:px-8">
+            <h2 className="text-4xl sm:text-7xl md:text-[8rem] font-black tracking-tighter uppercase mb-4 sm:mb-6 leading-none">Off The Grid.</h2>
+            <p className="text-lg sm:text-2xl md:text-4xl font-medium text-gray-300 leading-tight">No campus noise. Just you, your squad, and deep work in uncharted territory.</p>
           </div>
         </div>
 
@@ -163,18 +164,18 @@ export default function OffsiteProjectDevPage() {
         <div className="travel-panel w-screen h-full relative flex items-center justify-center">
           <img src="https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-40" alt="Coding" />
           <div className="absolute inset-0 bg-black/40" />
-          <div className="relative z-10 max-w-4xl px-8">
-            <h2 className="text-7xl md:text-[8rem] font-black tracking-tighter uppercase mb-6 leading-none">Ship Code.</h2>
-            <p className="text-2xl md:text-4xl font-medium text-gray-300 leading-tight">Lock in. Grind out the architecture. Deploy products that solve actual problems.</p>
+          <div className="relative z-10 max-w-4xl px-6 sm:px-8">
+            <h2 className="text-4xl sm:text-7xl md:text-[8rem] font-black tracking-tighter uppercase mb-4 sm:mb-6 leading-none">Ship Code.</h2>
+            <p className="text-lg sm:text-2xl md:text-4xl font-medium text-gray-300 leading-tight">Lock in. Grind out the architecture. Deploy products that solve actual problems.</p>
           </div>
         </div>
 
         {/* Panel 3: The Vibe */}
         <div className="travel-panel w-screen h-full relative flex items-center justify-center bg-[#050505]">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#00FFCC]/20 via-black to-black opacity-50" />
-          <div className="relative z-10 text-center">
-            <h2 className="text-6xl md:text-[6rem] font-black tracking-tighter uppercase mb-8">This is Offsite.</h2>
-            <button className="px-12 py-5 bg-transparent border border-[#00FFCC] text-[#00FFCC] hover:bg-[#00FFCC] hover:text-black transition-all rounded-full font-bold tracking-widest text-sm uppercase">
+          <div className="relative z-10 text-center px-6">
+            <h2 className="text-4xl sm:text-6xl md:text-[6rem] font-black tracking-tighter uppercase mb-6 sm:mb-8">This is Offsite.</h2>
+            <button className="px-8 sm:px-12 py-4 sm:py-5 bg-transparent border border-[#00FFCC] text-[#00FFCC] hover:bg-[#00FFCC] hover:text-black transition-all rounded-full font-bold tracking-widest text-xs sm:text-sm uppercase">
               Join The Next Expedition
             </button>
           </div>

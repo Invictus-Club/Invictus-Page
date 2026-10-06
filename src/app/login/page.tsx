@@ -41,20 +41,20 @@ export default function Login() {
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center p-4 bg-black overflow-hidden font-sans">
-      <Link href="/" className="absolute top-8 left-8 text-slate-400 hover:text-white transition flex items-center gap-2 group z-20">
+    <main className="relative min-h-screen flex items-center justify-center p-4 bg-black overflow-hidden font-sans py-16">
+      <Link href="/" className="absolute top-6 left-6 sm:top-8 sm:left-8 text-slate-400 hover:text-white transition flex items-center gap-2 group z-20">
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-        <span>Back to Home</span>
+        <span className="text-xs sm:text-sm font-semibold">Back to Home</span>
       </Link>
 
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md p-8 sm:p-10 relative z-10 border border-gray-800 bg-[#050505] shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl"
+        className="w-full max-w-md p-6 sm:p-10 relative z-10 border border-gray-800 bg-[#050505] shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-2xl"
       >
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-black text-white mb-2 uppercase tracking-tighter">Welcome Back</h2>
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-black text-white mb-2 uppercase tracking-tighter">Welcome Back</h2>
           <p className="text-sm text-gray-500 font-medium">Sign in to access your Invictus dashboard.</p>
         </div>
 

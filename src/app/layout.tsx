@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -9,14 +9,21 @@ export const metadata: Metadata = {
   description: "Join a community of elite developers, architects, and innovators.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#000000",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-[#05070f] text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white antialiased`}>
+    <html lang="en" className="dark bg-black">
+      <body className={`${inter.className} bg-black text-slate-100 min-h-screen selection:bg-[#FFD60A] selection:text-black antialiased overflow-x-hidden`}>
         {children}
       </body>
     </html>

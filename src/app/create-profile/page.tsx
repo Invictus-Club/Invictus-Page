@@ -106,11 +106,11 @@ export default function CreateProfile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full bg-[#050505] border border-gray-800 p-8 sm:p-10 shadow-2xl"
+          className="w-full bg-[#050505] border border-gray-800 p-6 sm:p-10 shadow-2xl rounded-2xl sm:rounded-none"
         >
-          <div className="mb-8">
-            <h2 className="text-3xl font-black text-white mb-2 flex items-center gap-3 uppercase tracking-tighter">
-              <ShieldCheck className="text-[#FFD60A]" size={32} />
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl font-black text-white mb-2 flex items-center gap-2.5 sm:gap-3 uppercase tracking-tighter">
+              <ShieldCheck className="text-[#FFD60A] shrink-0" size={28} />
               Join the Movement
             </h2>
             <p className="text-sm text-gray-500 font-medium">
@@ -140,8 +140,9 @@ export default function CreateProfile() {
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Claim your URL (Username)</label>
                   <div className="relative flex items-center">
-                    <span className="absolute left-4 text-gray-500 text-sm font-medium">vtuinvictus.com/p/</span>
-                    <input type="text" placeholder="johndoe" value={username} onChange={(e) => setUsername(e.target.value)} required className="w-full pl-36 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-[#FFD60A] font-bold transition-colors" />
+                    <span className="hidden sm:inline absolute left-4 text-gray-500 text-sm font-medium">vtuinvictus.com/p/</span>
+                    <span className="sm:hidden absolute left-3 text-gray-500 text-xs font-medium">/p/</span>
+                    <input type="text" placeholder="johndoe" value={username} onChange={(e) => setUsername(e.target.value)} required className="w-full pl-10 sm:pl-36 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-[#FFD60A] font-bold transition-colors" />
                   </div>
                 </div>
                 <div className="space-y-1">
