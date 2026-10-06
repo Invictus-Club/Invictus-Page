@@ -82,7 +82,10 @@ export default function OffsiteProjectDevPage() {
     lenis.scrollTo(0, { immediate: true });
     
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    const tickerUpdate = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerUpdate);
     gsap.ticker.lagSmoothing(0, 0);
 
     const ctx = gsap.context(() => {
@@ -111,12 +114,14 @@ export default function OffsiteProjectDevPage() {
 
     return () => {
       lenis.destroy();
+      gsap.ticker.remove(tickerUpdate);
       ctx.revert();
+      ScrollTrigger.refresh();
     };
   }, []);
 
   return (
-    <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-hidden selection:bg-[#00FFCC] selection:text-black">
+    <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-clip selection:bg-[#00FFCC] selection:text-black">
       <Link href="/#opportunities" className="fixed top-8 left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group mix-blend-difference">
         <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
         <span className="text-xs font-bold tracking-widest uppercase">Back to Home</span>

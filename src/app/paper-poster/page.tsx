@@ -48,16 +48,20 @@ export default function PaperPosterPage() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
+    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
+    rafId = requestAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
   }, []);
 
   return (
-    <main ref={containerRef} className="bg-[#050505] text-white min-h-screen font-sans overflow-x-hidden selection:bg-purple-500 selection:text-white">
+    <main ref={containerRef} className="bg-[#050505] text-white min-h-screen font-sans overflow-x-clip selection:bg-purple-500 selection:text-white">
       <Link href="/" className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group">
         <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
         <span className="text-xs font-bold tracking-widest uppercase">Back to Home</span>

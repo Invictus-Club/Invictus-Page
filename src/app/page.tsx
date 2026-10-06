@@ -205,41 +205,37 @@ export default function PremiumInvictus() {
   
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.8,
+      duration: 1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
+      touchMultiplier: 1.5,
     });
 
     // Auto-scroll to hash if present (fixes returning to #opportunities)
     if (window.location.hash) {
       setTimeout(() => {
-        const target = document.querySelector(window.location.hash);
+        const target = document.querySelector(window.location.hash) as HTMLElement | null;
         if (target) {
           lenis.scrollTo(target, { immediate: true });
         }
       }, 100);
     }
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    // Sync Lenis with GSAP ScrollTrigger
+    // Connect Lenis to ScrollTrigger and GSAP ticker
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => {
+    const tickerUpdate = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
+    gsap.ticker.add(tickerUpdate);
     gsap.ticker.lagSmoothing(0, 0);
 
     return () => {
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      gsap.ticker.remove(tickerUpdate);
+      ScrollTrigger.refresh();
     };
   }, []);
   
@@ -358,7 +354,7 @@ export default function PremiumInvictus() {
   }, { scope: containerRef });
 
   return (
-    <main ref={containerRef} className="bg-black min-h-screen text-white selection:bg-[#FFD60A] selection:text-black font-sans overflow-hidden">
+    <main ref={containerRef} className="bg-black min-h-screen text-white selection:bg-[#FFD60A] selection:text-black font-sans overflow-clip">
       <Navbar />
 
       {/* 1. HERO SECTION */}
