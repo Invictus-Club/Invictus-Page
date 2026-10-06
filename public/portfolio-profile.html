@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yash B Koparde | Member @ Invictus | Founder, Developer, Programmer </title>
+  <!-- Tailwind CSS -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <!-- Three.js & GSAP -->
+  <script src="three.min.js"></script>
+  <script src="gsap.min.js"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #05070f;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Glassmorphism */
+    .glass-panel {
+      background: rgba(13, 17, 28, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    .glass-card {
+      background: rgba(20, 27, 45, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card:hover {
+      background: rgba(30, 41, 69, 0.85);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.3);
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #05070f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b82f6;
+    }
+    
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: auto;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .pulse-avatar {
+      box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
+      70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    }
+
+    .badge-glow:hover {
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+      transform: scale(1.15) rotate(3deg);
+      transition: all 0.2s ease;
+    }
+
+    @keyframes loader-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-spinner {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: loader-spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 relative selection:bg-indigo-500 selection:text-white">
+
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#05070f] transition-opacity duration-1000 ease-in-out">
+    <div class="text-center flex flex-col items-center space-y-8">
+      <div class="relative">
+        <h1 class="text-5xl md:text-7xl font-black text-white tracking-[0.2em] uppercase font-mono relative z-10">INVICTUS</h1>
+        <div class="absolute inset-0 blur-2xl bg-indigo-500/20 z-0"></div>
+      </div>
+      <div class="flex flex-col items-center space-y-4">
+        <div class="loading-spinner"></div>
+        <p class="text-slate-500 text-[10px] md:text-xs tracking-[0.5em] uppercase font-mono">Loading Profile</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- Main Content Wrapper -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 pointer-events-none">
+    
+    <!-- Top Navigation / Header -->
+    <header class="glass-panel rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 border-slate-800 pointer-events-auto">
+      <div class="flex items-center space-x-4">
+        <div class="relative">
+          <img id="user-avatar" src="https://avatars.githubusercontent.com/u/231705073?v=4" alt="Yash Koparde Avatar" class="w-16 h-16 rounded-full border-2 border-indigo-500 pulse-avatar object-cover">
+          <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" title="Active Developer"></span>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2 flex-wrap">
+            <h1 id="user-name" class="text-2xl sm:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-100 via-white to-slate-400 drop-shadow-sm font-mono tracking-tight">YASH B KOPARDE</h1>
+            <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-purple-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold uppercase tracking-wider flex items-center space-x-1">
+              <i class="fas fa-crown text-amber-400"></i>
+              <span>Invictus Member</span>
+            </span>
+          </div>
+          <p id="user-handle" class="text-indigo-400 font-mono text-xs sm:text-sm mt-0.5">@yashkoparde • Invictus Member • Belgaum, India</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons & Audio Toggle -->
+      <div class="flex items-center flex-wrap gap-3">
+        <button id="sound-toggle" class="px-3 py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-mono border border-slate-700 transition flex items-center space-x-2">
+          <i class="fas fa-volume-up text-indigo-400" id="sound-icon"></i>
+          <span id="sound-label">Audio ON</span>
+        </button>
+        <a href="https://github.com/yashkoparde?tab=repositories" target="_blank" class="px-4 py-2 bg-indigo-600/80 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-semibold transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
+          <i class="fab fa-github"></i>
+          <span>GitHub</span>
+        </a>
+        <a href="https://leetcode.com/u/yashkoparde/" target="_blank" class="px-4 py-2 bg-amber-600/80 hover:bg-amber-500 text-white rounded-xl text-xs sm:text-sm font-semibold transition flex items-center space-x-2 shadow-lg shadow-amber-600/20">
+          <i class="fas fa-code"></i>
+          <span>LeetCode</span>
+        </a>
+        <a href="https://codeforces.com/profile/yashkoparde" target="_blank" class="px-4 py-2 bg-sky-600/80 hover:bg-sky-500 text-white rounded-xl text-xs sm:text-sm font-semibold transition flex items-center space-x-2 shadow-lg shadow-sky-600/20">
+          <i class="fas fa-chart-line"></i>
+          <span>Codeforces</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Bio & Stats Counters Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pointer-events-auto">
+      
+      <!-- Profile Card -->
+      <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between border-slate-800">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider">
+            <span class="text-indigo-400 flex items-center space-x-2">
+              <i class="fas fa-user-astronaut"></i>
+              <span>Developer Profile</span>
+            </span>
+            <span class="text-amber-400 flex items-center space-x-1 font-mono"><i class="fas fa-shield-alt"></i><span>Member</span></span>
+          </div>
+
+          <p id="user-bio" class="text-slate-300 text-sm italic leading-relaxed">
+            "Passionate about coding and building great projects"
+          </p>
+
+          <div class="space-y-2 text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+              <span><i class="fas fa-crown text-amber-400 mr-2"></i>Role:</span>
+              <span class="text-amber-300 font-semibold">Member @ Invictus</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span><i class="fas fa-building text-indigo-400 mr-2"></i>Company:</span>
+              <span id="user-company" class="text-slate-200">Not specified</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span><i class="fas fa-link text-indigo-400 mr-2"></i>Website:</span>
+              <a id="user-blog" href="https://yashkoparde.github.io/social-links/" target="_blank" class="text-indigo-400 hover:underline truncate max-w-[180px]">yashkoparde.github.io</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <!-- Stats Grid -->
+      <div class="lg:col-span-2 grid grid-cols-2 gap-3 sm:gap-4">
+        
+        <!-- Contributions Card -->
+        <div class="glass-card rounded-2xl p-4 flex flex-col items-center justify-center text-center group border-indigo-500/20">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i class="fas fa-fire text-lg"></i>
+          </div>
+          <span id="stat-contributions" class="text-2xl sm:text-3xl font-extrabold text-indigo-400 font-mono">0</span>
+          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold mt-1">Contributions</span>
+        </div>
+
+        <!-- Repositories Card -->
+        <div class="glass-card rounded-2xl p-4 flex flex-col items-center justify-center text-center group">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i class="fas fa-code-branch text-lg"></i>
+          </div>
+          <span id="stat-repos" class="text-2xl sm:text-3xl font-extrabold text-white font-mono">0</span>
+          <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold mt-1">Repositories</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Tech Stack & Contribution Heatmap -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pointer-events-auto">
+      
+      <!-- Language Breakdown -->
+      <div class="glass-panel rounded-2xl p-6 space-y-4 lg:col-span-1 border-slate-800">
+        <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+          <span>Language Breakdown</span>
+          <i class="fas fa-pie-chart text-indigo-400"></i>
+        </h3>
+        
+        <div id="language-bars" class="space-y-3 pt-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- GitHub Activity Heatmap -->
+      <div class="glass-panel rounded-2xl p-6 lg:col-span-2 space-y-4 border-slate-800 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+              <i class="fas fa-fire text-amber-500"></i>
+              <span>GitHub Contribution Graph</span>
+            </h3>
+            <span class="text-xs font-mono text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 font-bold">
+              Total Contributions: <span id="heatmap-contrib-count">6,330+</span>
+            </span>
+          </div>
+
+          <div class="overflow-x-auto p-2 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-center min-h-[120px]">
+            <img id="gh-heatmap" src="https://ghchart.rshah.org/4f46e5/yashkoparde" alt="Yash Koparde Contribution Heatmap" class="w-full max-w-full h-auto filter drop-shadow-md" onError="this.onerror=null; this.src='https://github-readme-activity-graph.vercel.app/graph?username=yashkoparde&theme=github-compact&bg_color=0d111c&color=6366f1&line=818cf8&point=c084fc';">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Repository Explorer Section -->
+    <section class="space-y-6 pointer-events-auto">
+      <div class="glass-panel rounded-2xl p-6 border-slate-800">
+        
+        <!-- Controls -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+              <i class="fas fa-boxes text-indigo-400"></i>
+              <span>Repository Showcase</span>
+            </h2>
+            <p class="text-xs text-slate-400">Explore 79+ projects built by Yash Koparde (Invictus Member)</p>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="relative w-full md:w-80">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="search-input" placeholder="Search repository..." class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500 font-mono transition">
+          </div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div id="filter-pills" class="flex items-center gap-2 overflow-x-auto pb-2 text-xs font-mono"></div>
+
+        <!-- Repositories Grid -->
+        <div id="repos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6"></div>
+
+        <!-- Load More Button -->
+        <div class="text-center pt-8">
+          <button id="load-more-btn" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-mono font-semibold transition border border-slate-700 shadow-md">
+            Show More Repositories
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Hackathon Flex Section -->
+    <section class="pointer-events-auto mt-10 space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+            <i class="fas fa-trophy text-amber-400"></i>
+            <span>Hackathon Flex</span>
+          </h2>
+          <p class="text-xs text-slate-400 font-mono mt-1">Wins, Participations, and Certificates</p>
+        </div>
+      </div>
+      <div id="hackathons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Join Invictus Section -->
+    <section class="glass-panel rounded-2xl p-8 border-indigo-500/50 flex flex-col md:flex-row items-center justify-between gap-6 pointer-events-auto bg-gradient-to-br from-indigo-900/30 to-purple-900/30 relative overflow-hidden group mt-10">
+      <div class="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"></div>
+      <div class="relative z-10 space-y-2">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-mono tracking-tight flex items-center gap-3">
+          <i class="fas fa-rocket text-indigo-400"></i>
+          Want to be a part of Invictus?
+        </h2>
+        <p class="text-slate-300 text-sm md:text-base font-mono">Join a community of elite developers, architects, and innovators.</p>
+      </div>
+      <a href="https://forms.gle/kiraSoGZT4oZyfji9" target="_blank" class="relative z-10 px-8 py-3 bg-white text-indigo-900 hover:bg-indigo-50 rounded-xl text-sm sm:text-base font-black uppercase tracking-wider transition-all transform hover:scale-105 hover:-translate-y-1 shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center gap-2 whitespace-nowrap">
+        <span>Join Now</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-slate-500 font-mono border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 pointer-events-auto">
+      <div>Crafted for <span class="text-amber-400 font-semibold">Yash B Koparde (Invictus Member)</span></div>
+      <div>Three.js 3D Interactive Canvas • Click anywhere to spawn particles!</div>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Repository Detail Modal -->
+  <div id="repo-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-panel max-w-xl w-full rounded-2xl p-6 border-indigo-500/30 space-y-6 relative shadow-2xl">
+      <button onclick="closeRepoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="space-y-2">
+        <span class="text-xs font-mono text-indigo-400 uppercase tracking-wider flex items-center space-x-2">
+          <i class="fas fa-bookmark"></i>
+          <span>Repository Details</span>
+        </span>
+        <h3 id="modal-repo-name" class="text-2xl font-bold text-white gradient-text">Repo Name</h3>
+        <p id="modal-repo-desc" class="text-slate-300 text-sm leading-relaxed">Repository description goes here.</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-xs font-mono bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+        <div>
+          <span class="text-slate-500 block">Primary Language</span>
+          <span id="modal-repo-lang" class="text-indigo-300 font-semibold text-sm">TypeScript</span>
+        </div>
+        <div>
+          <span class="text-slate-500 block">Stars / Forks</span>
+          <span id="modal-repo-stars" class="text-amber-300 font-semibold text-sm">★ 0</span>
+        </div>
+      </div>
+
+      <!-- Clone command -->
+      <div class="space-y-1">
+        <label class="text-xs font-mono text-slate-400">Clone Command:</label>
+        <div class="flex items-center space-x-2 bg-slate-900 border border-slate-800 rounded-xl p-2 font-mono text-xs text-slate-300">
+          <input type="text" id="modal-clone-cmd" readonly class="bg-transparent w-full focus:outline-none text-slate-300">
+          <button onclick="copyCloneCmd()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold">Copy</button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-3 pt-2">
+        <a id="modal-gh-link" href="#" target="_blank" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center space-x-2">
+          <i class="fab fa-github"></i>
+          <span>Open on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- External Data -->
+  <script src="data/hackathons.js"></script>
+
+  <!-- Application Script -->
+  <script>
+    let githubData = null;
+    let filteredRepos = [];
+    let displayedCount = 9;
+    let activeLanguage = 'All';
+    let audioEnabled = true;
+
+    // Web Audio Synthesizer for Interactive Clicks & Chimes
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(freq = 440, type = 'sine', duration = 0.08) {
+      if (!audioEnabled) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    document.getElementById('sound-toggle').addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      const label = document.getElementById('sound-label');
+      const icon = document.getElementById('sound-icon');
+      if (audioEnabled) {
+        label.innerText = 'Audio ON';
+        icon.className = 'fas fa-volume-up text-indigo-400';
+        playSound(600, 'sine', 0.1);
+      } else {
+        label.innerText = 'Audio OFF';
+        icon.className = 'fas fa-volume-mute text-slate-500';
+      }
+    });
+
+    const langColors = {
+      'TypeScript': '#3178c6',
+      'HTML': '#e34c26',
+      'Python': '#3572A5',
+      'JavaScript': '#f1e05a',
+      'C++': '#f34b7d',
+      'Java': '#b07219',
+      'Vue': '#41b883',
+      'CSS': '#563d7c',
+      'Other': '#8b5cf6'
+    };
+
+    async function loadData() {
+      try {
+        const response = await fetch('github_data.json');
+        if (response.ok) {
+          githubData = await response.json();
+          initDashboard();
+        } else {
+          throw new Error('Local JSON not found, fetching live API');
+        }
+      } catch (err) {
+        fetchLiveGitHubData();
+      }
+    }
+
+    async function fetchLiveGitHubData() {
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch('https://api.github.com/users/yashkoparde'),
+          fetch('https://api.github.com/users/yashkoparde/repos?per_page=100&sort=pushed')
+        ]);
+        
+        const user = await userRes.json();
+        const repos = await reposRes.json();
+
+        githubData = { user, repos };
+        initDashboard();
+      } catch (e) {
+        console.error('Failed to load GitHub data', e);
+      }
+    }
+
+    async function initDashboard() {
+      if (!githubData) return;
+      const { user, repos, leetcode, codeforces } = githubData;
+
+      renderHackathons();
+
+      // Update User Info
+      document.getElementById('user-name').innerText = user.name || user.login;
+      document.getElementById('user-handle').innerText = `@${user.login} • Invictus Member • ${user.location || 'Belgaum, India'}`;
+      document.getElementById('user-bio').innerText = user.bio ? `"${user.bio}"` : 'Busy Creating Architecture through Code';
+      if (user.avatar_url) document.getElementById('user-avatar').src = user.avatar_url;
+      if (user.company) document.getElementById('user-company').innerText = user.company;
+      if (user.blog) {
+        const blogElem = document.getElementById('user-blog');
+        blogElem.href = user.blog.startsWith('http') ? user.blog : `https://${user.blog}`;
+        blogElem.innerText = user.blog.replace('https://', '').replace('http://', '');
+      }
+
+      // Stats Counters
+      let totalStars = repos.reduce((acc, r) => acc + (r.stargazers_count || 0), 0);
+      let tsCount = repos.filter(r => r.language === 'TypeScript').length;
+      let totalContribs = 6333; // Fallback
+      let lcSolved = 327; // Fallback
+      let cfSolved = 14; // Fallback
+
+      // Codeforces Fetch
+      try {
+        const cfRes = await fetch(`https://codeforces.com/api/user.status?handle=${user.login}`);
+        const cfData = await cfRes.json();
+        if(cfData.status === 'OK') {
+           cfSolved = new Set(cfData.result.filter(s => s.verdict === 'OK').map(s => s.problem.name)).size;
+        }
+      } catch (e) { console.error('CF fetch error:', e); }
+
+      try {
+        const lcRes = await fetch(`https://alfa-leetcode-api.onrender.com/${user.login}/solved`);
+        const lcData = await lcRes.json();
+        if (lcData && lcData.solvedProblem) {
+          lcSolved = lcData.solvedProblem;
+          const lcTotalElem = document.getElementById('lc-total-count');
+          if (lcTotalElem) lcTotalElem.innerText = lcSolved;
+        }
+      } catch (e) { console.error('LC fetch error:', e); }
+
+      try {
+        const ghRes = await fetch(`https://github-contributions-api.jogruber.de/v4/${user.login}`);
+        const ghData = await ghRes.json();
+        if (ghData && ghData.total) {
+          let total = 0;
+          for (const year in ghData.total) {
+            if (!isNaN(parseInt(year))) {
+              total += ghData.total[year];
+            }
+          }
+          totalContribs = total;
+        }
+      } catch (e) { console.error('GH fetch error:', e); }
+
+      animateCounter('stat-leetcode-solved', lcSolved);
+      animateCounter('stat-contributions', totalContribs, '+');
+      animateCounter('stat-repos', user.public_repos || repos.length);
+      animateCounter('stat-stars', totalStars);
+      animateCounter('stat-cf-solved', cfSolved, '+');
+
+      document.getElementById('heatmap-contrib-count').innerText = `${totalContribs.toLocaleString()}+`;
+
+      renderLanguageBreakdown(repos);
+      renderFilters(repos);
+      filteredRepos = repos;
+      renderReposGrid();
+    }
+
+    function animateCounter(id, target, suffix = '') {
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: target,
+        duration: 1.5,
+        ease: 'power2.out',
+        onUpdate: () => {
+          const elem = document.getElementById(id);
+          if (elem) elem.innerText = Math.floor(obj.val).toLocaleString() + suffix;
+        }
+      });
+    }
+
+    function renderLanguageBreakdown(repos) {
+      const counts = {};
+      repos.forEach(r => {
+        if (r.language) {
+          counts[r.language] = (counts[r.language] || 0) + 1;
+        }
+      });
+
+      const total = repos.length;
+      const container = document.getElementById('language-bars');
+      container.innerHTML = '';
+
+      const sortedLangs = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+      sortedLangs.slice(0, 5).forEach(([lang, count]) => {
+        const pct = ((count / total) * 100).toFixed(1);
+        const color = langColors[lang] || langColors['Other'];
+
+        const div = document.createElement('div');
+        div.className = 'space-y-1';
+        div.innerHTML = `
+          <div class="flex justify-between text-xs font-mono">
+            <span class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${color}"></span>
+              <span class="text-slate-200">${lang}</span>
+            </span>
+            <span class="text-slate-400">${count} repos (${pct}%)</span>
+          </div>
+          <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-1000" style="width: ${pct}%; background-color: ${color}"></div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderFilters(repos) {
+      const langs = ['All'];
+      repos.forEach(r => {
+        if (r.language && !langs.includes(r.language)) langs.push(r.language);
+      });
+
+      const filterContainer = document.getElementById('filter-pills');
+      filterContainer.innerHTML = '';
+
+      langs.forEach(lang => {
+        const btn = document.createElement('button');
+        btn.className = `px-3 py-1.5 rounded-xl border transition cursor-pointer whitespace-nowrap ${
+          lang === activeLanguage
+            ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/30'
+            : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white'
+        }`;
+        btn.innerText = lang;
+        btn.onclick = () => {
+          playSound(520, 'sine', 0.05);
+          activeLanguage = lang;
+          renderFilters(repos);
+          filterAndRenderRepos();
+        };
+        filterContainer.appendChild(btn);
+      });
+    }
+
+    function filterAndRenderRepos() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      filteredRepos = githubData.repos.filter(r => {
+        const matchesLang = activeLanguage === 'All' || r.language === activeLanguage;
+        const matchesSearch = r.name.toLowerCase().includes(query) || (r.description && r.description.toLowerCase().includes(query));
+        return matchesLang && matchesSearch;
+      });
+      displayedCount = 9;
+      renderReposGrid();
+    }
+
+    function renderReposGrid() {
+      const grid = document.getElementById('repos-grid');
+      grid.innerHTML = '';
+
+      const itemsToRender = filteredRepos.slice(0, displayedCount);
+
+      if (itemsToRender.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-mono">No repositories match your criteria.</div>`;
+        document.getElementById('load-more-btn').style.display = 'none';
+        return;
+      }
+
+      itemsToRender.forEach(repo => {
+        const card = document.createElement('div');
+        card.className = 'glass-card rounded-xl p-5 flex flex-col justify-between border-slate-800 group cursor-pointer';
+        card.onclick = (e) => {
+          if (!e.target.closest('a')) {
+            openRepoModal(repo);
+          }
+        };
+
+        const langColor = langColors[repo.language] || langColors['Other'];
+
+        card.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-start justify-between">
+              <span class="font-bold text-white group-hover:text-indigo-400 transition text-base flex items-center space-x-2 truncate max-w-[80%]">
+                <i class="fas fa-bookmark text-xs text-indigo-400"></i>
+                <span class="truncate">${repo.name}</span>
+              </span>
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">
+                <i class="far fa-star text-amber-400 mr-1"></i>${repo.stargazers_count || 0}
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-400 line-clamp-2 h-9 leading-relaxed">
+              ${repo.description || 'No description provided.'}
+            </p>
+          </div>
+
+          <div class="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
+            <span class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${langColor}"></span>
+              <span>${repo.language || 'Code'}</span>
+            </span>
+
+            <div class="flex items-center space-x-3">
+              <a href="${repo.html_url}" target="_blank" class="hover:text-white" title="View Source"><i class="fab fa-github text-sm"></i></a>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      if (displayedCount >= filteredRepos.length) {
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'inline-block';
+      }
+    }
+
+    // Modal Handlers
+    function openRepoModal(repo) {
+      playSound(750, 'sine', 0.1);
+      document.getElementById('modal-repo-name').innerText = repo.name;
+      document.getElementById('modal-repo-desc').innerText = repo.description || 'No description provided for this repository.';
+      document.getElementById('modal-repo-lang').innerText = repo.language || 'General Code';
+      document.getElementById('modal-repo-stars').innerText = `★ ${repo.stargazers_count || 0} Stars | 🍴 ${repo.forks_count || 0} Forks`;
+      document.getElementById('modal-clone-cmd').value = `git clone ${repo.html_url}.git`;
+      document.getElementById('modal-gh-link').href = repo.html_url;
+
+      document.getElementById('repo-modal').classList.remove('hidden');
+    }
+
+    function closeRepoModal() {
+      playSound(350, 'sine', 0.08);
+      document.getElementById('repo-modal').classList.add('hidden');
+    }
+
+    function copyCloneCmd() {
+      const input = document.getElementById('modal-clone-cmd');
+      input.select();
+      navigator.clipboard.writeText(input.value);
+      playSound(880, 'triangle', 0.12);
+      alert('Clone command copied to clipboard!');
+    }
+
+    function scrollToSection(id) {
+      playSound(500, 'sine', 0.08);
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Event Listeners
+    document.getElementById('search-input').addEventListener('input', filterAndRenderRepos);
+    document.getElementById('load-more-btn').addEventListener('click', () => {
+      playSound(450, 'sine', 0.08);
+      displayedCount += 9;
+      renderReposGrid();
+    });
+
+    // ----------------------------------------------------
+    // THREE.JS INTERACTIVE 3D CANVAS & RAYCASTING
+    // ----------------------------------------------------
+    function initThreeJS() {
+      const container = document.getElementById('canvas-container');
+      const scene = new THREE.Scene();
+      
+      scene.fog = new THREE.FogExp2(0x05070f, 0.0018);
+
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 40;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Particle Field
+      const particleCount = 800;
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+
+      const colorPalette = [new THREE.Color(0x6366f1), new THREE.Color(0xa855f7), new THREE.Color(0xf59e0b), new THREE.Color(0x38bdf8)];
+
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * 120;
+        positions[i + 1] = (Math.random() - 0.5) * 120;
+        positions[i + 2] = (Math.random() - 0.5) * 120;
+
+        const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        colors[i] = c.r;
+        colors[i + 1] = c.g;
+        colors[i + 2] = c.b;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const particleMaterial = new THREE.PointsMaterial({
+        size: 0.85,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.75
+      });
+
+      const particleSystem = new THREE.Points(geometry, particleMaterial);
+      scene.add(particleSystem);
+
+      // Core Mesh
+      const coreGroup = new THREE.Group();
+
+      const coreGeo = new THREE.IcosahedronGeometry(12, 2);
+      const coreMat = new THREE.MeshBasicMaterial({
+        color: 0x6366f1,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.18
+      });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      coreGroup.add(coreMesh);
+
+      const innerGeo = new THREE.OctahedronGeometry(6, 0);
+      const innerMat = new THREE.MeshBasicMaterial({
+        color: 0xf59e0b,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35
+      });
+      const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+      coreGroup.add(innerMesh);
+
+      scene.add(coreGroup);
+
+      // Orbiting Nodes
+      const nodeGroup = new THREE.Group();
+      const nodeCount = 14;
+      const nodes = [];
+      const nodeMeshes = [];
+
+      for (let i = 0; i < nodeCount; i++) {
+        const nodeGeo = new THREE.DodecahedronGeometry(1.3, 0);
+        const nodeMat = new THREE.MeshBasicMaterial({
+          color: i % 2 === 0 ? 0x38bdf8 : (i % 3 === 0 ? 0xf59e0b : 0xec4899),
+          wireframe: true,
+          transparent: true,
+          opacity: 0.7
+        });
+        const node = new THREE.Mesh(nodeGeo, nodeMat);
+        
+        const angle = (i / nodeCount) * Math.PI * 2;
+        const radius = 22 + (Math.random() * 4 - 2);
+        node.position.x = Math.cos(angle) * radius;
+        node.position.y = (Math.random() - 0.5) * 15;
+        node.position.z = Math.sin(angle) * radius;
+        
+        nodeGroup.add(node);
+        nodes.push({ mesh: node, angle, radius, speed: 0.002 + Math.random() * 0.002 });
+        nodeMeshes.push(node);
+      }
+
+      scene.add(nodeGroup);
+
+      // Interactive Click Raycaster & Shockwave Burst
+      const raycaster = new THREE.Raycaster();
+      const mouseVec = new THREE.Vector2();
+
+      window.addEventListener('click', (e) => {
+        // Raycast check on 3D nodes
+        mouseVec.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseVec.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouseVec, camera);
+        const intersects = raycaster.intersectObjects(nodeMeshes);
+
+        if (intersects.length > 0) {
+          const hitObj = intersects[0].object;
+          playSound(900, 'square', 0.15);
+          gsap.to(hitObj.scale, { x: 2, y: 2, z: 2, duration: 0.3, yoyo: true, repeat: 1 });
+        } else {
+          // Click shockwave particle effect
+          playSound(300, 'sine', 0.06);
+          gsap.to(coreGroup.rotation, { y: coreGroup.rotation.y + 0.8, duration: 0.6, ease: 'back.out(1.7)' });
+        }
+      });
+
+      let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.0005;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.0005;
+      });
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        coreMesh.rotation.x += 0.001;
+        coreMesh.rotation.y += 0.002;
+        innerMesh.rotation.x -= 0.003;
+        innerMesh.rotation.y -= 0.002;
+
+        particleSystem.rotation.y += 0.0003;
+
+        nodes.forEach(n => {
+          n.angle += n.speed;
+          n.mesh.position.x = Math.cos(n.angle) * n.radius;
+          n.mesh.position.z = Math.sin(n.angle) * n.radius;
+          n.mesh.rotation.x += 0.01;
+          n.mesh.rotation.y += 0.01;
+        });
+
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+        camera.position.x = targetX * 30;
+        camera.position.y = -targetY * 30;
+        camera.lookAt(scene.position);
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }
+
+    function renderHackathons() {
+      const grid = document.getElementById('hackathons-grid');
+      if (!grid) return;
+      
+      if (typeof hackathonData === 'undefined' || hackathonData.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 font-mono">No hackathon data available yet. Add entries in data/hackathons.js</div>`;
+        return;
+      }
+
+      grid.innerHTML = '';
+      hackathonData.forEach(item => {
+        const imagesHtml = (item.images && item.images.length > 0) 
+          ? item.images.slice(0, 5).map(img => `<img src="${img}" alt="${item.title}" class="w-full h-full object-cover flex-shrink-0 snap-center transform group-hover:scale-105 transition duration-500">`).join('')
+          : `<img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">`;
+
+        grid.innerHTML += `
+          <div class="glass-card rounded-xl overflow-hidden border-slate-800 flex flex-col group relative">
+            <div class="h-40 overflow-hidden relative">
+              <div class="w-full h-full flex overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth">
+                ${imagesHtml}
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-3 left-4 right-4 flex justify-between items-end pointer-events-none">
+                <span class="px-2 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[10px] font-bold uppercase tracking-wider rounded backdrop-blur-sm">
+                  ${item.result || item.role}
+                </span>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <h3 class="text-lg font-bold text-white group-hover:text-amber-400 transition mb-1">${item.title}</h3>
+                <p class="text-xs text-slate-400 line-clamp-2">${item.description}</p>
+              </div>
+              <a href="${item.certificate}" target="_blank" class="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition">
+                <i class="fas fa-file-contract"></i>
+                <span>View Certificate</span>
+              </a>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      initThreeJS();
+      
+      // Hide loading screen after a short delay
+      setTimeout(() => {
+        const loader = document.getElementById('loading-screen');
+        if (loader) {
+          loader.classList.add('opacity-0');
+          setTimeout(() => loader.remove(), 1000);
+        }
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
