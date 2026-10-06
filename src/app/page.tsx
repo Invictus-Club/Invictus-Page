@@ -351,7 +351,96 @@ export default function PremiumInvictus() {
       }
     );
 
+    // INSANE PREMIUM LEADERSHIP REVEAL
+    const leadTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".lead-section",
+        start: "top 75%",
+      }
+    });
+
+    gsap.utils.toArray(".lead-character").forEach((char: any, i) => {
+      const curtain = char.querySelector(".curtain");
+      const img = char.querySelector(".lead-img");
+      const chars = char.querySelectorAll(".insane-char");
+      const pos = char.querySelector(".insane-pos");
+      
+      // Curtain slides away vertically
+      leadTl.fromTo(curtain, 
+        { scaleY: 1, transformOrigin: "bottom" }, 
+        { scaleY: 0, duration: 1.2, ease: "expo.inOut" }, 
+        i * 0.3
+      );
+
+      // Image zooms out elegantly
+      leadTl.fromTo(img, 
+        { scale: 1.5, filter: "brightness(0.5) contrast(1.2)" }, 
+        { scale: 1, filter: "brightness(1) contrast(1)", duration: 2, ease: "power3.out" }, 
+        i * 0.3 + 0.4
+      );
+
+      // Position text slides up from clipping mask
+      leadTl.fromTo(pos, 
+        { y: "100%" }, 
+        { y: "0%", duration: 0.8, ease: "expo.out" }, 
+        i * 0.3 + 0.8
+      );
+
+      // Name characters fly in with 3D rotation and extreme back-easing
+      if (chars.length > 0) {
+        leadTl.fromTo(chars, 
+          { y: 50, opacity: 0, rotationX: -90, scale: 0.5 }, 
+          { y: 0, opacity: 1, rotationX: 0, scale: 1, duration: 0.8, stagger: 0.04, ease: "back.out(2)" }, 
+          i * 0.3 + 0.9
+        );
+      }
+    });
+
+    // Team Members Entrance and Drone Shot Animation
+    gsap.fromTo(".team-member", 
+      { opacity: 0, y: 30, scale: 0.95 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".team-member",
+          start: "top 85%",
+        }
+      }
+    );
+    
+    gsap.utils.toArray(".team-drone-shot").forEach((shot: any) => {
+      gsap.to(shot, {
+        scale: 1.2,
+        ease: "none",
+        scrollTrigger: {
+          trigger: shot.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+
   }, { scope: containerRef });
+
+  // ----------------------------------------------------
+  // TEAM DATA (Store images in public/team/)
+  // ----------------------------------------------------
+  const teamData = [
+    { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "/team/chaitrali-mam.jpg", type: "lead" },
+    { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpg", type: "lead" },
+    { name: "Rahul Shirol", position: "Vice President", image: "/team/rahul-shirol.jpg", type: "lead" },
+    { name: "Sarah Johnson", position: "Technical Lead", image: "/team/tech-lead.jpg", type: "normal" },
+    { name: "Michael Chang", position: "Design Lead", image: "/team/design-lead.jpg", type: "normal" },
+    { name: "Emily Davis", position: "Events Lead", image: "/team/events-lead.jpg", type: "normal" },
+    { name: "David Kim", position: "Operations Lead", image: "/team/operations-lead.jpg", type: "normal" },
+    { name: "Olivia Martinez", position: "Marketing Lead", image: "/team/marketing-lead.jpg", type: "normal" }
+  ];
 
   return (
     <main ref={containerRef} className="bg-black min-h-screen text-white selection:bg-[#FFD60A] selection:text-black font-sans overflow-clip">
@@ -663,7 +752,7 @@ export default function PremiumInvictus() {
               <div className="w-full md:w-3/6 text-2xl sm:text-3xl font-black tracking-tighter mt-1 md:mt-0 text-stroke relative z-10">{ev.name}</div>
               <div className="w-full md:w-1/6 text-xs font-bold tracking-widest text-gray-500 mt-2 md:mt-0 relative z-10">{ev.category}</div>
               <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center mt-4 md:mt-0 relative z-10">
-                <span className={`text-[10px] sm:text-xs font-bold tracking-widest px-3 py-1 rounded-full border ${ev.status === 'OPEN' || ev.status === 'ONGOING' || ev.status === 'UPCOMING' ? 'border-[#FFD60A] text-[#FFD60A]' : 'border-gray-700 text-gray-500'}`}>
+                <span className={`text-[10px] sm:text-xs font-bold tracking-widest px-3 py-1 rounded-full border ${ev.status === 'ONGOING' || ev.status === 'UPCOMING' ? 'border-[#FFD60A] text-[#FFD60A]' : 'border-gray-700 text-gray-500'}`}>
                   {ev.status}
                 </span>
                 <ChevronRight className="hidden md:block ml-4 text-gray-600 group-hover:text-[#FFD60A] transition-colors" />
@@ -679,6 +768,63 @@ export default function PremiumInvictus() {
           <div className="marquee-content text-[5rem] sm:text-[8rem] md:text-[12rem] font-black tracking-tighter uppercase leading-none opacity-20">
             BUILDERS DESIGNERS DEVELOPERS RESEARCHERS MAKERS THINKERS FOUNDERS COMPETITORS 
           </div>
+        </div>
+      </section>
+
+      {/* 10. TEAM SECTION */}
+      <section id="team" className="py-20 sm:py-32 px-6 md:px-16 border-b border-gray-800 bg-[#050505] overflow-hidden">
+        <div className="flex flex-col mb-12 sm:mb-20 max-w-7xl mx-auto">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4">Core Team</h2>
+        </div>
+        
+        {/* LEADERSHIP (INSANE REVEAL) */}
+        <div className="lead-section grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+          {teamData.filter(m => m.type === 'lead').map((member, i) => (
+            <div key={i} className="lead-character relative flex flex-col group cursor-pointer perspective-1000">
+              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-black shadow-[0_0_50px_rgba(255,214,10,0.1)] border border-gray-800">
+                <img 
+                  src={member.image} 
+                  alt={member.name} 
+                  className="lead-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
+                  onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop" }} // Fallback if local image missing
+                />
+                <div className="curtain absolute inset-0 bg-[#050505] z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
+                
+                <div className="absolute bottom-6 left-6 right-6 z-20">
+                  <div className="overflow-hidden mb-2">
+                    <p className="insane-pos text-[#FFD60A] text-xs font-bold tracking-[0.25em] uppercase">{member.position}</p>
+                  </div>
+                  
+                  <h3 className="text-3xl md:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,1)] flex flex-wrap" style={{ perspective: 400 }}>
+                    {member.name.split('').map((char, index) => (
+                      <span key={index} className="insane-char inline-block" style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}>
+                        {char}
+                      </span>
+                    ))}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* OTHER MEMBERS (NORMAL REVEAL) */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto">
+          {teamData.filter(m => m.type === 'normal').map((member, i) => (
+            <div key={i} className="team-member flex flex-col group cursor-pointer">
+              <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 border border-gray-800 group-hover:border-gray-500 transition-colors bg-black">
+                <img 
+                  src={member.image} 
+                  alt={member.name} 
+                  className="team-drone-shot absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+              </div>
+              <h3 className="text-base sm:text-lg font-black tracking-tighter text-white group-hover:text-[#FFD60A] transition-colors">{member.name}</h3>
+              <p className="text-[10px] font-bold tracking-widest text-gray-500 uppercase mt-1">{member.position}</p>
+            </div>
+          ))}
         </div>
       </section>
 
