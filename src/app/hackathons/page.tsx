@@ -44,7 +44,12 @@ export default function HackathonsPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
     window.scrollTo(0, 0);
+    
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -52,6 +57,7 @@ export default function HackathonsPage() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
     });
+    lenis.scrollTo(0, { immediate: true });
     
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));

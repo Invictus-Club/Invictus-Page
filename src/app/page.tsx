@@ -214,6 +214,16 @@ export default function PremiumInvictus() {
       touchMultiplier: 2,
     });
 
+    // Auto-scroll to hash if present (fixes returning to #opportunities)
+    if (window.location.hash) {
+      setTimeout(() => {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          lenis.scrollTo(target, { immediate: true });
+        }
+      }, 100);
+    }
+
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);

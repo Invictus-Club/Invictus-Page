@@ -3,8 +3,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Mail, Lock, User, Code, Activity } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { ArrowLeft, Mail, Lock, User } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -13,12 +12,8 @@ export default function CreateProfile() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [usn, setUsn] = useState("");
   const [username, setUsername] = useState("");
-  const [github, setGithub] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [leetcode, setLeetcode] = useState("");
-  const [codeforces, setCodeforces] = useState("");
   
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,12 +39,8 @@ export default function CreateProfile() {
           password,
           options: {
             data: {
-              full_name: fullName,
-              username: username.toLowerCase().replace(/[^a-z0-9]/g, ''),
-              github: github,
-              linkedin: linkedin,
-              leetcode: leetcode,
-              codeforces: codeforces
+              usn: usn,
+              username: username.toLowerCase().replace(/[^a-z0-9]/g, '')
             }
           }
         });
@@ -66,12 +57,8 @@ export default function CreateProfile() {
         .from('profiles')
         .upsert({
           id: userId,
-          full_name: fullName,
+          usn: usn,
           username: username.toLowerCase().replace(/[^a-z0-9]/g, ''),
-          github: github || 'NoGithubProvided',
-          linkedin: linkedin,
-          leetcode: leetcode,
-          codeforces: codeforces,
           updated_at: new Date().toISOString()
         }, {
           onConflict: 'id'
@@ -108,14 +95,10 @@ export default function CreateProfile() {
           transition={{ duration: 0.6 }}
           className="w-full bg-[#050505] border border-gray-800 p-6 sm:p-10 shadow-2xl rounded-2xl sm:rounded-none"
         >
-          <div className="mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl font-black text-white mb-2 flex items-center gap-2.5 sm:gap-3 uppercase tracking-tighter">
-              <ShieldCheck className="text-[#FFD60A] shrink-0" size={28} />
-              Join the Movement
+          <div className="mb-6 sm:mb-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter">
+              Join Invictus
             </h2>
-            <p className="text-sm text-gray-500 font-medium">
-              Create your account and link your identities to auto-generate your elite developer dashboard.
-            </p>
           </div>
 
           {error && (
@@ -131,10 +114,10 @@ export default function CreateProfile() {
               <h3 className="text-xs font-bold tracking-widest text-gray-400 border-b border-gray-800 pb-2">ACCOUNT DETAILS</h3>
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Full Name</label>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">USN</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
-                    <input type="text" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-gray-200 transition-colors" />
+                    <input type="text" placeholder="2GI21CS000" value={usn} onChange={(e) => setUsn(e.target.value)} required className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-gray-200 transition-colors" />
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -162,43 +145,7 @@ export default function CreateProfile() {
               </div>
             </div>
 
-            {/* Developer Links */}
-            <div className="space-y-4 pt-4">
-              <h3 className="text-xs font-bold tracking-widest text-gray-400 border-b border-gray-800 pb-2">DEVELOPER LINKS</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">GitHub Link</label>
-                  <div className="relative">
-                    <FaGithub className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
-                    <input type="text" placeholder="github.com/yashkoparde" value={github} onChange={(e) => setGithub(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-gray-200 transition-colors" />
-                  </div>
-                </div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">LinkedIn Link</label>
-                  <div className="relative">
-                    <FaLinkedin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
-                    <input type="text" placeholder="linkedin.com/in/yash-koparde" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-gray-200 transition-colors" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">LeetCode Link</label>
-                  <div className="relative">
-                    <Code className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
-                    <input type="text" placeholder="leetcode.com/yashkoparde" value={leetcode} onChange={(e) => setLeetcode(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-gray-200 transition-colors" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Codeforces Link</label>
-                  <div className="relative">
-                    <Activity className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
-                    <input type="text" placeholder="codeforces.com/profile/yashkoparde" value={codeforces} onChange={(e) => setCodeforces(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 text-sm focus:outline-none focus:border-[#FFD60A] text-gray-200 transition-colors" />
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <button 
               type="submit" 

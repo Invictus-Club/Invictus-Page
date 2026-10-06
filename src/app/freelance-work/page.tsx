@@ -39,7 +39,12 @@ function DynamicRing() {
 
 export default function FreelanceWorkPage() {
   useEffect(() => {
+    
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
     window.scrollTo(0, 0);
+    
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

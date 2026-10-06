@@ -31,7 +31,7 @@ export default function Profile() {
       .eq("id", user.id)
       .single();
 
-    const fullName = profile?.full_name || user.user_metadata.full_name || "Developer";
+    const fullName = profile?.username || user.user_metadata?.username || "Developer";
     
     // Extract github username
     const extractUsername = (url: string | null) => {
@@ -144,7 +144,7 @@ export default function Profile() {
           <span className="text-xs font-bold tracking-widest hidden sm:block">SIGN OUT</span>
         </button>
         <button 
-          onClick={() => router.push("/create-profile")}
+          onClick={() => router.push("/edit-socials")}
           className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-lg hover:bg-white transition-colors shadow-xl"
         >
           Edit Socials

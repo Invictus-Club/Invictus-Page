@@ -66,7 +66,12 @@ export default function OffsiteProjectDevPage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
     window.scrollTo(0, 0);
+    
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -74,6 +79,7 @@ export default function OffsiteProjectDevPage() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
     });
+    lenis.scrollTo(0, { immediate: true });
     
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
@@ -89,7 +95,10 @@ export default function OffsiteProjectDevPage() {
           trigger: ".travel-container",
           pin: true,
           scrub: 1,
-          end: () => "+=" + (document.querySelector(".travel-container") as HTMLElement).offsetWidth * 2
+          end: () => {
+            const el = document.querySelector(".travel-container") as HTMLElement;
+            return el ? "+=" + el.offsetWidth * 2 : "+=0";
+          }
         }
       });
       
