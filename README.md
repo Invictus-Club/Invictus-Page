@@ -1,93 +1,224 @@
-<div align="center">
-  <h1 align="center">🏆 Invictus Club</h1>
-  <p align="center">
-    <strong>The Elite Developer Hub for VTU Students</strong>
-  </p>
-  <p align="center">
-    A premium, ultra-modern Next.js platform showcasing the culture, vision, events, and victories of the Invictus squad.
-  </p>
-</div>
+# Invictus Club Platform
 
-<br />
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16.3.8-black?style=for-the-badge&logo=nextdotjs" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19.2.8-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4.0-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+</p>
 
-## 🚀 Quick Start
+---
 
-To get the project running locally on your machine:
+## Executive Summary
+
+**Invictus Club Platform** is the flagship web application for Invictus Club, an elite technical community and developer hub. Built with Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS v4, the platform showcases club initiatives, national hackathon victories, upcoming events, research publications, freelance offerings, and member portfolios.
+
+> [!NOTE]
+> Designed for high-performance deployment on Vercel with automated build optimizations, dynamic routes, and static generation.
+
+---
+
+## High-Level Architecture (HLA)
+
+The system follows a modern Jamstack pattern leveraging Next.js App Router, edge caching, static site generation (SSG), server-side rendering (SSR), and Supabase Backend-as-a-Service.
+
+```mermaid
+flowchart TD
+    Client["Client Browser"] --> CDN["Vercel Edge Network / CDN"]
+    CDN --> NextServer["Next.js Server (App Router)"]
+    NextServer --> DynamicRoutes["Dynamic Routes (/p/[username], /profile)"]
+    NextServer --> StaticPages["Prerendered Static Pages (/wins, /events)"]
+    DynamicRoutes --> SupabaseAuth["Supabase Authentication Service"]
+    DynamicRoutes --> SupabaseDB["Supabase PostgreSQL Database"]
+    NextServer --> DataStore["Local Data Modules (src/data/)"]
+    DataStore --> MediaAssets["Public Image & Static Assets"]
+```
+
+---
+
+## Low-Level Architecture (LLA)
+
+```mermaid
+flowchart LR
+    subgraph Presentation["Presentation Tier (Client & SSR)"]
+        Layout["Root Layout & Glass Navbar"]
+        ThreeCanvas["Three.js / React Three Fiber Canvas"]
+        GSAP["GSAP & Framer Motion Animations"]
+        Lenis["Lenis Smooth Scroll Engine"]
+    end
+
+    subgraph Routing["Application Routes (src/app)"]
+        HomeRoute["/ Landing Page"]
+        EventsRoute["/events Showcase"]
+        WinsRoute["/wins Victory Showcase"]
+        ProfileRoute["/profile & /create-profile"]
+        PublicRoute["/p/[username] Portfolio View"]
+        DevRoute["/offsite-project-dev & /freelance-work"]
+    end
+
+    subgraph DataTier["Data & Integration Tier"]
+        WinsData["src/data/wins.ts Data Store"]
+        EventsData["src/data/events.ts Data Store"]
+        SupaClient["src/lib/supabase.ts Client"]
+    end
+
+    Presentation --> Routing
+    ThreeCanvas --> HomeRoute
+    GSAP --> Presentation
+    Lenis --> Presentation
+    Routing --> DataTier
+```
+
+---
+
+## About Invictus Club
+
+Invictus Club is a premier student developer committee dedicated to engineering excellence, competitive programming, hackathon dominance, and cutting-edge software development. Members collaborate on real-world industry applications, publish academic research, and compete at national-level hackathons.
+
+### Key Benefits of Joining Invictus Club
+
+- **Monthly Offsite Travel & Retreats**: Unwind and build team cohesion with sponsored offsite trips, hackathon travel support, and team getaways across nature spots and tech hubs.
+- **Bi-Weekly Hangouts**: Casual meetups, informal gaming sessions, technical code jams, and pizza nights to foster authentic friendships outside of project deadlines.
+- **Weekly Google Meet Syncs**: Regular online committee check-ins, project progress reviews, mentorship office hours, and knowledge sharing ensuring every member feels a strong sense of community and active ownership.
+
+---
+
+## Key Features & Platform Modules
+
+| Route | Description | Technical Highlights |
+| :--- | :--- | :--- |
+| `/` | Main Club Portal | Three.js interactive 3D mesh canvas, GSAP timeline animations, responsive achievement metrics |
+| `/wins` | Hall of Fame | Categorized grid displaying trophies, certificates, prize details, and lightbox preview modals |
+| `/events` | Club Timeline | Categorized event cards (Upcoming, Ongoing, Past) with gallery trigger previews |
+| `/hackathons` | National Competitions | Detailed breakdown of national hackathon entries, prize money, and winning team rosters |
+| `/ideathons` | Innovation Pitches | Innovation problem statements grid, tech stack tags, and judging criteria modals |
+| `/project-contests` | Coding Challenges | Competition listings, guidelines, and project submission leaderboards |
+| `/offsite-project-dev` | Client Development | Portfolio showcasing offsite client software projects engineered by club members |
+| `/freelance-work` | Developer Intake | Client inquiry form and freelance service catalog |
+| `/paper-poster` | Academic Publications | Conference paper catalog, citation links, and abstract reader modals |
+| `/research` | Club Research | Research domains overview, paper downloads, and academic contributions |
+| `/profile` | Member Dashboard | Protected user profile manager with dynamic portfolio preview iframe |
+| `/create-profile` | Profile Editor | Interactive profile details form and social handles builder |
+| `/p/[username]` | Public Developer Portfolios | Dynamic route serving standalone rendered developer profile portfolios |
+
+---
+
+## Project Directory Structure
+
+```
+invictus-club/
+|-- src/
+|   |-- app/
+|   |   |-- layout.tsx
+|   |   |-- page.tsx
+|   |   |-- globals.css
+|   |   |-- create-profile/page.tsx
+|   |   |-- events/page.tsx
+|   |   |-- freelance-work/page.tsx
+|   |   |-- hackathons/page.tsx
+|   |   |-- ideathons/page.tsx
+|   |   |-- login/page.tsx
+|   |   |-- offsite-project-dev/page.tsx
+|   |   |-- p/[username]/page.tsx
+|   |   |-- paper-poster/page.tsx
+|   |   |-- profile/page.tsx
+|   |   |-- project-contests/page.tsx
+|   |   |-- research/page.tsx
+|   |   `-- wins/
+|   |       |-- page.tsx
+|   |       `-- WinsClient.tsx
+|   |-- components/
+|   |   |-- Navbar.tsx
+|   |   |-- Footer.tsx
+|   |   `-- home/OpportunitiesSection.tsx
+|   |-- data/
+|   |   |-- events.ts
+|   |   `-- wins.ts
+|   `-- lib/
+|       `-- supabase.ts
+|-- public/
+|   |-- portfolio-profile.html
+|   `-- images, icons, banners
+|-- package.json
+|-- tsconfig.json
+|-- next.config.ts
+`-- README.md
+```
+
+---
+
+## Local Development Setup
+
+> [!IMPORTANT]
+> Ensure Node.js 18+ and npm are installed on your machine before running the setup commands.
+
+### 1. Clone & Install Dependencies
 
 ```bash
-# 1. Install dependencies
+git clone https://github.com/yashkoparde/Invictus.git
+cd Invictus
 npm install
+```
 
-# 2. Start the development server
+### 2. Configure Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 3. Run Development Server
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the site in action.
+Open `http://localhost:3000` in your web browser.
 
 ---
 
-## 📂 Project Structure
+## Production Build & Vercel Deployment
 
-This project is built using the Next.js App Router. Here's a quick map of where everything lives:
+To test a production build locally:
 
-- **`src/app/`** - The main application code and routes.
-  - **`page.tsx`** - The landing page.
-  - **`events/`** - The Timeline / Events subpage.
-  - **`wins/`** - The Hall of Fame subpage.
-- **`src/data/`** - **THIS IS WHERE YOU MANAGE CONTENT.** (See below)
-- **`src/app/api/images/`** - A custom internal API that seamlessly serves your photos to the frontend.
+```bash
+npm run build
+npm run start
+```
 
----
+### Deploying to Vercel
 
-## 🛠️ How to Maintain Content
+1. Push your changes to GitHub.
+2. Import the repository in [Vercel Dashboard](https://vercel.com).
+3. Set the Framework Preset to **Next.js**.
+4. Add environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+5. Click **Deploy**.
 
-We've designed the codebase so you never have to touch the complex React/UI code just to add a new event or a hackathon win. All content is driven by simple configuration files.
-
-### 1. Adding/Editing "Hall of Fame" Wins
-All hackathon wins are managed in **`src/data/wins.ts`** and their photos live in **`src/data/photos/`**.
-
-**To add a new win:**
-1. Pick the next available ID number (e.g., if the last one was `14`, use `15`).
-2. Create a new folder for your images: `src/data/photos/15/`.
-3. Drop your `.jpg` or `.png` images into that folder. (We recommend naming them simply, like `1.jpg`, `2.jpg`).
-4. Open `src/data/wins.ts` and add a new block to the array:
-   ```typescript
-   {
-     id: "15",
-     name: "Awesome Web3 Hackathon",
-     location: "Online",
-     position: "1st Place",
-     displayDate: "Oct 2026",
-     sortDate: "2026-10-01", // Used to auto-sort chronologically
-     images: [
-       "/api/images/15/1.jpg", 
-       "/api/images/15/2.jpg"
-     ]
-   }
-   ```
-*That's it! The homepage and Hall of Fame page will automatically update, create the image sliders, and apply all animations.*
-
-### 2. Adding/Editing Events
-All events are managed in **`src/data/events.ts`**.
-
-**To add a new event:**
-1. Open `src/data/events.ts`.
-2. Add a new block to the array:
-   ```typescript
-   {
-     id: "new-unique-id",
-     name: "Next-Gen AI Workshop",
-     date: "2026-11-15",
-     category: "WORKSHOP",
-     status: "UPCOMING" // Valid options: "UPCOMING", "ONGOING", "PAST"
-   }
-   ```
-*The Events page will automatically categorize it into the correct section based on the `status` you provide.*
+> [!TIP]
+> Next.js 16 Turbopack is pre-configured in `next.config.ts` for fast build execution times on Vercel infrastructure.
 
 ---
 
-## 🎨 Tech Stack Highlights
-- **Framework:** Next.js 14+ (App Router)
-- **Styling:** TailwindCSS
-- **Animations:** Framer Motion (Butter-smooth fisheye swoops, spring physics) & GSAP (ScrollTriggers)
-- **3D Graphics:** React Three Fiber / Drei (Abstract wireframes, animated Torus knots)
+## Content Management Guide
+
+All events and victory entries are managed via lightweight TypeScript data modules without needing database edits:
+
+- **Adding Wins**: Update `src/data/wins.ts` with victory details, position, display dates, and image paths.
+- **Adding Events**: Update `src/data/events.ts` with event titles, status (`UPCOMING`, `ONGOING`, `PAST`), and categories.
+
+---
+
+## Technology Stack
+
+- **Framework**: Next.js 16 (Turbopack, App Router)
+- **Language**: TypeScript 5
+- **UI & Components**: React 19, Lucide React Icons
+- **Styling**: Tailwind CSS v4, PostCSS
+- **Animations**: GSAP (ScrollTrigger), Framer Motion, Lenis Smooth Scroll
+- **3D Graphics**: Three.js, React Three Fiber, React Three Drei
+- **Backend & Auth**: Supabase JavaScript SDK
+- **Deployment Platform**: Vercel Edge Network
