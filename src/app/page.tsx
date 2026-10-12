@@ -506,9 +506,9 @@ function Navbar() {
         </h2>
         
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto max-w-xs sm:max-w-none">
-          <Link href="/create-profile" className="w-full sm:w-auto">
+          <Link href="#opportunities" className="w-full sm:w-auto">
             <button className="bg-white text-black px-8 sm:px-12 py-4 sm:py-5 text-sm font-bold tracking-widest hover:bg-[#FFD60A] transition-all w-full sm:w-auto">
-              JOIN INVICTUS
+              VIEW OPPORTUNITIES
             </button>
           </Link>
           <Link href="#events" className="w-full sm:w-auto">
