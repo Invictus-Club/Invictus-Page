@@ -93,15 +93,6 @@ function Navbar() {
           <Link href="/wins" className="hover:text-[#FFD60A] transition-colors">WINS</Link>
         </div>
         <div className="flex items-center gap-4">
-          {session ? (
-            <Link href="/profile" className="hidden md:block bg-[#FFD60A] text-black px-6 py-2.5 text-xs font-bold tracking-widest hover:bg-white transition-colors">
-              GO TO DASHBOARD
-            </Link>
-          ) : (
-            <Link href="/create-profile" className="hidden md:block bg-white text-black px-6 py-2.5 text-xs font-bold tracking-widest hover:bg-[#FFD60A] transition-colors">
-              JOIN INVICTUS
-            </Link>
-          )}
           <button 
             type="button" 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
