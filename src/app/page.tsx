@@ -69,7 +69,6 @@ function Hero3D() {
   );
 }
 
-import { supabase } from "@/lib/supabase";
 import winsData from "@/data/wins";
 import eventsData from "@/data/events";
 
@@ -77,18 +76,10 @@ import eventsData from "@/data/events";
 // NAVIGATION
 // ----------------------------------------------------
 function Navbar() {
-  const [session, setSession] = useState<unknown>(null);
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+  
 
   return (
     <>
