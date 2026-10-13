@@ -78,3 +78,52 @@ body {
   -webkit-text-stroke: 1px var(--invictus-yellow);
   color: var(--invictus-yellow);
 }
+
+/* Glassmorphism & Cyber Aesthetics for Portfolio */
+.glass-panel {
+  background: rgba(10, 14, 26, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+.glass-card {
+  background: rgba(15, 21, 38, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(22, 30, 56, 0.85);
+  border-color: rgba(255, 214, 10, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(255, 214, 10, 0.2);
+}
+
+.pulse-avatar {
+  box-shadow: 0 0 0 0 rgba(255, 214, 10, 0.7);
+  animation: pulse-avatar-glow 2.5s infinite;
+}
+
+@keyframes pulse-avatar-glow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 214, 10, 0.6); }
+  70% { box-shadow: 0 0 0 16px rgba(255, 214, 10, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 214, 10, 0); }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFD60A 60%, #FFAA00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
