@@ -42,3 +42,11 @@ next-env.d.ts
 
 # standalone experimental folders
 bhūnīti-lab/
+
+# private maintenance tools (not hosted)
+maintainer-gui/
+admin-manager.py
+tools/
+invictus-admin-web/
+launch_admin_web.bat
+
