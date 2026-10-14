@@ -76,10 +76,7 @@ import eventsData from "@/data/events";
 // NAVIGATION
 // ----------------------------------------------------
 function Navbar() {
-  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  
 
   return (
     <>
@@ -146,8 +143,300 @@ function Navbar() {
           </div>
 
           <div className="pt-8 flex flex-col gap-3">
-            <Link href="#opportunities" onClick={() => setMobileMenuOpen(false)} className="w-full text-center bg-[#FFD60A] text-black py-3.5 text-xs font-bold tracking-widest hover:bg-white transition-colors uppercase">
+            <Link 
+              href="#opportunities" 
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center bg-[#FFD60A] text-black py-3.5 text-xs font-bold tracking-widest hover:bg-white transition-colors uppercase"
+            >
               EXPLORE OPPORTUNITIES
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ----------------------------------------------------
+// PAGE COMPONENT
+// ----------------------------------------------------
+export default function PremiumInvictus() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+    });
+
+    // Auto-scroll to hash if present (fixes returning to #opportunities)
+    if (window.location.hash) {
+      setTimeout(() => {
+        const target = document.querySelector(window.location.hash) as HTMLElement | null;
+        if (target) {
+          lenis.scrollTo(target, { immediate: true });
+        }
+      }, 100);
+    }
+
+    // Connect Lenis to ScrollTrigger and GSAP ticker
+    lenis.on('scroll', ScrollTrigger.update);
+    const tickerUpdate = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerUpdate);
+    gsap.ticker.lagSmoothing(0, 0);
+
+    return () => {
+      lenis.destroy();
+      gsap.ticker.remove(tickerUpdate);
+      ScrollTrigger.refresh();
+    };
+  }, []);
+  
+  useGSAP(() => {
+    // Cinematic Showcase Animation 1
+    const showcaseTl1 = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#culture-1",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+        pin: true
+      }
+    });
+
+    showcaseTl1
+      .to("#culture-1 .drone-shot", { scale: 1.2, opacity: 0.8, ease: "none" }, 0)
+      .fromTo("#culture-1 .center-element", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, ease: "power2.out" }, 0)
+      .fromTo("#culture-1 .float-img-1", { y: "50vh", rotation: -15, scale: 0.8 }, { y: "-20vh", rotation: 5, scale: 1.1, ease: "none" }, 0)
+      .fromTo("#culture-1 .float-img-2", { y: "60vh", rotation: 10, scale: 0.9 }, { y: "-30vh", rotation: -5, scale: 1.2, ease: "none" }, 0)
+      .fromTo("#culture-1 .float-img-3", { x: -100, y: "40vh", rotation: -20 }, { x: 50, y: "-10vh", rotation: 10, ease: "none" }, 0)
+      .fromTo("#culture-1 .float-img-4", { x: 100, y: "50vh", rotation: 20 }, { x: -50, y: "-15vh", rotation: -10, ease: "none" }, 0);
+
+    // Cinematic Showcase Animation 2
+    const showcaseTl2 = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#culture-2",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+        pin: true
+      }
+    });
+
+    showcaseTl2
+      .to("#culture-2 .drone-shot-2", { scale: 1.2, opacity: 0.8, ease: "none" }, 0)
+      .fromTo("#culture-2 .center-element-2", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, ease: "power2.out" }, 0)
+      .fromTo("#culture-2 .float-img-2-1", { y: "50vh", rotation: 15, scale: 0.8 }, { y: "-20vh", rotation: -5, scale: 1.1, ease: "none" }, 0)
+      .fromTo("#culture-2 .float-img-2-2", { y: "60vh", rotation: -10, scale: 0.9 }, { y: "-30vh", rotation: 5, scale: 1.2, ease: "none" }, 0)
+      .fromTo("#culture-2 .float-img-2-3", { x: 100, y: "40vh", rotation: 20 }, { x: -50, y: "-10vh", rotation: -10, ease: "none" }, 0)
+      .fromTo("#culture-2 .float-img-2-4", { x: -100, y: "50vh", rotation: -20 }, { x: 50, y: "-15vh", rotation: 10, ease: "none" }, 0);
+
+    // Element by Element Stagger Animations for Events and Achievements
+    gsap.fromTo(".event-item", 
+      { opacity: 0, x: -50 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.4,
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: "#events",
+          start: "top 80%",
+        }
+      }
+    );
+
+    gsap.fromTo(".achievement-item", 
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: "#achievements",
+          start: "top 80%",
+        }
+      }
+    );
+
+    // Smooth, elegant entrance for Editorial Panels
+    gsap.fromTo(".warp-panel", 
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#editorial",
+          start: "top 75%",
+        }
+      }
+    );
+
+    // Pinned How it works
+    ScrollTrigger.create({
+      trigger: ".pinned-container",
+      start: "top top",
+      end: "+=300%",
+      pin: true,
+      animation: gsap.to(".pinned-content", {
+        xPercent: -75,
+        ease: "none"
+      }),
+      scrub: 1
+    });
+
+    // Phonk Style Edit Card Reveal
+    gsap.fromTo(".opportunity-card", 
+      { scale: 1.1, opacity: 0, rotationZ: 5, filter: "brightness(2) contrast(1.5)" },
+      { 
+        scale: 1, 
+        opacity: 1, 
+        rotationZ: 0,
+        filter: "brightness(1) contrast(1)",
+        duration: 0.5, 
+        stagger: 0.1, 
+        ease: "expo.out", 
+        scrollTrigger: { trigger: "#opportunities", start: "top 70%" } 
+      }
+    );
+
+    // INSANE PREMIUM LEADERSHIP REVEAL
+    const leadTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".lead-section",
+        start: "top 75%",
+      }
+    });
+
+    gsap.utils.toArray(".lead-character").forEach((char: any, i) => {
+      const curtain = char.querySelector(".curtain");
+      const img = char.querySelector(".lead-img");
+      const chars = char.querySelectorAll(".insane-char");
+      const pos = char.querySelector(".insane-pos");
+      
+      // Curtain slides away vertically
+      leadTl.fromTo(curtain, 
+        { scaleY: 1, transformOrigin: "bottom" }, 
+        { scaleY: 0, duration: 1.2, ease: "expo.inOut" }, 
+        i * 0.3
+      );
+
+      // Image zooms out elegantly
+      leadTl.fromTo(img, 
+        { scale: 1.5, filter: "brightness(0.5) contrast(1.2)" }, 
+        { scale: 1, filter: "brightness(1) contrast(1)", duration: 2, ease: "power3.out" }, 
+        i * 0.3 + 0.4
+      );
+
+      // Position text slides up from clipping mask
+      leadTl.fromTo(pos, 
+        { y: "100%" }, 
+        { y: "0%", duration: 0.8, ease: "expo.out" }, 
+        i * 0.3 + 0.8
+      );
+
+      // Name characters fly in with 3D rotation and extreme back-easing
+      if (chars.length > 0) {
+        leadTl.fromTo(chars, 
+          { y: 50, opacity: 0, rotationX: -90, scale: 0.5 }, 
+          { y: 0, opacity: 1, rotationX: 0, scale: 1, duration: 0.8, stagger: 0.04, ease: "back.out(2)" }, 
+          i * 0.3 + 0.9
+        );
+      }
+    });
+
+    // Team Members Entrance and Drone Shot Animation
+    gsap.fromTo(".team-member", 
+      { opacity: 0, y: 30, scale: 0.95 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".team-member",
+          start: "top 85%",
+        }
+      }
+    );
+    
+    gsap.utils.toArray(".team-drone-shot").forEach((shot: any) => {
+      gsap.to(shot, {
+        scale: 1.2,
+        ease: "none",
+        scrollTrigger: {
+          trigger: shot.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+
+  }, { scope: containerRef });
+
+  // ----------------------------------------------------
+  // TEAM DATA (Store images in public/team/)
+  // ----------------------------------------------------
+  const teamData = [
+    { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "/team/chaitrali-mam.jpg", type: "lead" },
+    { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpeg", type: "lead" },
+    { name: "Rahul Shirol", position: "Vice President", image: "/team/rahul-shirol.png", type: "lead" },
+    { name: "Sarah Johnson", position: "Technical Lead", image: "/team/tech-lead.jpg", type: "normal" },
+    { name: "Michael Chang", position: "Design Lead", image: "/team/design-lead.jpg", type: "normal" },
+    { name: "Emily Davis", position: "Events Lead", image: "/team/events-lead.jpg", type: "normal" },
+    { name: "David Kim", position: "Operations Lead", image: "/team/operations-lead.jpg", type: "normal" },
+    { name: "Olivia Martinez", position: "Marketing Lead", image: "/team/marketing-lead.jpg", type: "normal" }
+  ];
+
+  return (
+    <main ref={containerRef} className="bg-black min-h-screen text-white selection:bg-[#FFD60A] selection:text-black font-sans overflow-clip">
+      <Navbar />
+
+      {/* 1. HERO SECTION */}
+      <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-16 pt-24 pb-16">
+        <Hero3D />
+        
+        <div className="relative z-10 flex flex-col items-start gap-3 sm:gap-4 max-w-5xl">
+          <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase text-[#FFD60A]">
+            VTU • COMPETITION & INNOVATION
+          </div>
+          
+          <h1 className="text-5xl sm:text-8xl lg:text-[12rem] font-black tracking-tighter leading-[0.9] sm:leading-[0.85] text-white break-words">
+            INVICTUS
+          </h1>
+          
+          <p className="text-lg sm:text-2xl md:text-3xl font-light text-gray-300 tracking-tight max-w-2xl mt-2 sm:mt-4">
+            Learn, build, compete and grow together.
+          </p>
+          
+          <p className="text-xs sm:text-sm md:text-base text-gray-400 sm:text-gray-500 max-w-xl font-medium leading-relaxed mt-2 sm:mt-4">
+            A student-led initiative connecting VTU students to competitions, teams, innovation, and opportunities beyond their campus.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-8 sm:mt-12 w-full sm:w-auto">
+            <Link href="#about-showcase" className="w-full sm:w-auto">
+              <button className="w-full sm:w-auto justify-center bg-[#FFD60A] text-black px-8 py-4 text-xs sm:text-sm font-bold tracking-widest hover:bg-white transition-all flex items-center gap-2">
+                EXPLORE INVICTUS <ArrowRight size={16} />
+              </button>
+            </Link>
+            <Link href="#opportunities" className="w-full sm:w-auto">
+              <button className="w-full sm:w-auto justify-center bg-transparent border border-gray-700 text-white px-8 py-4 text-xs sm:text-sm font-bold tracking-widest hover:border-white transition-all">
+                VIEW OPPORTUNITIES
+              </button>
             </Link>
           </div>
         </div>
@@ -253,7 +542,7 @@ function Navbar() {
               { title: "OFFSITE DEV", desc: "Get out of the city. Ship real code. Zero distractions.", color: "#00FFCC", path: "/offsite-project-dev", img: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" },
               { title: "HACKATHONS", desc: "24 hours to break things and build them better.", color: "#FFD60A", path: "/hackathons", img: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop" }
             ].map((item, i) => (
-              <Link href={item.path} key={i} className="opportunity-card h-[380px] sm:h-[450px] md:h-[500px] border border-gray-800 p-6 sm:p-8 md:p-10 flex flex-col justify-between group hover:border-gray-500 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-3xl hover:shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)]">
+              <Link href={item.path} key={i} className="opportunity-card h-[280px] sm:h-[400px] md:h-[500px] border border-gray-800 p-6 sm:p-8 md:p-10 flex flex-col justify-between group hover:border-gray-500 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-3xl hover:shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)]">
                 <img src={item.img} alt={item.title} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-110 group-hover:opacity-40 transition-all duration-700 mix-blend-luminosity z-0" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[80px] rounded-full group-hover:bg-white/10 transition-all duration-700 z-10" />
@@ -283,7 +572,7 @@ function Navbar() {
               { title: "EXPOS", desc: "Show off what you built this semester.", color: "#D90429", path: "/project-contests", img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop" },
               { title: "RESEARCH", desc: "Deep dive and publish.", color: "#555555", path: "/research", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2070&auto=format&fit=crop" }
             ].map((item, i) => (
-              <Link href={item.path} key={i} className="opportunity-card h-[220px] sm:h-[250px] border border-gray-800 p-5 sm:p-6 flex flex-col justify-between group hover:border-gray-600 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-2xl">
+              <Link href={item.path} key={i} className="opportunity-card h-[160px] sm:h-[220px] md:h-[250px] border border-gray-800 p-5 sm:p-6 flex flex-col justify-between group hover:border-gray-600 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-2xl">
                 <img src={item.img} alt={item.title} className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:scale-110 group-hover:opacity-30 transition-all duration-500 mix-blend-luminosity z-0" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10" />
                 
@@ -451,13 +740,13 @@ function Navbar() {
         {/* LEADERSHIP (INSANE REVEAL) */}
         <div className="lead-section grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
           {teamData.filter(m => m.type === 'lead').map((member, i) => (
-            <div key={i} className="lead-character relative flex flex-col group cursor-pointer perspective-1000">
+            <div key={i} className="lead-character w-[80%] md:w-full mx-auto relative flex flex-col group cursor-pointer perspective-1000">
               <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-black shadow-[0_0_50px_rgba(255,214,10,0.1)] border border-gray-800">
                 <img 
                   src={member.image} 
                   alt={member.name} 
                   className="lead-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
-                  onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop" }} // Fallback if local image missing
+                  onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
                 />
                 <div className="curtain absolute inset-0 bg-[#050505] z-10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
@@ -489,6 +778,7 @@ function Navbar() {
                   src={member.image} 
                   alt={member.name} 
                   className="team-drone-shot absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                  onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               </div>
