@@ -15,18 +15,30 @@ import {
   Sparkles,
   Layers
 } from "lucide-react";
-import eventsData, { EventItem } from "@/data/events";
+import staticEventsData, { EventItem } from "@/data/events";
+import { getEvents } from "@/lib/events-service";
+import { useEffect } from "react";
 
 export default function EventsPage() {
-  const [selectedId, setSelectedId] = useState<string | null>(eventsData[0]?.id ?? null);
+  const [eventsList, setEventsList] = useState<EventItem[]>(staticEventsData);
+  const [selectedId, setSelectedId] = useState<string | null>(staticEventsData[0]?.id ?? null);
   const [activeFilter, setActiveFilter] = useState<"ALL" | "UPCOMING" | "ONGOING" | "PAST">("ALL");
 
-  const filteredEvents = eventsData.filter(ev => {
+  useEffect(() => {
+    getEvents().then((items) => {
+      if (items && items.length > 0) {
+        setEventsList(items);
+        if (!selectedId) setSelectedId(items[0]?.id);
+      }
+    });
+  }, []);
+
+  const filteredEvents = eventsList.filter(ev => {
     if (activeFilter === "ALL") return true;
     return ev.status === activeFilter;
   });
 
-  const selectedEvent = eventsData.find(ev => ev.id === selectedId) || filteredEvents[0];
+  const selectedEvent = eventsList.find(ev => ev.id === selectedId) || filteredEvents[0];
 
   const getStatusBadge = (status: EventItem["status"]) => {
     switch (status) {
@@ -119,13 +131,13 @@ export default function EventsPage() {
                     <div 
                       className={`p-6 sm:p-7 rounded-2xl transition-all duration-300 border ${
                         isSelected 
-                          ? "bg-[#111111] border-[#FFD60A]/70 shadow-[0_10px_35px_rgba(0,0,0,0.8)] scale-[1.01]" 
-                          : "bg-black/60 border-gray-800 hover:border-gray-600 hover:bg-[#0a0a0a]"
+                          ? "bg-[#141414] border-[#FFD60A] shadow-[0_15px_45px_rgba(255,214,10,0.18)] scale-[1.03] sm:scale-[1.04] ring-1 ring-[#FFD60A]/50 z-20" 
+                          : "bg-black/60 border-gray-800 hover:border-gray-600 hover:bg-[#0a0a0a] scale-100 opacity-80 hover:opacity-100"
                       }`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <span className="text-xs font-mono text-gray-400 font-bold flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-gray-500" />
+                          <Calendar className={`w-3.5 h-3.5 ${isSelected ? "text-[#FFD60A]" : "text-gray-500"}`} />
                           {new Date(ev.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                         </span>
 
@@ -267,12 +279,14 @@ export default function EventsPage() {
 
                     {/* Action Button */}
                     <div className="pt-4 flex flex-col sm:flex-row gap-3">
-                      <Link 
-                        href="/create-profile"
+                      <a 
+                        href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
+                        target="_blank"
+                        rel="noreferrer"
                         className="flex-1 text-center py-3.5 px-6 bg-[#FFD60A] text-black font-bold tracking-widest text-xs uppercase hover:bg-white transition-all rounded-xl shadow-[0_0_25px_rgba(255,214,10,0.3)]"
                       >
-                        Register Squad for This Event
-                      </Link>
+                        Register Squad via Community
+                      </a>
                       <a 
                         href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
                         target="_blank"
