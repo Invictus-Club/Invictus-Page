@@ -7,7 +7,19 @@ export interface EventItem {
   id: string;
   name: string;
   date: string;
-  category: "HACKATHON" | "RESEARCH" | "PROJECTS" | "BUILD" | "EXPO";
+  category: 
+    | "HACKATHON" 
+    | "MAKEATHON" 
+    | "IDEATHON" 
+    | "RESEARCH" 
+    | "PROJECTS" 
+    | "BUILD" 
+    | "EXPO" 
+    | "WORKSHOP" 
+    | "CODING CONTEST" 
+    | "SEMINAR" 
+    | "MEETUP" 
+    | "PITCH DAY";
   status: "UPCOMING" | "ONGOING" | "PAST";
   location: string;
   prizePool?: string;
