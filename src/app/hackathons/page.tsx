@@ -205,9 +205,7 @@ export default function HackathonsPage() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#FFD60A]/40 bg-[#FFD60A]/10 text-[#FFD60A] text-xs font-mono font-bold tracking-widest uppercase mb-6">
-            <Zap className="w-3.5 h-3.5" /> High-Performance Tournament Training
-          </div>
+
 
           <h1 className="text-6xl sm:text-8xl md:text-[10rem] font-black tracking-tighter text-white drop-shadow-[0_0_50px_rgba(255,214,10,0.25)] leading-[0.85] uppercase">
             HACKATHONS
@@ -242,9 +240,7 @@ export default function HackathonsPage() {
       {/* DETAILED 24-HOUR BATTLE BLUEPRINT */}
       <section className="py-24 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
         <div className="mb-16">
-          <div className="text-xs font-mono font-bold tracking-[0.25em] text-[#FFD60A] uppercase mb-2">
-            THE METHODOLOGY
-          </div>
+
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white">
             How Invictus Wins Tournaments
           </h2>
@@ -296,7 +292,7 @@ export default function HackathonsPage() {
             </div>
 
             <div className="w-full lg:w-1/2 space-y-6">
-              <span className="text-xs font-mono font-bold text-[#FFD60A] uppercase tracking-widest">CASE STUDY 01</span>
+
               <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase leading-tight">
                 Disaster Response Grid with Edge AI
               </h2>
@@ -337,7 +333,7 @@ export default function HackathonsPage() {
             </div>
 
             <div className="w-full lg:w-1/2 space-y-6">
-              <span className="text-xs font-mono font-bold text-[#FFD60A] uppercase tracking-widest">CASE STUDY 02</span>
+
               <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase leading-tight">
                 High-Frequency Algorithmic Order Flow Analyzer
               </h2>
@@ -382,10 +378,10 @@ export default function HackathonsPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link 
-              href="/create-profile" 
+              href="/events" 
               className="px-10 py-4 bg-[#FFD60A] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full shadow-[0_0_35px_rgba(255,214,10,0.3)]"
             >
-              Apply For Next Squad
+              Browse Tournaments
             </Link>
             <Link 
               href="/events" 
