@@ -164,9 +164,7 @@ export default function FreelanceWorkPage() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#D90429]/40 bg-[#D90429]/10 text-[#D90429] text-xs font-mono font-bold tracking-widest uppercase mb-6">
-            <DollarSign className="w-3.5 h-3.5" /> High-Ticket Client Contracts & Bounties
-          </div>
+
 
           <h1 className="text-6xl sm:text-8xl md:text-[10rem] font-black tracking-tighter text-white drop-shadow-[0_0_50px_rgba(217,4,41,0.3)] leading-[0.85] uppercase">
             FREELANCE
@@ -183,9 +181,7 @@ export default function FreelanceWorkPage() {
       {/* HOW INVICTUS FREELANCE AGENCY MODEL WORKS */}
       <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
         <div className="mb-16">
-          <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#D90429] uppercase mb-2 block">
-            HOW WE PROTECT OUR DEVELOPERS
-          </span>
+
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white">
             The Student-First Agency Model
           </h2>
@@ -231,9 +227,7 @@ export default function FreelanceWorkPage() {
         <div className="max-w-7xl mx-auto px-6 md:px-16">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16">
             <div>
-              <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#D90429] uppercase mb-2 block">
-                ACTIVE PIPELINE
-              </span>
+
               <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase text-white">
                 Open Client Bounties
               </h2>
@@ -316,12 +310,14 @@ export default function FreelanceWorkPage() {
                   </p>
                 </div>
 
-                <Link
-                  href="/create-profile"
+                <a
+                  href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
+                  target="_blank"
+                  rel="noreferrer"
                   className="block text-center py-4 bg-[#D90429] text-white font-bold tracking-widest uppercase text-xs rounded-xl hover:bg-white hover:text-black transition-colors"
                 >
-                  Claim This Bounty with Invictus Profile
-                </Link>
+                  Apply via Invictus Dev Guild
+                </a>
               </div>
             </div>
           </div>
@@ -334,13 +330,13 @@ export default function FreelanceWorkPage() {
           READY TO EARN AS A VTU DEVELOPER?
         </h2>
         <p className="text-sm sm:text-base text-gray-400 max-w-xl mb-8 leading-relaxed">
-          Create your developer profile, submit your GitHub and project proof, and enter the Invictus freelance talent pool.
+          Connect with the Invictus developer community, submit your GitHub and project proof, and enter the talent pool.
         </p>
         <Link 
-          href="/create-profile"
+          href="/#opportunities"
           className="px-10 py-4 bg-white text-black font-bold tracking-widest uppercase text-xs hover:bg-[#D90429] hover:text-white transition-all rounded-full"
         >
-          Join Freelance Roster
+          Explore All Opportunities
         </Link>
       </section>
     </main>
