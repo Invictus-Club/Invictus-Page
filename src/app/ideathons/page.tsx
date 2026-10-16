@@ -144,9 +144,7 @@ export default function IdeathonsPage() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-white text-xs font-mono font-bold tracking-widest uppercase mb-6">
-            <Lightbulb className="w-3.5 h-3.5 text-[#FFD60A]" /> Strategy & High-Stakes Venture Pitching
-          </div>
+
 
           <h1 className="text-6xl sm:text-8xl md:text-[10rem] font-black tracking-tighter text-white drop-shadow-[0_0_50px_rgba(255,255,255,0.25)] leading-[0.85] uppercase">
             IDEATHONS
@@ -163,9 +161,7 @@ export default function IdeathonsPage() {
       {/* STRATEGY METHODOLOGY */}
       <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
         <div className="mb-16">
-          <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#FFD60A] uppercase mb-2 block">
-            HOW INVICTUS TEAMS PITCH
-          </span>
+
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white">
             The Pitch Defense Blueprint
           </h2>
@@ -193,9 +189,7 @@ export default function IdeathonsPage() {
       {/* RECENT VICTORIES */}
       <section className="py-20 bg-[#060606] border-t border-gray-800 px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
-          <h3 className="text-xs font-mono font-bold tracking-widest text-gray-500 uppercase mb-8">
-            RECENT IDEATHON WINS BY INVICTUS FELLOWS
-          </h3>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-8 rounded-2xl bg-black border border-gray-800">
@@ -226,10 +220,10 @@ export default function IdeathonsPage() {
           Bring your raw hypothesis to our weekly pitch reviews. We will tear it apart, rebuild it, and help you win competitions with it.
         </p>
         <Link 
-          href="/create-profile"
+          href="/events"
           className="px-10 py-4 bg-black text-white font-bold tracking-widest uppercase text-xs hover:scale-105 transition-all rounded-full shadow-2xl"
         >
-          Pitch to Invictus Mentors
+          View Innovation Events
         </Link>
       </section>
     </main>
