@@ -35,6 +35,7 @@ function AutoSlider({ images, name }: { images: string[], name: string }) {
               src={img} 
               alt={`${name} image ${idx + 1}`} 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1200&auto=format&fit=crop"; }}
             />
           </div>
         ))}
