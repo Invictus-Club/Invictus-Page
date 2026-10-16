@@ -145,9 +145,7 @@ export default function ResearchPage() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00E5FF]/40 bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-mono font-bold tracking-widest uppercase mb-6">
-            <Sparkles className="w-3.5 h-3.5" /> Peer-Reviewed Publications & Compute Grants
-          </div>
+
 
           <h1 className="text-6xl sm:text-8xl md:text-[10rem] font-black tracking-tighter text-white drop-shadow-[0_0_50px_rgba(0,229,255,0.3)] leading-[0.85] uppercase">
             RESEARCH
@@ -164,9 +162,7 @@ export default function ResearchPage() {
       {/* CORE RESEARCH DOMAINS */}
       <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
         <div className="mb-16">
-          <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#00E5FF] uppercase mb-2 block">
-            LAB DIVISIONS
-          </span>
+
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white">
             Active Investigation Areas
           </h2>
@@ -194,9 +190,7 @@ export default function ResearchPage() {
       {/* RECENT PAPERS BY INVICTUS FELLOWS */}
       <section className="py-20 bg-[#060606] border-t border-gray-800 px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
-          <h3 className="text-xs font-mono font-bold tracking-widest text-gray-500 uppercase mb-8">
-            RECENT PREPRINTS & CONFERENCE ACCEPTS
-          </h3>
+
 
           <div className="space-y-4">
             {[
@@ -235,10 +229,10 @@ export default function ResearchPage() {
           Submit your proposal or abstract. We pair you with senior co-authors and provide access to dedicated GPU clusters.
         </p>
         <Link 
-          href="/create-profile"
+          href="/#opportunities"
           className="px-10 py-4 bg-[#00E5FF] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full shadow-[0_0_30px_rgba(0,229,255,0.4)]"
         >
-          Submit Proposal to Lab
+          Explore Research Labs
         </Link>
       </section>
     </main>
