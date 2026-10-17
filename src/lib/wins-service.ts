@@ -1,6 +1,4 @@
-import fs from "fs";
-import path from "path";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import fallbackWins from "@/data/wins";
 
 export interface WinItem {
@@ -14,36 +12,46 @@ export interface WinItem {
 }
 
 export async function getWins(): Promise<WinItem[]> {
-  try {
-    const { data, error } = await supabase
-      .from("wins")
-      .select("*")
-      .order("sort_date", { ascending: false });
+  if (isSupabaseConfigured) {
+    try {
+      const { data, error } = await supabase
+        .from("wins")
+        .select("*")
+        .order("sort_date", { ascending: false });
 
-    if (!error && data && data.length > 0) {
-      return data.map((row: any) => ({
-        id: String(row.id),
-        name: row.name,
-        location: row.location,
-        position: row.position,
-        displayDate: row.display_date,
-        sortDate: row.sort_date,
-        images: Array.isArray(row.images) ? row.images : [],
-      }));
+      if (!error && data && data.length > 0) {
+        return data.map((row: any) => ({
+          id: String(row.id),
+          name: row.name,
+          location: row.location,
+          position: row.position,
+          displayDate: row.display_date,
+          sortDate: row.sort_date,
+          images: Array.isArray(row.images) ? row.images : [],
+        }));
+      }
+    } catch (err) {
+      console.warn("Supabase wins query failed, falling back to local files:", err);
     }
-  } catch (err) {
-    console.warn("Supabase wins query failed, falling back to local files:", err);
   }
 
-  // Fallback to local files
+  // Safe isomorphic fallback
   return fallbackWins.map((win) => {
-    const dir = path.join(process.cwd(), "public", "photos", win.id);
     let images: string[] = [];
-    if (fs.existsSync(dir)) {
-      images = fs
-        .readdirSync(dir)
-        .filter((f) => /\.(jpg|jpeg|png|webp)$/i.test(f))
-        .map((f) => `/photos/${win.id}/${f}`);
+    try {
+      if (typeof window === "undefined") {
+        const fs = require("fs");
+        const path = require("path");
+        const dir = path.join(process.cwd(), "public", "photos", win.id);
+        if (fs.existsSync(dir)) {
+          images = fs
+            .readdirSync(dir)
+            .filter((f: string) => /\.(jpg|jpeg|png|webp)$/i.test(f))
+            .map((f: string) => `/photos/${win.id}/${f}`);
+        }
+      }
+    } catch {
+      // Safe fallback if filesystem is unavailable in edge/browser context
     }
     return { ...win, images };
   });
