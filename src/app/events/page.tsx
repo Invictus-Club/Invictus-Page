@@ -9,9 +9,7 @@ import {
   Calendar, 
   Award, 
   Users, 
-  ChevronDown, 
   CheckCircle2, 
-  Clock, 
   Sparkles,
   Layers
 } from "lucide-react";
@@ -28,7 +26,7 @@ export default function EventsPage() {
     getEvents().then((items) => {
       if (items && items.length > 0) {
         setEventsList(items);
-        if (!selectedId) setSelectedId(items[0]?.id);
+        setSelectedId((prev) => prev ?? (items[0]?.id ?? null));
       }
     });
   }, []);
@@ -110,15 +108,28 @@ export default function EventsPage() {
             </h2>
 
             <div className="relative border-l border-gray-800 ml-3 pl-6 sm:pl-8 space-y-6">
-              {filteredEvents.map((ev) => {
-                const isSelected = selectedId === ev.id;
-
-                return (
-                  <div
-                    key={ev.id}
-                    className="relative group cursor-pointer"
-                    onClick={() => setSelectedId(ev.id)}
+              {filteredEvents.length === 0 ? (
+                <div className="p-8 rounded-2xl border border-gray-800 bg-[#0c0c0c] text-center space-y-3">
+                  <Calendar className="w-8 h-8 text-gray-600 mx-auto" />
+                  <h4 className="text-base font-bold text-gray-200">No {activeFilter.toLowerCase()} tournaments found</h4>
+                  <p className="text-xs text-gray-400 font-mono">Switch to ALL to explore all tournament schedules across the season.</p>
+                  <button 
+                    onClick={() => setActiveFilter("ALL")}
+                    className="mt-2 px-4 py-2 rounded-xl bg-[#FFD60A] text-black font-bold text-xs uppercase hover:bg-white transition-colors"
                   >
+                    View All Events
+                  </button>
+                </div>
+              ) : (
+                filteredEvents.map((ev) => {
+                  const isSelected = selectedId === ev.id;
+
+                  return (
+                    <div
+                      key={ev.id}
+                      className="relative group cursor-pointer"
+                      onClick={() => setSelectedId(ev.id)}
+                    >
                     {/* Glowing Timeline Marker */}
                     <div 
                       className={`absolute -left-[31px] sm:-left-[39px] top-6 w-3 h-3 rounded-full transition-all duration-300 ${
@@ -169,14 +180,14 @@ export default function EventsPage() {
                     </div>
                   </div>
                 );
-              })}
+              }))}
             </div>
           </div>
 
           {/* Right Column: Deep Tournament Dossier (Sticks into viewport smoothly) */}
           <div className="lg:col-span-6 lg:sticky lg:top-24">
             <AnimatePresence mode="wait">
-              {selectedEvent && (
+              {selectedEvent ? (
                 <motion.div
                   key={selectedEvent.id}
                   initial={{ opacity: 0, y: 15 }}
@@ -298,6 +309,11 @@ export default function EventsPage() {
                     </div>
                   </div>
                 </motion.div>
+              ) : (
+                <div className="bg-[#0b0b0b] border border-gray-800 rounded-3xl p-12 text-center text-gray-400">
+                  <Calendar className="w-8 h-8 text-gray-600 mx-auto mb-3" />
+                  <p className="text-sm font-mono">Select an active tournament from the timeline to preview its agenda and dossier.</p>
+                </div>
               )}
             </AnimatePresence>
           </div>

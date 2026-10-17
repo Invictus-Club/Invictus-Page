@@ -20,7 +20,16 @@ function AutoSlider({ images, name }: { images: string[], name: string }) {
     return () => clearInterval(interval);
   }, [images]);
 
-  if (!images || images.length === 0) return null;
+  if (!images || images.length === 0) {
+    return (
+      <div className="relative w-full h-[180px] sm:h-[240px] md:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-800/80 bg-gradient-to-br from-zinc-950 via-black to-zinc-900 flex flex-col items-center justify-center gap-3 mt-6 sm:mt-8 p-6 text-center">
+        <div className="w-12 h-12 rounded-full bg-[#FFD60A]/10 border border-[#FFD60A]/30 flex items-center justify-center text-[#FFD60A]">
+          <Trophy className="w-6 h-6" />
+        </div>
+        <p className="text-xs font-mono tracking-widest text-gray-400 uppercase">OFFICIAL INVICTUS VICTORY</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-[220px] sm:h-[300px] md:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-800 group mt-6 sm:mt-8">
