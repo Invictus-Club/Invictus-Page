@@ -11,6 +11,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, ChevronRight, Menu, X, ExternalLink } from "lucide-react";
+import Lenis from "lenis";
+import winsData from "@/data/wins";
+import eventsData from "@/data/events";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -55,8 +58,6 @@ function ParticleNetwork() {
   );
 }
 
-import Lenis from "lenis";
-
 function Hero3D() {
   return (
     <div className="absolute inset-0 z-0 bg-black pointer-events-none">
@@ -68,9 +69,6 @@ function Hero3D() {
     </div>
   );
 }
-
-import winsData from "@/data/wins";
-import eventsData from "@/data/events";
 
 // ----------------------------------------------------
 // NAVIGATION
