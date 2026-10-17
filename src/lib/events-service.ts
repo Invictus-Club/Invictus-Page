@@ -1,7 +1,11 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import fallbackEvents, { EventItem } from "@/data/events";
 
 export async function getEvents(): Promise<EventItem[]> {
+  if (!isSupabaseConfigured) {
+    return fallbackEvents;
+  }
+
   try {
     const { data, error } = await supabase
       .from("events")
