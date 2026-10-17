@@ -10,7 +10,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, ChevronRight, Menu, X, ExternalLink } from "lucide-react";
+import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
 import Lenis from "lenis";
 import winsData from "@/data/wins";
 import eventsData from "@/data/events";
@@ -317,7 +317,7 @@ export default function PremiumInvictus() {
       }
     });
 
-    gsap.utils.toArray(".lead-character").forEach((char: any, i) => {
+    gsap.utils.toArray<HTMLElement>(".lead-character").forEach((char, i) => {
       const curtain = char.querySelector(".curtain");
       const img = char.querySelector(".lead-img");
       const chars = char.querySelectorAll(".insane-char");
@@ -371,7 +371,7 @@ export default function PremiumInvictus() {
       }
     );
     
-    gsap.utils.toArray(".team-drone-shot").forEach((shot: any) => {
+    gsap.utils.toArray<HTMLElement>(".team-drone-shot").forEach((shot) => {
       gsap.to(shot, {
         scale: 1.2,
         ease: "none",
