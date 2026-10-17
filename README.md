@@ -53,8 +53,6 @@ flowchart LR
         HomeRoute["/ Landing Page"]
         EventsRoute["/events Showcase"]
         WinsRoute["/wins Victory Showcase"]
-        ProfileRoute["/profile & /create-profile"]
-        PublicRoute["/p/[username] Portfolio View"]
         DevRoute["/offsite-project-dev & /freelance-work"]
     end
 
@@ -99,9 +97,6 @@ Invictus Club is a premier student developer committee dedicated to engineering 
 | `/freelance-work` | Developer Intake | Client inquiry form and freelance service catalog |
 | `/paper-poster` | Academic Publications | Conference paper catalog, citation links, and abstract reader modals |
 | `/research` | Club Research | Research domains overview, paper downloads, and academic contributions |
-| `/profile` | Member Dashboard | Protected user profile manager with dynamic portfolio preview iframe |
-| `/create-profile` | Profile Editor | Interactive profile details form and social handles builder |
-| `/p/[username]` | Public Developer Portfolios | Dynamic route serving standalone rendered developer profile portfolios |
 
 ---
 
@@ -114,16 +109,12 @@ invictus-club/
 |   |   |-- layout.tsx
 |   |   |-- page.tsx
 |   |   |-- globals.css
-|   |   |-- create-profile/page.tsx
 |   |   |-- events/page.tsx
 |   |   |-- freelance-work/page.tsx
 |   |   |-- hackathons/page.tsx
 |   |   |-- ideathons/page.tsx
-|   |   |-- login/page.tsx
 |   |   |-- offsite-project-dev/page.tsx
-|   |   |-- p/[username]/page.tsx
 |   |   |-- paper-poster/page.tsx
-|   |   |-- profile/page.tsx
 |   |   |-- project-contests/page.tsx
 |   |   |-- research/page.tsx
 |   |   `-- wins/
