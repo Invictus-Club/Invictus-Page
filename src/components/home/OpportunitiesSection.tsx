@@ -30,7 +30,7 @@ export function OpportunitiesSection() {
         {/* Highlighted Large Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {largeCards.map((item, i) => (
-            <Link href={item.path} key={i} className="h-[380px] sm:h-[450px] md:h-[500px] border border-gray-800 p-6 sm:p-8 md:p-10 flex flex-col justify-between group hover:border-gray-500 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-3xl hover:shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)]">
+            <Link href={item.path} key={i} className="h-[280px] sm:h-[400px] md:h-[500px] border border-gray-800 p-6 sm:p-8 md:p-10 flex flex-col justify-between group hover:border-gray-500 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-3xl hover:shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)]">
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10" />
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[80px] rounded-full group-hover:bg-white/10 transition-all duration-700" />
               
@@ -54,7 +54,7 @@ export function OpportunitiesSection() {
         {/* Rest of the Independent Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4 sm:mt-8">
           {smallCards.map((item, i) => (
-            <Link href={item.path} key={i} className="h-[220px] sm:h-[250px] border border-gray-800 p-5 sm:p-6 flex flex-col justify-between group hover:border-gray-600 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-2xl">
+            <Link href={item.path} key={i} className="h-[160px] sm:h-[220px] md:h-[250px] border border-gray-800 p-5 sm:p-6 flex flex-col justify-between group hover:border-gray-600 transition-colors bg-black relative overflow-hidden block cursor-pointer rounded-2xl">
               <div className="relative z-20 flex justify-between items-start">
                 <span className="text-xs font-mono text-gray-600">0{i+3}</span>
                 <ArrowRight className="text-gray-700 group-hover:text-white transform group-hover:-rotate-45 transition-all w-4 h-4" />
