@@ -84,6 +84,9 @@ export default function FreelanceWorkPage() {
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };

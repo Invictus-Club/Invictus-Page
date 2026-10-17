@@ -88,8 +88,8 @@ function FlyRingsCore() {
 
 export default function OffsiteProjectDevPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [telemetryAlt, setTelemetryAlt] = useState(420);
-  const [telemetrySpeed, setTelemetrySpeed] = useState(64);
+  const altRef = useRef<HTMLSpanElement>(null);
+  const speedRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if ('scrollRestoration' in history) {
@@ -123,10 +123,14 @@ export default function OffsiteProjectDevPage() {
           pin: true,
           scrub: 1.2,
           onUpdate: (self) => {
-            // Live Drone Telemetry HUD calculation
+            // Live Drone Telemetry HUD calculation via direct DOM manipulation (zero React re-render lag)
             const progress = self.progress;
-            setTelemetryAlt(Math.round(420 + progress * 380));
-            setTelemetrySpeed(Math.round(58 + Math.sin(progress * Math.PI) * 44));
+            if (altRef.current) {
+              altRef.current.textContent = `${Math.round(420 + progress * 380)}M`;
+            }
+            if (speedRef.current) {
+              speedRef.current.textContent = `${Math.round(58 + Math.sin(progress * Math.PI) * 44)} KM/H`;
+            }
           },
           end: () => {
             const el = document.querySelector(".travel-container") as HTMLElement;
@@ -204,6 +208,9 @@ export default function OffsiteProjectDevPage() {
     }, containerRef);
 
     return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
       lenis.destroy();
       gsap.ticker.remove(tickerUpdate);
       ctx.revert();
@@ -301,9 +308,9 @@ export default function OffsiteProjectDevPage() {
         <div className="absolute top-6 right-6 sm:top-10 sm:right-10 z-30 pointer-events-none text-right font-mono text-xs mix-blend-difference space-y-0.5">
           <div className="text-[#00FFCC] font-bold tracking-wider flex items-center justify-end gap-2">
             <Crosshair size={14} className="text-[#00FFCC]" />
-            <span>ALT: {telemetryAlt}M</span>
+            <span>ALT: <span ref={altRef}>420M</span></span>
             <span>•</span>
-            <span>SPD: {telemetrySpeed} KM/H</span>
+            <span>SPD: <span ref={speedRef}>58 KM/H</span></span>
           </div>
           <p className="text-[10px] text-gray-400 tracking-widest">GPS LOCK: 18 SATELLITES // HEADING 284° W</p>
         </div>

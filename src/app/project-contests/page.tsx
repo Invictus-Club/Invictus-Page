@@ -82,6 +82,9 @@ export default function ProjectContestsPage() {
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };
