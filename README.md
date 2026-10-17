@@ -28,10 +28,7 @@ The system follows a modern Jamstack pattern leveraging Next.js App Router, edge
 flowchart TD
     Client["Client Browser"] --> CDN["Vercel Edge Network / CDN"]
     CDN --> NextServer["Next.js Server (App Router)"]
-    NextServer --> DynamicRoutes["Dynamic Routes (/p/[username], /profile)"]
     NextServer --> StaticPages["Prerendered Static Pages (/wins, /events)"]
-    DynamicRoutes --> SupabaseAuth["Supabase Authentication Service"]
-    DynamicRoutes --> SupabaseDB["Supabase PostgreSQL Database"]
     NextServer --> DataStore["Local Data Modules (src/data/)"]
     DataStore --> MediaAssets["Public Image & Static Assets"]
 ```
