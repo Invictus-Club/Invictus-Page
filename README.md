@@ -130,7 +130,6 @@ invictus-club/
 |   `-- lib/
 |       `-- supabase.ts
 |-- public/
-|   |-- portfolio-profile.html
 |   `-- images, icons, banners
 |-- package.json
 |-- tsconfig.json
