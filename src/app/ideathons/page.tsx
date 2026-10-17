@@ -88,6 +88,9 @@ export default function IdeathonsPage() {
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };

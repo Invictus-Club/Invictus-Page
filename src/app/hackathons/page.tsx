@@ -141,6 +141,9 @@ export default function HackathonsPage() {
     }, containerRef);
 
     return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
       lenis.destroy();
       gsap.ticker.remove(tickerUpdate);
       ctx.revert();
