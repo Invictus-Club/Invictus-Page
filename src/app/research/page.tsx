@@ -1,22 +1,100 @@
-/* eslint-disable */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowLeft, 
   FileText, 
-  CheckCircle2, 
   BookOpen, 
-  Cpu, 
-  Database, 
   Copy, 
   Check, 
-  ExternalLink,
-  Sparkles,
-  Award
+  Waves, 
+  Trees, 
+  ArrowRight,
+  Compass
 } from "lucide-react";
+
+// Procedural Neural Data River Canvas (River Animation)
+function NeuralRiverCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    let time = 0;
+
+    const resize = () => {
+      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      canvas.height = canvas.parentElement?.clientHeight || 400;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const streams: { y: number; speed: number; amp: number; freq: number }[] = [];
+    for (let i = 0; i < 8; i++) {
+      streams.push({
+        y: 60 + i * 40,
+        speed: 1.5 + Math.random() * 2,
+        amp: 12 + Math.random() * 15,
+        freq: 0.01 + Math.random() * 0.015
+      });
+    }
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      time += 0.025;
+
+      // Dark River Depths
+      ctx.fillStyle = "#01080d";
+      ctx.fillRect(0, 0, w, h);
+
+      // Flowing Currents
+      streams.forEach((s, idx) => {
+        ctx.strokeStyle = idx % 2 === 0 ? "rgba(0, 229, 255, 0.25)" : "rgba(255, 255, 255, 0.12)";
+        ctx.lineWidth = idx % 2 === 0 ? 2 : 1;
+        ctx.beginPath();
+        for (let x = 0; x < w; x += 15) {
+          const cy = s.y + Math.sin(x * s.freq + time * s.speed) * s.amp;
+          if (x === 0) ctx.moveTo(x, cy);
+          else ctx.lineTo(x, cy);
+        }
+        ctx.stroke();
+      });
+
+      // Drifting Data Spores
+      for (let i = 0; i < 25; i++) {
+        const px = ((i * 45 + time * 60) % (w + 40)) - 20;
+        const py = (h * 0.2) + ((i * 97) % (h * 0.6)) + Math.sin(time + i) * 10;
+        ctx.fillStyle = "#00E5FF";
+        ctx.shadowColor = "#00E5FF";
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-60" />;
+}
 
 export default function ResearchPage() {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -81,39 +159,43 @@ export default function ResearchPage() {
         <span>OPPORTUNITIES</span>
       </Link>
 
-      {/* HERO SECTION */}
-      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00E5FF]/30 bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-bold tracking-widest uppercase mb-6"
-        >
-          <BookOpen size={14} />
-          <span>INVICTUS RESEARCH DIVISION</span>
-        </motion.div>
+      {/* HERO SECTION WITH NEURAL DATA RIVER CANVAS */}
+      <section className="relative h-[85vh] sm:h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900 px-6">
+        <NeuralRiverCanvas />
 
-        <motion.h1 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
-        >
-          UNDERGRADS PUBLISHING <span className="text-[#00E5FF]">REAL PAPERS.</span>
-        </motion.h1>
+        <div className="relative z-10 text-center max-w-5xl mx-auto space-y-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00E5FF]/30 bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(0,229,255,0.2)]"
+          >
+            <Waves size={14} />
+            <span>THE UNCHARTERED DATA RIVER // INVICTUS RESEARCH</span>
+          </motion.div>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
-        >
-          You don&apos;t need a master&apos;s degree to contribute to computer science. We partner students with faculty mentors to structure, benchmark, and publish peer-reviewed papers.
-        </motion.p>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.88] text-white"
+          >
+            NAVIGATE THE <span className="text-[#00E5FF]">DATA RIVER.</span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-sm sm:text-lg md:text-xl text-zinc-300 font-medium max-w-2xl mx-auto leading-relaxed"
+          >
+            Venturing into research territory where no undergrad textbook has gone. Formulate hypotheses, collect empirical benchmarks, and publish peer-reviewed papers.
+          </motion.p>
+        </div>
       </section>
 
-      {/* INTERACTIVE 4-STAGE PUBLISHING ROADMAP */}
-      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+      {/* 4-STAGE PUBLISHING ROADMAP */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <span className="text-xs font-bold uppercase tracking-widest text-[#00E5FF] block mb-2">
             THE PUBLISHING BLUEPRINT
@@ -121,12 +203,8 @@ export default function ResearchPage() {
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
             How Students Actually Publish
           </h2>
-          <p className="text-zinc-400 text-sm sm:text-base mt-3">
-            Click through the 4 stages from initial hypothesis to indexed conference proceedings.
-          </p>
         </div>
 
-        {/* Step Selectors */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto mb-10">
           {publicationSteps.map((s, i) => (
             <button
@@ -144,7 +222,6 @@ export default function ResearchPage() {
           ))}
         </div>
 
-        {/* Active Stage Card */}
         <motion.div
           key={activeStep}
           initial={{ opacity: 0, y: 10 }}
@@ -152,9 +229,9 @@ export default function ResearchPage() {
           className="p-8 sm:p-12 rounded-3xl bg-zinc-950 border border-zinc-800 max-w-4xl mx-auto"
         >
           <span className="text-xs font-mono font-bold text-[#00E5FF] uppercase tracking-widest block mb-2">
-            STAGE 0{activeStep + 1} DEEP DIVE
+            STAGE 0{activeStep + 1} INTEL
           </span>
-          <h3 className="text-2xl sm:text-4xl font-black uppercase text-white mb-4">
+          <h3 className="text-2xl sm:text-3xl font-black uppercase text-white mb-4">
             {publicationSteps[activeStep].title}
           </h3>
           <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
@@ -163,17 +240,8 @@ export default function ResearchPage() {
         </motion.div>
       </section>
 
-      {/* RECENT PAPERS SHOWCASE */}
+      {/* PAPERS ARCHIVE */}
       <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#00E5FF] block mb-2">
-            PEER-REVIEWED ARCHIVE
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
-            Recent Publications & Preprints
-          </h2>
-        </div>
-
         <div className="space-y-6 max-w-4xl mx-auto">
           {papers.map((paper) => (
             <div key={paper.id} className="p-8 rounded-3xl bg-zinc-950 border border-zinc-800 space-y-4">
@@ -192,7 +260,6 @@ export default function ResearchPage() {
               <p className="text-xs font-mono text-zinc-400">Authors: {paper.authors}</p>
               
               <div className="p-4 rounded-2xl bg-black border border-zinc-900 text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                <span className="font-bold text-zinc-500 uppercase tracking-wider block mb-1">Abstract:</span>
                 {paper.abstract}
               </div>
             </div>
@@ -200,7 +267,7 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* FINAL HIGH-ENERGY CTA */}
       <section className="py-24 px-6 text-center border-t border-zinc-900 bg-black">
         <div className="max-w-2xl mx-auto space-y-6">
           <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">

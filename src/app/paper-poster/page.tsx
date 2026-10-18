@@ -1,20 +1,100 @@
-/* eslint-disable */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowLeft, 
   Presentation, 
-  Layers, 
   Eye, 
   CheckCircle2, 
   QrCode, 
-  Maximize2,
-  FileCheck,
-  AlertTriangle
+  Maximize2, 
+  AlertTriangle,
+  ArrowRight
 } from "lucide-react";
+
+// Procedural Brutalist Gallery Perspective Canvas (Drone Fly-Through / Gallery Perspective)
+function GalleryPerspectiveCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    let offset = 0;
+
+    const resize = () => {
+      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      canvas.height = canvas.parentElement?.clientHeight || 400;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = w * 0.5;
+      const cy = h * 0.42;
+
+      offset = (offset + 0.8) % 60;
+
+      // Gallery Floor & Ceiling Perspective Lines
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.lineWidth = 1;
+
+      for (let i = -6; i <= 6; i++) {
+        const x = cx + i * (w / 10);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, 0);
+        ctx.stroke();
+      }
+
+      // Moving Gallery Frames / Posters on Left & Right Walls
+      for (let j = 0; j < 5; j++) {
+        const depth = ((j * 60 + offset) % 300) / 300;
+        const scale = Math.pow(depth, 1.8);
+        const frameW = 80 * scale;
+        const frameH = 110 * scale;
+        const leftX = cx - (w * 0.45 * scale) - frameW;
+        const rightX = cx + (w * 0.45 * scale);
+        const frameY = cy - frameH * 0.5;
+
+        // Left Frame
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.fillStyle = "rgba(20, 20, 25, 0.6)";
+        ctx.strokeRect(leftX, frameY, frameW, frameH);
+        ctx.fillRect(leftX, frameY, frameW, frameH);
+
+        // Right Frame
+        ctx.strokeRect(rightX, frameY, frameW, frameH);
+        ctx.fillRect(rightX, frameY, frameW, frameH);
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-50" />;
+}
 
 export default function PaperPosterPage() {
   const [activeHotspot, setActiveHotspot] = useState<number>(0);
@@ -63,39 +143,43 @@ export default function PaperPosterPage() {
         <span>OPPORTUNITIES</span>
       </Link>
 
-      {/* HERO SECTION */}
-      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-zinc-300 text-xs font-bold tracking-widest uppercase mb-6"
-        >
-          <Presentation size={14} className="text-[#FFD60A]" />
-          <span>INVICTUS GALLERY & POSTER SESSIONS</span>
-        </motion.div>
+      {/* HERO SECTION WITH GALLERY PERSPECTIVE CANVAS */}
+      <section className="relative h-[85vh] sm:h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900 px-6">
+        <GalleryPerspectiveCanvas />
 
-        <motion.h1 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
-        >
-          POSTERS ARE <span className="text-zinc-400">RESEARCH SHOWPIECES.</span>
-        </motion.h1>
+        <div className="relative z-10 text-center max-w-5xl mx-auto space-y-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-zinc-300 text-xs font-bold tracking-widest uppercase shadow-lg"
+          >
+            <Presentation size={14} className="text-[#FFD60A]" />
+            <span>THE GALLERY FLY-THROUGH // STREETWEAR FOR RESEARCH</span>
+          </motion.div>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
-        >
-          Turn dense academic papers into striking, high-impact exhibition posters that stop evaluators in their tracks across crowded symposium halls.
-        </motion.p>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.88] text-white"
+          >
+            POSTERS ARE <span className="text-zinc-400">SHOWPIECES.</span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-sm sm:text-lg md:text-xl text-zinc-300 font-medium max-w-2xl mx-auto leading-relaxed"
+          >
+            Turn dense academic papers into striking, architectural exhibition posters that command attention across crowded national symposiums.
+          </motion.p>
+        </div>
       </section>
 
       {/* INTERACTIVE POSTER ANATOMY INSPECTOR */}
-      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+      <section className="py-24 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <span className="text-xs font-bold uppercase tracking-widest text-[#FFD60A] block mb-2">
             ANATOMY OF A WINNING POSTER
@@ -103,12 +187,8 @@ export default function PaperPosterPage() {
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
             Click A Component To Inspect
           </h2>
-          <p className="text-zinc-400 text-sm sm:text-base mt-3">
-            Click each key quadrant of a standard A0 scientific presentation board to see what judges evaluate.
-          </p>
         </div>
 
-        {/* Component Selector Buttons */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto mb-10">
           {posterSections.map((sec, i) => (
             <button
@@ -116,7 +196,7 @@ export default function PaperPosterPage() {
               onClick={() => setActiveHotspot(i)}
               className={`p-4 rounded-2xl text-left border transition-all ${
                 activeHotspot === i
-                  ? "bg-white text-black shadow-lg"
+                  ? "bg-white text-black shadow-lg scale-105"
                   : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700"
               }`}
             >
@@ -126,7 +206,6 @@ export default function PaperPosterPage() {
           ))}
         </div>
 
-        {/* Active Inspection Card */}
         <motion.div
           key={activeHotspot}
           initial={{ opacity: 0, y: 10 }}
@@ -169,7 +248,7 @@ export default function PaperPosterPage() {
         </motion.div>
       </section>
 
-      {/* COMMON MISTAKES TO AVOID */}
+      {/* COMMON MISTAKES */}
       <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <span className="text-xs font-bold uppercase tracking-widest text-red-400 block mb-2">
@@ -191,7 +270,7 @@ export default function PaperPosterPage() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* FINAL HIGH-ENERGY CTA */}
       <section className="py-24 px-6 text-center border-t border-zinc-900 bg-black">
         <div className="max-w-2xl mx-auto space-y-6">
           <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">

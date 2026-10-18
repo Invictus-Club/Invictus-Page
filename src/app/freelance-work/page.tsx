@@ -1,7 +1,7 @@
-/* eslint-disable */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -10,14 +10,113 @@ import {
   ShieldCheck, 
   CheckCircle2, 
   Code2, 
-  Briefcase, 
   TrendingUp, 
-  Layers, 
-  ExternalLink,
-  ChevronRight,
-  Zap,
-  Calculator
+  Zap, 
+  Calculator,
+  Car,
+  ArrowRight
 } from "lucide-react";
+
+// Procedural High-Speed Highway Canvas (Car Escape / Fast Courier)
+function HighSpeedCourierCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    let offset = 0;
+
+    const resize = () => {
+      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      canvas.height = canvas.parentElement?.clientHeight || 400;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      const vx = w * 0.5;
+      const vy = h * 0.35;
+
+      // Dark Sky
+      ctx.fillStyle = "#020204";
+      ctx.fillRect(0, 0, w, vy);
+
+      // Distant City Skyline Silhouette
+      ctx.fillStyle = "#080912";
+      for (let i = 0; i < 20; i++) {
+        const bx = (i / 20) * w;
+        const bw = w / 22;
+        const bh = 15 + Math.sin(i * 12) * 25 + 20;
+        ctx.fillRect(bx, vy - bh, bw, bh);
+      }
+
+      // Highway Road
+      ctx.beginPath();
+      ctx.moveTo(vx - 25, vy);
+      ctx.lineTo(vx + 25, vy);
+      ctx.lineTo(w * 0.9, h);
+      ctx.lineTo(w * 0.1, h);
+      ctx.closePath();
+      ctx.fillStyle = "#06080d";
+      ctx.fill();
+
+      // Neon Crimson Road Curbs
+      ctx.strokeStyle = "rgba(217, 4, 41, 0.4)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(vx - 25, vy);
+      ctx.lineTo(w * 0.1, h);
+      ctx.moveTo(vx + 25, vy);
+      ctx.lineTo(w * 0.9, h);
+      ctx.stroke();
+
+      // High-Velocity Center Dashes
+      offset = (offset + 5) % 40;
+      ctx.strokeStyle = "#FFFFFF";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i < 12; i++) {
+        const p1 = (i + offset / 40) / 12;
+        const p2 = (i + 0.45 + offset / 40) / 12;
+        if (p1 > 1) continue;
+
+        const y1 = vy + Math.pow(p1, 2.3) * (h - vy);
+        const y2 = vy + Math.pow(Math.min(1, p2), 2.3) * (h - vy);
+        ctx.moveTo(vx, y1);
+        ctx.lineTo(vx, y2);
+      }
+      ctx.stroke();
+
+      // Red Taillight Trails
+      ctx.strokeStyle = "rgba(217, 4, 41, 0.6)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(vx - 8, vy + 10);
+      ctx.lineTo(vx - 22, h - 20);
+      ctx.moveTo(vx + 8, vy + 10);
+      ctx.lineTo(vx + 22, h - 20);
+      ctx.stroke();
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-60" />;
+}
 
 export default function FreelanceWorkPage() {
   const [selectedBounty, setSelectedBounty] = useState<number>(0);
@@ -76,21 +175,6 @@ export default function FreelanceWorkPage() {
         "Over-the-air EAS update automation pipeline configured"
       ],
       vetting: "Tested across real physical devices in the student developer lab."
-    },
-    {
-      category: "web",
-      role: "Creative Studio Web Experience & Portfolio",
-      client: "Design & VFX Agency",
-      budget: "$1,500 USD",
-      payoutInr: "₹1,25,000 INR",
-      deadline: "2 Weeks",
-      stack: ["React", "Three.js", "GSAP ScrollTrigger", "Lenis"],
-      deliverables: [
-        "Interactive 3D particle canvas reacting to cursor position",
-        "Smooth inertia scroll timeline with zero 60fps frame drops",
-        "Lightweight headless CMS integration with Sanity"
-      ],
-      vetting: "Creative review by Invictus UI team before client sign-off."
     }
   ];
 
@@ -109,51 +193,54 @@ export default function FreelanceWorkPage() {
         <span>OPPORTUNITIES</span>
       </Link>
 
-      {/* HERO SECTION */}
-      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#D90429]/30 bg-[#D90429]/10 text-[#D90429] text-xs font-bold tracking-widest uppercase mb-6"
-        >
-          <DollarSign size={14} />
-          <span>INVICTUS DEV GUILD</span>
-        </motion.div>
+      {/* HERO SECTION WITH HIGH-SPEED COURIER CAR ESCAPE CANVAS */}
+      <section className="relative h-[85vh] sm:h-screen flex flex-col items-center justify-center overflow-hidden border-b border-zinc-900 px-6">
+        <HighSpeedCourierCanvas />
 
-        <motion.h1 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
-        >
-          STOP DOING $10 GIGS. <span className="text-[#D90429]">EARN REAL MONEY.</span>
-        </motion.h1>
+        <div className="relative z-10 text-center max-w-5xl mx-auto space-y-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#D90429]/30 bg-[#D90429]/10 text-[#D90429] text-xs font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(217,4,41,0.2)]"
+          >
+            <Car size={14} />
+            <span>THE HIGH-SPEED COURIER // ESCAPE THE $10 GIGS</span>
+          </motion.div>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
-        >
-          We bring high-paying software contracts from real startups directly to VTU student builders. Upfront escrow protection, senior PR code reviews, and zero scam clients.
-        </motion.p>
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.88] text-white"
+          >
+            ESCAPE LOW WAGES. <span className="text-[#D90429]">CASH $3,000.</span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-sm sm:text-lg md:text-xl text-zinc-300 font-medium max-w-2xl mx-auto leading-relaxed"
+          >
+            We connect VTU student engineers directly with international startups. 40% upfront escrow, zero unpaid clients, and real production software contracts.
+          </motion.p>
+        </div>
       </section>
 
       {/* INTERACTIVE EARNINGS ESTIMATOR */}
-      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
         <div className="p-8 sm:p-12 rounded-3xl bg-zinc-950 border border-zinc-800 max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <Calculator className="w-6 h-6 text-[#D90429]" />
             <h3 className="text-2xl font-black uppercase text-white tracking-tight">
-              Interactive Bounty Payout Estimator
+              Bounty Take-Home Estimator
             </h3>
           </div>
           <p className="text-xs sm:text-sm text-zinc-400 mb-8">
-            Select a project archetype to see real market compensation for Invictus Dev Guild members.
+            Click an archetype to see real market rates earned by Invictus developers.
           </p>
 
-          {/* Scope Picker Buttons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
             {scopeOptions.map((opt, i) => (
               <button
@@ -165,18 +252,17 @@ export default function FreelanceWorkPage() {
                     : "bg-black/60 border-zinc-900 text-zinc-400 hover:border-zinc-800"
                 }`}
               >
-                <div className="text-xs font-mono text-zinc-500 mb-1">Option 0{i+1}</div>
+                <div className="text-xs font-mono text-zinc-500 mb-1">Tier 0{i+1}</div>
                 <div className="text-sm font-bold text-white mb-1">{opt.name}</div>
                 <div className="text-xs text-[#D90429] font-mono font-bold">{opt.payoutInr}</div>
               </button>
             ))}
           </div>
 
-          {/* Result Card */}
           <div className="p-6 rounded-2xl bg-black border border-zinc-900 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
               <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest block mb-1">
-                ESTIMATED TAKE-HOME PAYOUT
+                VERIFIED PAYOUT
               </span>
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl sm:text-5xl font-black text-[#D90429] font-mono">
@@ -187,13 +273,13 @@ export default function FreelanceWorkPage() {
                 </span>
               </div>
               <div className="text-xs text-zinc-400 mt-2 font-mono">
-                Standard Sprint: {scopeOptions[calculatorScope].timeline}
+                Sprint Duration: {scopeOptions[calculatorScope].timeline}
               </div>
             </div>
 
             <div className="sm:text-right">
               <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest block mb-2">
-                RECOMMENDED TECH STACK
+                TECH WEAPONS
               </span>
               <div className="flex flex-wrap sm:justify-end gap-1.5">
                 {scopeOptions[calculatorScope].stack.map((st, i) => (
@@ -219,7 +305,6 @@ export default function FreelanceWorkPage() {
             </h2>
           </div>
 
-          {/* Filter Tabs */}
           <div className="flex flex-wrap gap-2">
             {[
               { id: "all", label: "All Bounties" },
@@ -245,9 +330,7 @@ export default function FreelanceWorkPage() {
           </div>
         </div>
 
-        {/* Bounty Explorer Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* List */}
           <div className="lg:col-span-5 space-y-3">
             {filteredBounties.map((bounty, idx) => (
               <div
@@ -265,7 +348,7 @@ export default function FreelanceWorkPage() {
                 </div>
                 <h3 className="text-lg font-bold tracking-tight text-white mb-3">{bounty.role}</h3>
                 <div className="flex flex-wrap gap-1.5">
-                  {bounty.stack.slice(0, 3).map((st, i) => (
+                  {bounty.stack.map((st, i) => (
                     <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded bg-black border border-zinc-800 text-zinc-300">
                       {st}
                     </span>
@@ -275,7 +358,6 @@ export default function FreelanceWorkPage() {
             ))}
           </div>
 
-          {/* Dossier */}
           {filteredBounties[selectedBounty] && (
             <motion.div 
               key={selectedBounty}
@@ -315,15 +397,6 @@ export default function FreelanceWorkPage() {
                 </div>
               </div>
 
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 block mb-2">
-                  Invictus Quality Guarantee:
-                </span>
-                <p className="text-xs text-zinc-400 font-mono bg-black p-3.5 rounded-xl border border-zinc-900">
-                  {filteredBounties[selectedBounty].vetting}
-                </p>
-              </div>
-
               <a
                 href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
                 target="_blank"
@@ -334,44 +407,6 @@ export default function FreelanceWorkPage() {
               </a>
             </motion.div>
           )}
-        </div>
-      </section>
-
-      {/* THE GUILD SHIELD */}
-      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#D90429] block mb-2">
-            ZERO RISK FOR DEVELOPERS
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
-            How The Guild Protects You
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800">
-            <ShieldCheck className="w-8 h-8 text-[#D90429] mb-4" />
-            <h4 className="font-bold text-lg mb-2">40% Upfront Escrow</h4>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-              No developer writes a single line of code until client funds are verified and locked in escrow.
-            </p>
-          </div>
-
-          <div className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800">
-            <Code2 className="w-8 h-8 text-[#D90429] mb-4" />
-            <h4 className="font-bold text-lg mb-2">Senior PR Reviews</h4>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-              Club tech leads review your pull requests before client handoff, catching security flaws and bugs early.
-            </p>
-          </div>
-
-          <div className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800">
-            <TrendingUp className="w-8 h-8 text-[#D90429] mb-4" />
-            <h4 className="font-bold text-lg mb-2">Direct Job Offers</h4>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-              Multiple students turned freelance projects into full-time remote engineering positions after graduation.
-            </p>
-          </div>
         </div>
       </section>
 
