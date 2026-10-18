@@ -3,29 +3,25 @@
 
 import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Points, PointMaterial } from "@react-three/drei";
+import { OrbitControls, Points, PointMaterial } from "@react-three/drei";
 import { useRef, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import Lenis from "lenis";
 import Link from "next/link";
 import { 
   ArrowLeft, 
-  BookOpen, 
+  Cpu, 
   Database, 
   Network, 
-  Award, 
-  FileCheck, 
   FileText, 
-  Sparkles, 
-  Cpu, 
   CheckCircle,
   ExternalLink
 } from "lucide-react";
 
-// 3D Neural Swarm / Data Lattice representing empirical research and neural networks
+// Sleek Minimalist Research Lattice Mesh
 function ResearchLatticeMesh() {
   const pointsRef = useRef<THREE.Points>(null);
-  const count = 2200;
+  const count = 1800;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -34,7 +30,7 @@ function ResearchLatticeMesh() {
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
       const phi = Math.acos(2.0 * v - 1.0);
-      const r = Math.cbrt(Math.random()) * 4.5;
+      const r = Math.cbrt(Math.random()) * 4.0;
       const sinPhi = Math.sin(phi);
       arr[i * 3] = r * sinPhi * Math.cos(theta);
       arr[i * 3 + 1] = r * sinPhi * Math.sin(theta);
@@ -45,8 +41,8 @@ function ResearchLatticeMesh() {
 
   useFrame((state, delta) => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.15;
-      pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.4) * 0.2;
+      pointsRef.current.rotation.y += delta * 0.12;
+      pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.15;
     }
   });
 
@@ -55,10 +51,10 @@ function ResearchLatticeMesh() {
       <PointMaterial 
         transparent 
         color="#00E5FF" 
-        size={0.06} 
+        size={0.045} 
         sizeAttenuation={true} 
         depthWrite={false} 
-        opacity={0.75} 
+        opacity={0.65} 
       />
     </Points>
   );
@@ -91,6 +87,9 @@ export default function ResearchPage() {
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };
@@ -99,141 +98,189 @@ export default function ResearchPage() {
   const researchPillars = [
     {
       icon: Cpu,
-      title: "Model Compression & Edge LLMs",
-      desc: "Quantizing 7B+ parameter transformer models into 2-bit and 3-bit weights (AWQ / GPTQ) running on commodity phone chips without cloud latency.",
-      target: "IEEE / NeurIPS Workshop Submissions"
+      title: "Model Compression & Edge Inferencing",
+      desc: "Quantizing 7B+ parameter transformer architectures down to low-bit representations (AWQ, GPTQ) for deterministic, cloud-free local execution on commodity hardware.",
+      target: "IEEE / NeurIPS Workshop Standards"
     },
     {
       icon: Database,
-      title: "Byzantine-Fault-Tolerant Consensus",
-      desc: "Benchmarking distributed state machines under high network packet loss and adversarial partition simulations.",
+      title: "Distributed Fault-Tolerant Consensus",
+      desc: "Simulating distributed state machine synchronization, latency bottlenecks, and partition tolerance under simulated high-packet-loss network topographies.",
       target: "ACM Distributed Computing Tracks"
     },
     {
       icon: Network,
-      title: "Spatial Computing & CV Photogrammetry",
-      desc: "Evaluating Gaussian Splatting rendering pipelines against traditional LiDAR point clouds on low-cost consumer hardware.",
-      target: "CVPR / ECCV Posters"
+      title: "Spatial Computing & Neural Radiance",
+      desc: "Evaluating 3D Gaussian Splatting rendering performance against photogrammetry point clouds on low-power mobile GPUs.",
+      target: "Computer Vision & Graphics Symposia"
+    }
+  ];
+
+  const recentPapers = [
+    {
+      title: "Low-Latency Quantized Transformer Execution on Low-Power Consumer Silicon",
+      authors: "Y. Koparde, S. Patil, M. Kulkarni",
+      venue: "VTU Regional Computing Symposium // 2026",
+      status: "Published Paper"
+    },
+    {
+      title: "Deterministic Fallbacks for Distributed LoRa Mesh Sensor Topographies",
+      authors: "P. Deshmukh, A. Joshi, Invictus Systems Group",
+      venue: "State Technical Innovation Proceedings // 2026",
+      status: "Peer Reviewed"
     }
   ];
 
   return (
     <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-x-clip selection:bg-[#00E5FF] selection:text-black">
-      {/* Top Header Back Button */}
-      <Link href="/#opportunities" className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 text-white/50 hover:text-white transition flex items-center gap-2 group mix-blend-difference">
-        <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" />
-        <span className="text-xs font-bold tracking-widest uppercase">Back to Base</span>
+      {/* Sleek Minimalist Floating Back Button */}
+      <Link 
+        href="/#opportunities" 
+        className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-zinc-400 hover:text-white hover:border-white/30 text-xs font-mono uppercase tracking-widest transition-all"
+      >
+        <ArrowLeft size={14} />
+        <span>Base</span>
       </Link>
 
       {/* HERO SECTION */}
-      <section className="relative h-screen flex flex-col items-center justify-center border-b border-gray-800">
-        <div className="absolute inset-0 z-0">
-          <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={2} color="#00E5FF" />
+      <section className="relative h-screen flex flex-col items-center justify-center border-b border-zinc-900">
+        <div className="absolute inset-0 z-0 opacity-70">
+          <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[10, 10, 5]} intensity={2.0} color="#00E5FF" />
             <ResearchLatticeMesh />
-            <OrbitControls enableZoom={false} maxDistance={15} minDistance={4} autoRotate autoRotateSpeed={0.5} />
-            <Environment preset="night" />
+            <OrbitControls enableZoom={false} maxDistance={14} minDistance={4} autoRotate autoRotateSpeed={0.5} />
           </Canvas>
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.1),transparent_70%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,229,255,0.06),transparent_65%)] pointer-events-none" />
         </div>
         
         <motion.div 
-          className="z-10 text-center pointer-events-none px-4 max-w-5xl"
-          initial={{ opacity: 0, scale: 0.92, filter: "blur(20px)" }}
-          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
+          className="z-10 text-center pointer-events-none px-6 max-w-5xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 text-[11px] font-mono font-medium tracking-[0.2em] uppercase mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF]" />
+            ACADEMIC COMPUTING // EMPIRICAL BENCHMARKS
+          </div>
 
-
-          <h1 className="text-6xl sm:text-8xl md:text-[10rem] font-black tracking-tighter text-white drop-shadow-[0_0_50px_rgba(0,229,255,0.3)] leading-[0.85] uppercase">
+          <h1 className="text-6xl sm:text-8xl md:text-[9.5rem] font-black tracking-tighter text-white leading-[0.88] uppercase">
             RESEARCH
           </h1>
 
-          <div className="w-48 h-1 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent mx-auto my-6" />
-
-          <p className="text-xs sm:text-sm md:text-lg text-gray-300 font-bold tracking-[0.25em] uppercase max-w-2xl mx-auto leading-relaxed">
-            Move Beyond Tutorial Coding. Publish Novel Algorithms Before You Graduate.
+          <p className="text-xs sm:text-sm md:text-base text-zinc-400 font-mono tracking-[0.2em] uppercase mt-6 max-w-xl mx-auto leading-relaxed">
+            Empirical Validation. Formal Mathematical Models. Published Conference Papers.
           </p>
         </motion.div>
       </section>
 
-      {/* CORE RESEARCH DOMAINS */}
-      <section className="py-20 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
-        <div className="mb-16">
-
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-white">
-            Active Investigation Areas
-          </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mt-4 leading-relaxed">
-            Invictus partners with university faculty and industry researchers to provide student fellows with GPU compute clusters, mathematical review, and conference travel grants.
+      {/* RESEARCH PILLARS */}
+      <section className="py-24 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-zinc-900">
+          <div>
+            <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#00E5FF] uppercase mb-2 block">
+              // 01 / CORE DOMAINS
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
+              Investigative Divisions
+            </h2>
+          </div>
+          <p className="text-xs sm:text-sm text-zinc-400 font-mono max-w-md">
+            Focus areas designed to advance beyond standard coursework into published peer-reviewed contributions.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {researchPillars.map((item, i) => (
-            <div key={i} className="p-8 rounded-3xl bg-[#080808] border border-gray-800 hover:border-[#00E5FF]/50 transition-all flex flex-col justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {researchPillars.map((p, i) => (
+            <div key={i} className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-[#00E5FF]/40 transition-all flex flex-col justify-between group">
               <div>
-                <item.icon size={36} className="text-[#00E5FF] mb-6" />
-                <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-3">{item.title}</h3>
-                <p className="text-sm text-gray-400 font-medium leading-relaxed">{item.desc}</p>
+                <p.icon className="w-6 h-6 text-[#00E5FF] mb-6" />
+                <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-3">{p.title}</h3>
+                <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed">{p.desc}</p>
               </div>
-              <div className="mt-8 pt-4 border-t border-gray-900 text-xs font-mono text-[#00E5FF]">
-                {item.target}
+              <div className="mt-8 pt-4 border-t border-zinc-900 text-xs font-mono text-zinc-500 flex items-center gap-2">
+                <CheckCircle className="w-3.5 h-3.5 text-[#00E5FF] shrink-0" /> {p.target}
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* RECENT PAPERS BY INVICTUS FELLOWS */}
-      <section className="py-20 bg-[#060606] border-t border-gray-800 px-6 md:px-16">
-        <div className="max-w-7xl mx-auto">
-
+      {/* RECENT WORKING PAPERS */}
+      <section className="py-20 bg-[#040404] border-t border-zinc-900 px-6 md:px-16">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-900">
+            <div>
+              <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#00E5FF] uppercase mb-2 block">
+                // 02 / PUBLICATIONS
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
+                Member Preprints & Papers
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
+              Faculty & Student Co-Authored
+            </span>
+          </div>
 
           <div className="space-y-4">
-            {[
-              {
-                title: "Asynchronous Gradient Checkpointing in Heterogeneous Consumer GPUs",
-                authors: "Invictus AI Working Group • Belagavi Campus",
-                status: "Accepted, IEEE Regional Computing 2026",
-                abstract: "Demonstrated a 34% reduction in peak VRAM consumption during fine-tuning of 8B parameter models on mixed RTX 3060 / 4060 hardware rigs."
-              },
-              {
-                title: "Zero-Knowledge Verifiable Execution for Collegiate Academic Transcripts",
-                authors: "Invictus Cryptography Lab",
-                status: "Preprint on arXiv / Under Peer Review",
-                abstract: "A succinct zk-SNARK proof system enabling students to cryptographically verify GPA and credit requirements to international universities without exposing full transcript records."
-              }
-            ].map((paper, i) => (
-              <div key={i} className="p-8 rounded-2xl bg-black border border-gray-800 hover:border-gray-600 transition-colors">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-mono text-[#00E5FF] font-bold">{paper.status}</span>
-                  <span className="text-xs font-mono text-gray-500">{paper.authors}</span>
+            {recentPapers.map((paper, idx) => (
+              <div 
+                key={idx}
+                className="p-6 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-white/20 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                <div className="space-y-1.5 max-w-3xl">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/20 text-[#00E5FF]">
+                      {paper.status}
+                    </span>
+                    <span className="text-xs font-mono text-zinc-500">{paper.venue}</span>
+                  </div>
+                  <h4 className="text-lg font-bold text-white tracking-tight">{paper.title}</h4>
+                  <p className="text-xs font-mono text-zinc-400">Authors: {paper.authors}</p>
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-white my-2">{paper.title}</h4>
-                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-medium">{paper.abstract}</p>
+
+                <div className="shrink-0">
+                  <span className="text-xs font-mono text-zinc-400 flex items-center gap-1.5">
+                    <FileText size={14} className="text-[#00E5FF]" /> PDF in Review
+                  </span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="h-[60vh] flex flex-col items-center justify-center relative bg-black px-6 text-center">
-        <h2 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-6 leading-none">
-          PUBLISH YOUR FIRST PAPER
-        </h2>
-        <p className="text-sm sm:text-base text-gray-400 max-w-xl mb-8 leading-relaxed">
-          Submit your proposal or abstract. We pair you with senior co-authors and provide access to dedicated GPU clusters.
-        </p>
-        <Link 
-          href="/#opportunities"
-          className="px-10 py-4 bg-[#00E5FF] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full shadow-[0_0_30px_rgba(0,229,255,0.4)]"
-        >
-          Explore Research Labs
-        </Link>
+      {/* MINIMALIST CTA */}
+      <section className="py-28 px-6 bg-black text-center border-t border-zinc-900">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00E5FF] block">
+            // JOIN RESEARCH SPRINT
+          </span>
+          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase text-white leading-tight">
+            Publish With Invictus.
+          </h2>
+          <p className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed">
+            Have a unique algorithmic premise or systems investigation? Partner with experienced co-authors and faculty advisors to structure, benchmark, and publish your findings.
+          </p>
+
+          <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              href="/events"
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#00E5FF] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full"
+            >
+              Academic Symposia
+            </Link>
+            <Link 
+              href="/#opportunities"
+              className="w-full sm:w-auto px-8 py-3.5 border border-zinc-800 text-zinc-300 font-mono font-medium tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
+            >
+              All Opportunities
+            </Link>
+          </div>
+        </div>
       </section>
     </main>
   );
