@@ -1,88 +1,39 @@
 /* eslint-disable */
 "use client";
 
-import { motion } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, TorusKnot } from "@react-three/drei";
-import { useRef, useEffect, useState } from "react";
-import * as THREE from "three";
-import Lenis from "lenis";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowLeft, 
+  DollarSign, 
   ShieldCheck, 
-  FileCheck, 
+  CheckCircle2, 
+  Code2, 
+  Briefcase, 
   TrendingUp, 
-  CheckCircle,
-  ArrowRight,
-  ExternalLink
+  Layers, 
+  ExternalLink,
+  ChevronRight,
+  Zap,
+  Calculator
 } from "lucide-react";
 
-// Minimal Architectural Knot Core
-function ArchitecturalKnotMesh() {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.25;
-      meshRef.current.rotation.y += delta * 0.2;
-    }
-  });
-
-  return (
-    <Float speed={1.8} rotationIntensity={1} floatIntensity={1.2}>
-      <TorusKnot ref={meshRef} args={[1.5, 0.38, 128, 32]} scale={1.2}>
-        <meshStandardMaterial 
-          color="#D90429" 
-          emissive="#550010"
-          emissiveIntensity={0.35}
-          roughness={0.2} 
-          metalness={0.9} 
-          wireframe={false}
-        />
-      </TorusKnot>
-    </Float>
-  );
-}
-
 export default function FreelanceWorkPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedBounty, setSelectedBounty] = useState<number>(0);
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [calculatorScope, setCalculatorScope] = useState<number>(1);
 
-  useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
+  const scopeOptions = [
+    { name: "High-Converting 3D Landing Page", payoutUsd: "$1,200", payoutInr: "₹1,00,000", timeline: "2 Weeks", stack: ["Next.js", "Tailwind", "Three.js / GSAP"] },
+    { name: "Full-Stack SaaS MVP with Auth & Payments", payoutUsd: "$2,400", payoutInr: "₹2,00,000", timeline: "3.5 Weeks", stack: ["Next.js", "Supabase", "Stripe", "Prisma"] },
+    { name: "Cross-Platform Mobile App (iOS & Android)", payoutUsd: "$3,200", payoutInr: "₹2,70,000", timeline: "4 Weeks", stack: ["React Native", "Expo", "SQLite", "EAS"] },
+    { name: "AI Document Search & RAG Chat Engine", payoutUsd: "$4,000", payoutInr: "₹3,40,000", timeline: "4.5 Weeks", stack: ["FastAPI", "pgvector", "LangChain", "React"] }
+  ];
 
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-    });
-    lenis.scrollTo(0, { immediate: true });
-
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'auto';
-      }
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
-  }, []);
-
-  const realBounties = [
+  const bounties = [
     {
+      category: "web",
       role: "High-Throughput Analytics Dashboard",
       client: "Fintech SaaS (Series A)",
       budget: "$2,200 USD",
@@ -90,14 +41,15 @@ export default function FreelanceWorkPage() {
       deadline: "3 Weeks",
       stack: ["Next.js 16", "Tailwind CSS", "ClickHouse", "Tremor"],
       deliverables: [
-        "WebSocket feed consuming 15,000 real-time events/sec",
-        "Canvas charts rendering sub-10ms latency metrics",
-        "Role-based access control with session revocation"
+        "WebSocket connection ingesting 15,000 events/sec",
+        "Canvas charts rendering sub-10ms response telemetry",
+        "Role-based access control with Supabase Auth"
       ],
       vetting: "Code reviewed and security-scanned by Invictus systems leads."
     },
     {
-      role: "Enterprise RAG & Knowledge Pipeline",
+      category: "ai",
+      role: "AI Document Search & Knowledge Pipeline",
       client: "Enterprise LegalTech Startup",
       budget: "$3,400 USD",
       payoutInr: "₹2,85,000 INR",
@@ -105,12 +57,13 @@ export default function FreelanceWorkPage() {
       stack: ["FastAPI", "Python", "pgvector", "LangChain", "React"],
       deliverables: [
         "Document ingestion with chunking and token budget guards",
-        "Hybrid semantic search using pgvector and rerankers",
+        "Hybrid semantic search using pgvector and Cohere rerankers",
         "Streamed conversational chat UI with citation anchors"
       ],
       vetting: "API key encryption and egress policies audited through club infra."
     },
     {
+      category: "mobile",
       role: "Cross-Platform Logistics Mobile App",
       client: "Supply Chain & Fleet Operator",
       budget: "$1,600 USD",
@@ -123,177 +76,239 @@ export default function FreelanceWorkPage() {
         "Over-the-air EAS update automation pipeline configured"
       ],
       vetting: "Tested across real physical devices in the student developer lab."
+    },
+    {
+      category: "web",
+      role: "Creative Studio Web Experience & Portfolio",
+      client: "Design & VFX Agency",
+      budget: "$1,500 USD",
+      payoutInr: "₹1,25,000 INR",
+      deadline: "2 Weeks",
+      stack: ["React", "Three.js", "GSAP ScrollTrigger", "Lenis"],
+      deliverables: [
+        "Interactive 3D particle canvas reacting to cursor position",
+        "Smooth inertia scroll timeline with zero 60fps frame drops",
+        "Lightweight headless CMS integration with Sanity"
+      ],
+      vetting: "Creative review by Invictus UI team before client sign-off."
     }
   ];
 
+  const filteredBounties = filterCategory === "all" 
+    ? bounties 
+    : bounties.filter(b => b.category === filterCategory);
+
   return (
-    <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-x-clip selection:bg-[#D90429] selection:text-white">
-      {/* Sleek Minimalist Floating Back Button */}
+    <main className="min-h-screen bg-black text-white selection:bg-[#D90429] selection:text-white">
+      {/* Sleek Floating Back Button */}
       <Link 
         href="/#opportunities" 
-        className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-zinc-400 hover:text-white hover:border-white/30 text-xs font-mono uppercase tracking-widest transition-all"
+        className="fixed top-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-950/80 backdrop-blur-md border border-white/10 text-zinc-300 hover:text-white hover:border-[#D90429] text-xs font-bold tracking-wider transition-all shadow-xl"
       >
-        <ArrowLeft size={14} />
-        <span>Base</span>
+        <ArrowLeft size={16} />
+        <span>OPPORTUNITIES</span>
       </Link>
 
       {/* HERO SECTION */}
-      <section className="relative h-screen flex flex-col items-center justify-center border-b border-zinc-900">
-        <div className="absolute inset-0 z-0 opacity-70">
-          <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={2.2} color="#D90429" />
-            <directionalLight position={[-10, -5, -5]} intensity={1.2} color="#FFFFFF" />
-            <ArchitecturalKnotMesh />
-            <OrbitControls enableZoom={false} maxDistance={14} minDistance={4} autoRotate autoRotateSpeed={0.6} />
-          </Canvas>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(217,4,41,0.06),transparent_65%)] pointer-events-none" />
-        </div>
-        
-        <motion.div 
-          className="z-10 text-center pointer-events-none px-6 max-w-5xl"
-          initial={{ opacity: 0, y: 30 }}
+      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#D90429]/30 bg-[#D90429]/10 text-[#D90429] text-xs font-bold tracking-widest uppercase mb-6"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 text-[11px] font-mono font-medium tracking-[0.2em] uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D90429]" />
-            DEV GUILD // COMMERCIAL CONTRACTS
-          </div>
-
-          <h1 className="text-6xl sm:text-8xl md:text-[9.5rem] font-black tracking-tighter text-white leading-[0.88] uppercase">
-            FREELANCE
-          </h1>
-
-          <p className="text-xs sm:text-sm md:text-base text-zinc-400 font-mono tracking-[0.2em] uppercase mt-6 max-w-xl mx-auto leading-relaxed">
-            High-Value Production Engineering For Startups And Modern Tech Companies.
-          </p>
+          <DollarSign size={14} />
+          <span>INVICTUS DEV GUILD</span>
         </motion.div>
+
+        <motion.h1 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
+        >
+          STOP DOING $10 GIGS. <span className="text-[#D90429]">EARN REAL MONEY.</span>
+        </motion.h1>
+
+        <motion.p 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
+        >
+          We bring high-paying software contracts from real startups directly to VTU student builders. Upfront escrow protection, senior PR code reviews, and zero scam clients.
+        </motion.p>
       </section>
 
-      {/* AGENCY MODEL */}
-      <section className="py-24 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-zinc-900">
+      {/* INTERACTIVE EARNINGS ESTIMATOR */}
+      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="p-8 sm:p-12 rounded-3xl bg-zinc-950 border border-zinc-800 max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <Calculator className="w-6 h-6 text-[#D90429]" />
+            <h3 className="text-2xl font-black uppercase text-white tracking-tight">
+              Interactive Bounty Payout Estimator
+            </h3>
+          </div>
+          <p className="text-xs sm:text-sm text-zinc-400 mb-8">
+            Select a project archetype to see real market compensation for Invictus Dev Guild members.
+          </p>
+
+          {/* Scope Picker Buttons */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {scopeOptions.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => setCalculatorScope(i)}
+                className={`p-4 rounded-xl text-left border transition-all ${
+                  calculatorScope === i
+                    ? "bg-[#D90429]/15 border-[#D90429] text-white"
+                    : "bg-black/60 border-zinc-900 text-zinc-400 hover:border-zinc-800"
+                }`}
+              >
+                <div className="text-xs font-mono text-zinc-500 mb-1">Option 0{i+1}</div>
+                <div className="text-sm font-bold text-white mb-1">{opt.name}</div>
+                <div className="text-xs text-[#D90429] font-mono font-bold">{opt.payoutInr}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Result Card */}
+          <div className="p-6 rounded-2xl bg-black border border-zinc-900 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div>
+              <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest block mb-1">
+                ESTIMATED TAKE-HOME PAYOUT
+              </span>
+              <div className="flex items-baseline gap-3">
+                <span className="text-3xl sm:text-5xl font-black text-[#D90429] font-mono">
+                  {scopeOptions[calculatorScope].payoutInr}
+                </span>
+                <span className="text-sm font-mono text-zinc-400">
+                  ({scopeOptions[calculatorScope].payoutUsd})
+                </span>
+              </div>
+              <div className="text-xs text-zinc-400 mt-2 font-mono">
+                Standard Sprint: {scopeOptions[calculatorScope].timeline}
+              </div>
+            </div>
+
+            <div className="sm:text-right">
+              <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest block mb-2">
+                RECOMMENDED TECH STACK
+              </span>
+              <div className="flex flex-wrap sm:justify-end gap-1.5">
+                {scopeOptions[calculatorScope].stack.map((st, i) => (
+                  <span key={i} className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300">
+                    {st}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FILTERABLE BOUNTY BOARD */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#D90429] uppercase mb-2 block">
-              // 01 / GUILD MODEL
+            <span className="text-xs font-bold uppercase tracking-widest text-[#D90429] block mb-2">
+              VERIFIED OPPORTUNITIES
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-              The Developer Collective
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+              Open Client Contracts
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 font-mono max-w-md">
-            Guaranteed escrow deposits, peer architecture review, and public case-study credit.
-          </p>
+
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "all", label: "All Bounties" },
+              { id: "web", label: "Web / Frontend" },
+              { id: "ai", label: "AI & APIs" },
+              { id: "mobile", label: "Mobile Apps" }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setFilterCategory(tab.id);
+                  setSelectedBounty(0);
+                }}
+                className={`px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all ${
+                  filterCategory === tab.id
+                    ? "bg-[#D90429] text-white shadow-lg"
+                    : "bg-zinc-900 text-zinc-400 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: ShieldCheck,
-              title: "Escrow Deposit Protection",
-              desc: "Contracts begin with upfront milestone escrow funding. Developers are never exposed to unpaid client handoffs or scope drift."
-            },
-            {
-              icon: FileCheck,
-              title: "Senior Code Quality Gate",
-              desc: "Every milestone PR undergoes architecture and security audits by Invictus tech leads before client delivery."
-            },
-            {
-              icon: TrendingUp,
-              title: "Full Attribution & Credit",
-              desc: "Members retain public portfolio attribution. Several student builders have converted freelance clients into full-time roles."
-            }
-          ].map((item, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-[#D90429]/40 transition-all flex flex-col justify-between group">
-              <div>
-                <item.icon className="w-6 h-6 text-[#D90429] mb-6" />
-                <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-3">{item.title}</h3>
-                <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed">{item.desc}</p>
+        {/* Bounty Explorer Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* List */}
+          <div className="lg:col-span-5 space-y-3">
+            {filteredBounties.map((bounty, idx) => (
+              <div
+                key={idx}
+                onClick={() => setSelectedBounty(idx)}
+                className={`p-6 rounded-2xl border cursor-pointer transition-all ${
+                  selectedBounty === idx 
+                    ? "bg-zinc-900 border-[#D90429] shadow-lg" 
+                    : "bg-zinc-950 border-zinc-800 hover:border-zinc-700"
+                }`}
+              >
+                <div className="flex justify-between items-start gap-2 mb-2">
+                  <span className="text-xs font-mono text-zinc-400">{bounty.client}</span>
+                  <span className="text-sm font-mono font-bold text-[#D90429]">{bounty.budget}</span>
+                </div>
+                <h3 className="text-lg font-bold tracking-tight text-white mb-3">{bounty.role}</h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {bounty.stack.slice(0, 3).map((st, i) => (
+                    <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded bg-black border border-zinc-800 text-zinc-300">
+                      {st}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="mt-8 pt-4 border-t border-zinc-900 text-xs font-mono text-zinc-500 flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-[#D90429] shrink-0" /> Verified Escrow Guarantee
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* INTERACTIVE BOUNTY BOARD */}
-      <section className="py-24 bg-[#040404] border-t border-zinc-900">
-        <div className="max-w-7xl mx-auto px-6 md:px-16">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14 pb-6 border-b border-zinc-900">
-            <div>
-              <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#D90429] uppercase mb-2 block">
-                // 02 / ACTIVE CONTRACTS
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-                Client Bounties
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-              {realBounties.length} Verified Production Contracts
-            </span>
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* List */}
-            <div className="lg:col-span-5 space-y-3">
-              {realBounties.map((bounty, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedBounty(idx)}
-                  className={`p-6 rounded-2xl border cursor-pointer transition-all ${
-                    selectedBounty === idx 
-                      ? "bg-zinc-900/90 border-[#D90429]/60 shadow-[0_0_30px_rgba(217,4,41,0.1)]" 
-                      : "bg-zinc-950/60 border-white/[0.08] hover:border-white/20"
-                  }`}
-                >
-                  <div className="flex justify-between items-start gap-2 mb-2">
-                    <span className="text-xs font-mono text-zinc-400">{bounty.client}</span>
-                    <span className="text-sm font-mono font-bold text-[#D90429]">{bounty.budget}</span>
-                  </div>
-                  <h3 className="text-lg font-bold tracking-tight text-white mb-3">{bounty.role}</h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {bounty.stack.slice(0, 3).map((st, i) => (
-                      <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300">
-                        {st}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Dossier */}
-            <div className="lg:col-span-7 bg-zinc-950/80 border border-white/[0.08] rounded-2xl p-8 sm:p-10 space-y-6">
+          {/* Dossier */}
+          {filteredBounties[selectedBounty] && (
+            <motion.div 
+              key={selectedBounty}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="lg:col-span-7 bg-zinc-950 border border-zinc-800 rounded-3xl p-8 sm:p-10 space-y-6"
+            >
               <div>
                 <div className="flex items-center justify-between text-xs font-mono text-zinc-400 mb-2">
-                  <span>{realBounties[selectedBounty].client}</span>
-                  <span className="text-[#D90429] font-bold">Timeline: {realBounties[selectedBounty].deadline}</span>
+                  <span>{filteredBounties[selectedBounty].client}</span>
+                  <span className="text-[#D90429] font-bold">Timeline: {filteredBounties[selectedBounty].deadline}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                  {realBounties[selectedBounty].role}
+                  {filteredBounties[selectedBounty].role}
                 </h3>
-                <div className="flex items-center gap-4 mt-3">
-                  <span className="text-2xl font-black font-mono text-[#D90429]">
-                    {realBounties[selectedBounty].budget}
+                <div className="flex items-baseline gap-3 mt-3">
+                  <span className="text-3xl font-black font-mono text-[#D90429]">
+                    {filteredBounties[selectedBounty].budget}
                   </span>
                   <span className="text-xs font-mono text-zinc-400">
-                    ≈ {realBounties[selectedBounty].payoutInr}
+                    ≈ {filteredBounties[selectedBounty].payoutInr}
                   </span>
                 </div>
               </div>
 
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block mb-3">
-                  Scope & Deliverables:
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 block mb-3">
+                  Required Deliverables:
                 </span>
                 <div className="space-y-2">
-                  {realBounties[selectedBounty].deliverables.map((item, i) => (
-                    <div key={i} className="flex items-start gap-2.5 p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 text-xs text-zinc-300">
-                      <CheckCircle className="w-4 h-4 text-[#D90429] shrink-0 mt-0.5" />
+                  {filteredBounties[selectedBounty].deliverables.map((item, i) => (
+                    <div key={i} className="flex items-start gap-2.5 p-3 rounded-xl bg-black border border-zinc-900 text-xs sm:text-sm text-zinc-300">
+                      <CheckCircle2 className="w-4 h-4 text-[#D90429] shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -301,11 +316,11 @@ export default function FreelanceWorkPage() {
               </div>
 
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 block mb-2">
-                  Quality Audit Standard:
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 block mb-2">
+                  Invictus Quality Guarantee:
                 </span>
-                <p className="text-xs text-zinc-400 font-mono bg-zinc-900/60 p-3 rounded-xl border border-zinc-800">
-                  {realBounties[selectedBounty].vetting}
+                <p className="text-xs text-zinc-400 font-mono bg-black p-3.5 rounded-xl border border-zinc-900">
+                  {filteredBounties[selectedBounty].vetting}
                 </p>
               </div>
 
@@ -313,40 +328,74 @@ export default function FreelanceWorkPage() {
                 href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
                 target="_blank"
                 rel="noreferrer"
-                className="block text-center py-3.5 bg-[#D90429] text-white font-bold tracking-widest uppercase text-xs rounded-full hover:bg-white hover:text-black transition-colors"
+                className="block text-center py-4 bg-[#D90429] text-white font-bold tracking-widest uppercase text-xs rounded-full hover:bg-white hover:text-black transition-colors shadow-lg"
               >
-                Apply via Dev Guild
+                Claim Bounty via Dev Guild WhatsApp
               </a>
-            </div>
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* THE GUILD SHIELD */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#D90429] block mb-2">
+            ZERO RISK FOR DEVELOPERS
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+            How The Guild Protects You
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <ShieldCheck className="w-8 h-8 text-[#D90429] mb-4" />
+            <h4 className="font-bold text-lg mb-2">40% Upfront Escrow</h4>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              No developer writes a single line of code until client funds are verified and locked in escrow.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <Code2 className="w-8 h-8 text-[#D90429] mb-4" />
+            <h4 className="font-bold text-lg mb-2">Senior PR Reviews</h4>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              Club tech leads review your pull requests before client handoff, catching security flaws and bugs early.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <TrendingUp className="w-8 h-8 text-[#D90429] mb-4" />
+            <h4 className="font-bold text-lg mb-2">Direct Job Offers</h4>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              Multiple students turned freelance projects into full-time remote engineering positions after graduation.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* MINIMALIST CTA */}
-      <section className="py-28 px-6 bg-black text-center border-t border-zinc-900">
+      {/* FINAL CTA */}
+      <section className="py-24 px-6 text-center border-t border-zinc-900 bg-black">
         <div className="max-w-2xl mx-auto space-y-6">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#D90429] block">
-            // JOIN INVICTUS GUILD
-          </span>
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase text-white leading-tight">
-            Ship Client Software.
+          <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">
+            Ready To Get Paid For Code?
           </h2>
-          <p className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed">
-            Have verified project proof or GitHub contributions? Join the student developer talent pool to take on high-paying startup contracts.
+          <p className="text-zinc-400 text-base leading-relaxed">
+            Send your GitHub profile to the Dev Guild review board and enter our active talent pool.
           </p>
-
           <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
               href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
               target="_blank"
               rel="noreferrer"
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#D90429] text-white font-bold tracking-widest uppercase text-xs hover:bg-white hover:text-black transition-all rounded-full"
+              className="w-full sm:w-auto px-8 py-4 bg-[#D90429] text-white font-bold tracking-widest uppercase text-xs hover:bg-white hover:text-black transition-all rounded-full shadow-[0_0_25px_rgba(217,4,41,0.3)]"
             >
-              Join Dev Guild
+              Join Invictus Dev Guild
             </a>
             <Link 
-              href="/#opportunities"
-              className="w-full sm:w-auto px-8 py-3.5 border border-zinc-800 text-zinc-300 font-mono font-medium tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
+              href="/#opportunities" 
+              className="w-full sm:w-auto px-8 py-4 border border-zinc-800 text-zinc-300 font-bold tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
             >
               All Opportunities
             </Link>

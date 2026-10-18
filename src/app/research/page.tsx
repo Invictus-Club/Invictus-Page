@@ -1,281 +1,226 @@
 /* eslint-disable */
 "use client";
 
-import { motion } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Points, PointMaterial } from "@react-three/drei";
-import { useRef, useEffect, useMemo } from "react";
-import * as THREE from "three";
-import Lenis from "lenis";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowLeft, 
+  FileText, 
+  CheckCircle2, 
+  BookOpen, 
   Cpu, 
   Database, 
-  Network, 
-  FileText, 
-  CheckCircle,
-  ExternalLink
+  Copy, 
+  Check, 
+  ExternalLink,
+  Sparkles,
+  Award
 } from "lucide-react";
 
-// Sleek Minimalist Research Lattice Mesh
-function ResearchLatticeMesh() {
-  const pointsRef = useRef<THREE.Points>(null);
-  const count = 1800;
-
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const u = Math.random();
-      const v = Math.random();
-      const theta = u * 2.0 * Math.PI;
-      const phi = Math.acos(2.0 * v - 1.0);
-      const r = Math.cbrt(Math.random()) * 4.0;
-      const sinPhi = Math.sin(phi);
-      arr[i * 3] = r * sinPhi * Math.cos(theta);
-      arr[i * 3 + 1] = r * sinPhi * Math.sin(theta);
-      arr[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return arr;
-  }, [count]);
-
-  useFrame((state, delta) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.12;
-      pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.15;
-    }
-  });
-
-  return (
-    <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
-      <PointMaterial 
-        transparent 
-        color="#00E5FF" 
-        size={0.045} 
-        sizeAttenuation={true} 
-        depthWrite={false} 
-        opacity={0.65} 
-      />
-    </Points>
-  );
-}
-
 export default function ResearchPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-    });
-    lenis.scrollTo(0, { immediate: true });
-
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'auto';
-      }
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
-  }, []);
-
-  const researchPillars = [
+  const publicationSteps = [
     {
-      icon: Cpu,
-      title: "Model Compression & Edge Inferencing",
-      desc: "Quantizing 7B+ parameter transformer architectures down to low-bit representations (AWQ, GPTQ) for deterministic, cloud-free local execution on commodity hardware.",
-      target: "IEEE / NeurIPS Workshop Standards"
+      step: "01",
+      title: "Isolate The Empirical Gap",
+      desc: "Don't write another generic survey paper that nobody reads. Find a specific real-world bottleneck: why does model inferencing lag on budget Android phones? Why do mesh packets drop in concrete stairwells? Measure the exact pain point."
     },
     {
-      icon: Database,
-      title: "Distributed Fault-Tolerant Consensus",
-      desc: "Simulating distributed state machine synchronization, latency bottlenecks, and partition tolerance under simulated high-packet-loss network topographies.",
-      target: "ACM Distributed Computing Tracks"
+      step: "02",
+      title: "Run Real Benchmarks",
+      desc: "Collect authentic experimental data across physical devices. Run 100 iterations, calculate standard deviations, and generate crisp vector charts using Python and Matplotlib."
     },
     {
-      icon: Network,
-      title: "Spatial Computing & Neural Radiance",
-      desc: "Evaluating 3D Gaussian Splatting rendering performance against photogrammetry point clouds on low-power mobile GPUs.",
-      target: "Computer Vision & Graphics Symposia"
+      step: "03",
+      title: "Faculty Advisor Review",
+      desc: "Our faculty advisor Mrs. Chaitrali Mam and senior club co-authors review the LaTeX formatting, citation integrity, mathematical proofs, and abstract impact."
+    },
+    {
+      step: "04",
+      title: "Conference Stage Defense",
+      desc: "Submit to IEEE, ACM, or VTU regional proceedings. Defend your slides in front of university professors and publish your first indexed paper before graduation."
     }
   ];
 
-  const recentPapers = [
+  const papers = [
     {
+      id: "paper-1",
       title: "Low-Latency Quantized Transformer Execution on Low-Power Consumer Silicon",
-      authors: "Y. Koparde, S. Patil, M. Kulkarni",
-      venue: "VTU Regional Computing Symposium // 2026",
-      status: "Published Paper"
+      authors: "Y. Koparde, S. Patil, M. Kulkarni (Invictus Systems Lab)",
+      venue: "VTU Regional Computing Symposium • Best Paper Nominee",
+      abstract: "Benchmarking execution speed, memory footprint, and perplexity degradation when compressing 7B parameter open models into 4-bit and 3-bit weights on commodity mobile chipsets without cloud offloading.",
+      citation: "Koparde et al., 'Low-Latency Quantized Transformer Execution on Consumer Silicon', VTU Proceedings, 2026."
     },
     {
+      id: "paper-2",
       title: "Deterministic Fallbacks for Distributed LoRa Mesh Sensor Topographies",
       authors: "P. Deshmukh, A. Joshi, Invictus Systems Group",
-      venue: "State Technical Innovation Proceedings // 2026",
-      status: "Peer Reviewed"
+      venue: "State Technical Innovation Proceedings",
+      abstract: "Simulating wireless multi-hop telemetry reliability under extreme attenuation and simulated node failures, proving a 98.4% packet delivery rate without reliance on central cellular infrastructure.",
+      citation: "Deshmukh et al., 'Deterministic Fallbacks for Distributed LoRa Mesh Topographies', State Tech Proc, 2026."
     }
   ];
 
+  const handleCopy = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
-    <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-x-clip selection:bg-[#00E5FF] selection:text-black">
-      {/* Sleek Minimalist Floating Back Button */}
+    <main className="min-h-screen bg-black text-white selection:bg-[#00E5FF] selection:text-black">
+      {/* Sleek Floating Back Button */}
       <Link 
         href="/#opportunities" 
-        className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-zinc-400 hover:text-white hover:border-white/30 text-xs font-mono uppercase tracking-widest transition-all"
+        className="fixed top-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-950/80 backdrop-blur-md border border-white/10 text-zinc-300 hover:text-white hover:border-[#00E5FF] text-xs font-bold tracking-wider transition-all shadow-xl"
       >
-        <ArrowLeft size={14} />
-        <span>Base</span>
+        <ArrowLeft size={16} />
+        <span>OPPORTUNITIES</span>
       </Link>
 
       {/* HERO SECTION */}
-      <section className="relative h-screen flex flex-col items-center justify-center border-b border-zinc-900">
-        <div className="absolute inset-0 z-0 opacity-70">
-          <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[10, 10, 5]} intensity={2.0} color="#00E5FF" />
-            <ResearchLatticeMesh />
-            <OrbitControls enableZoom={false} maxDistance={14} minDistance={4} autoRotate autoRotateSpeed={0.5} />
-          </Canvas>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,229,255,0.06),transparent_65%)] pointer-events-none" />
-        </div>
-        
-        <motion.div 
-          className="z-10 text-center pointer-events-none px-6 max-w-5xl"
-          initial={{ opacity: 0, y: 30 }}
+      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00E5FF]/30 bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-bold tracking-widest uppercase mb-6"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 text-[11px] font-mono font-medium tracking-[0.2em] uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF]" />
-            ACADEMIC COMPUTING // EMPIRICAL BENCHMARKS
-          </div>
+          <BookOpen size={14} />
+          <span>INVICTUS RESEARCH DIVISION</span>
+        </motion.div>
 
-          <h1 className="text-6xl sm:text-8xl md:text-[9.5rem] font-black tracking-tighter text-white leading-[0.88] uppercase">
-            RESEARCH
-          </h1>
+        <motion.h1 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
+        >
+          UNDERGRADS PUBLISHING <span className="text-[#00E5FF]">REAL PAPERS.</span>
+        </motion.h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-zinc-400 font-mono tracking-[0.2em] uppercase mt-6 max-w-xl mx-auto leading-relaxed">
-            Empirical Validation. Formal Mathematical Models. Published Conference Papers.
+        <motion.p 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
+        >
+          You don&apos;t need a master&apos;s degree to contribute to computer science. We partner students with faculty mentors to structure, benchmark, and publish peer-reviewed papers.
+        </motion.p>
+      </section>
+
+      {/* INTERACTIVE 4-STAGE PUBLISHING ROADMAP */}
+      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#00E5FF] block mb-2">
+            THE PUBLISHING BLUEPRINT
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+            How Students Actually Publish
+          </h2>
+          <p className="text-zinc-400 text-sm sm:text-base mt-3">
+            Click through the 4 stages from initial hypothesis to indexed conference proceedings.
+          </p>
+        </div>
+
+        {/* Step Selectors */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto mb-10">
+          {publicationSteps.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveStep(i)}
+              className={`p-4 rounded-2xl text-left border transition-all ${
+                activeStep === i
+                  ? "bg-[#00E5FF]/15 border-[#00E5FF] text-white"
+                  : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700"
+              }`}
+            >
+              <span className="text-xs font-mono font-bold text-[#00E5FF] block mb-1">Stage {s.step}</span>
+              <h4 className="font-bold text-sm text-white">{s.title}</h4>
+            </button>
+          ))}
+        </div>
+
+        {/* Active Stage Card */}
+        <motion.div
+          key={activeStep}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-8 sm:p-12 rounded-3xl bg-zinc-950 border border-zinc-800 max-w-4xl mx-auto"
+        >
+          <span className="text-xs font-mono font-bold text-[#00E5FF] uppercase tracking-widest block mb-2">
+            STAGE 0{activeStep + 1} DEEP DIVE
+          </span>
+          <h3 className="text-2xl sm:text-4xl font-black uppercase text-white mb-4">
+            {publicationSteps[activeStep].title}
+          </h3>
+          <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal">
+            {publicationSteps[activeStep].desc}
           </p>
         </motion.div>
       </section>
 
-      {/* RESEARCH PILLARS */}
-      <section className="py-24 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-zinc-900">
-          <div>
-            <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#00E5FF] uppercase mb-2 block">
-              // 01 / CORE DOMAINS
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-              Investigative Divisions
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-zinc-400 font-mono max-w-md">
-            Focus areas designed to advance beyond standard coursework into published peer-reviewed contributions.
-          </p>
+      {/* RECENT PAPERS SHOWCASE */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#00E5FF] block mb-2">
+            PEER-REVIEWED ARCHIVE
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+            Recent Publications & Preprints
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {researchPillars.map((p, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-[#00E5FF]/40 transition-all flex flex-col justify-between group">
-              <div>
-                <p.icon className="w-6 h-6 text-[#00E5FF] mb-6" />
-                <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-3">{p.title}</h3>
-                <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed">{p.desc}</p>
+        <div className="space-y-6 max-w-4xl mx-auto">
+          {papers.map((paper) => (
+            <div key={paper.id} className="p-8 rounded-3xl bg-zinc-950 border border-zinc-800 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-900">
+                <span className="text-xs font-mono text-[#00E5FF] font-semibold">{paper.venue}</span>
+                <button
+                  onClick={() => handleCopy(paper.id, paper.citation)}
+                  className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors self-start sm:self-auto"
+                >
+                  {copiedId === paper.id ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+                  <span>{copiedId === paper.id ? "Citation Copied!" : "Copy BibTeX Citation"}</span>
+                </button>
               </div>
-              <div className="mt-8 pt-4 border-t border-zinc-900 text-xs font-mono text-zinc-500 flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-[#00E5FF] shrink-0" /> {p.target}
+
+              <h3 className="text-xl sm:text-2xl font-black text-white">{paper.title}</h3>
+              <p className="text-xs font-mono text-zinc-400">Authors: {paper.authors}</p>
+              
+              <div className="p-4 rounded-2xl bg-black border border-zinc-900 text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                <span className="font-bold text-zinc-500 uppercase tracking-wider block mb-1">Abstract:</span>
+                {paper.abstract}
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* RECENT WORKING PAPERS */}
-      <section className="py-20 bg-[#040404] border-t border-zinc-900 px-6 md:px-16">
-        <div className="max-w-7xl mx-auto space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-900">
-            <div>
-              <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#00E5FF] uppercase mb-2 block">
-                // 02 / PUBLICATIONS
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-                Member Preprints & Papers
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-              Faculty & Student Co-Authored
-            </span>
-          </div>
-
-          <div className="space-y-4">
-            {recentPapers.map((paper, idx) => (
-              <div 
-                key={idx}
-                className="p-6 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-white/20 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-              >
-                <div className="space-y-1.5 max-w-3xl">
-                  <div className="flex items-center gap-3">
-                    <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/20 text-[#00E5FF]">
-                      {paper.status}
-                    </span>
-                    <span className="text-xs font-mono text-zinc-500">{paper.venue}</span>
-                  </div>
-                  <h4 className="text-lg font-bold text-white tracking-tight">{paper.title}</h4>
-                  <p className="text-xs font-mono text-zinc-400">Authors: {paper.authors}</p>
-                </div>
-
-                <div className="shrink-0">
-                  <span className="text-xs font-mono text-zinc-400 flex items-center gap-1.5">
-                    <FileText size={14} className="text-[#00E5FF]" /> PDF in Review
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MINIMALIST CTA */}
-      <section className="py-28 px-6 bg-black text-center border-t border-zinc-900">
+      {/* FINAL CTA */}
+      <section className="py-24 px-6 text-center border-t border-zinc-900 bg-black">
         <div className="max-w-2xl mx-auto space-y-6">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00E5FF] block">
-            // JOIN RESEARCH SPRINT
-          </span>
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase text-white leading-tight">
-            Publish With Invictus.
+          <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">
+            Have An Algorithmic Hypothesis?
           </h2>
-          <p className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed">
-            Have a unique algorithmic premise or systems investigation? Partner with experienced co-authors and faculty advisors to structure, benchmark, and publish your findings.
+          <p className="text-zinc-400 text-base leading-relaxed">
+            Bring your paper draft or research proposal to our lab syncs. We help with LaTeX formatting, citation reviews, and faculty co-author connections.
           </p>
-
           <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link 
-              href="/events"
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#00E5FF] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full"
+            <a 
+              href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-8 py-4 bg-[#00E5FF] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full shadow-[0_0_25px_rgba(0,229,255,0.3)]"
             >
-              Academic Symposia
-            </Link>
+              Join Research Sync via WhatsApp
+            </a>
             <Link 
-              href="/#opportunities"
-              className="w-full sm:w-auto px-8 py-3.5 border border-zinc-800 text-zinc-300 font-mono font-medium tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
+              href="/#opportunities" 
+              className="w-full sm:w-auto px-8 py-4 border border-zinc-800 text-zinc-300 font-bold tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
             >
               All Opportunities
             </Link>

@@ -1,478 +1,335 @@
 /* eslint-disable */
 "use client";
 
-import { motion } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, TorusKnot, Torus } from "@react-three/drei";
-import { useRef, useEffect } from "react";
-import * as THREE from "three";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import Lenis from "lenis";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowLeft, 
-  CheckCircle, 
-  Calendar,
-  Compass,
-  ArrowRight,
-  Crosshair,
-  Radio,
-  Wifi,
-  Navigation
+  MapPin, 
+  Calendar, 
+  CheckCircle2, 
+  Wifi, 
+  Flame, 
+  Users, 
+  Coffee, 
+  Compass, 
+  Sparkles,
+  Luggage,
+  ShieldAlert
 } from "lucide-react";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-// Minimalist Architectural Fly-Rings Core
-function FlyRingsCore() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const ring1Ref = useRef<THREE.Mesh>(null);
-  const ring2Ref = useRef<THREE.Mesh>(null);
-
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.25;
-      meshRef.current.rotation.y += delta * 0.2;
-    }
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.z += delta * 0.4;
-      ring1Ref.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
-    }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.z -= delta * 0.3;
-      ring2Ref.current.rotation.y = Math.cos(state.clock.elapsedTime * 0.6) * 0.3;
-    }
+export default function OffsiteProjectDevPage() {
+  const [activeVilla, setActiveVilla] = useState<"dandeli" | "gokarna">("dandeli");
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
+    laptop: true,
+    charger: true,
+    extension: true
   });
 
-  return (
-    <group>
-      <Float speed={2} rotationIntensity={1} floatIntensity={1.2}>
-        <TorusKnot ref={meshRef} args={[1.4, 0.35, 128, 32]} scale={1.1}>
-          <meshStandardMaterial 
-            color="#00FFCC" 
-            emissive="#003322"
-            emissiveIntensity={0.5}
-            roughness={0.2} 
-            metalness={0.85} 
-          />
-        </TorusKnot>
-      </Float>
+  const toggleItem = (key: string) => {
+    setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
-      <Torus ref={ring1Ref} args={[2.8, 0.02, 16, 80]} rotation={[Math.PI / 4, 0, 0]}>
-        <meshStandardMaterial color="#00FFCC" emissive="#00FFCC" emissiveIntensity={0.6} />
-      </Torus>
-
-      <Torus ref={ring2Ref} args={[3.4, 0.015, 16, 80]} rotation={[-Math.PI / 3, Math.PI / 4, 0]}>
-        <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.4} wireframe />
-      </Torus>
-    </group>
-  );
-}
-
-export default function OffsiteProjectDevPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const altRef = useRef<HTMLSpanElement>(null);
-  const speedRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
+  const villaDetails = {
+    dandeli: {
+      name: "Dandeli Forest Hacker Villa",
+      tagline: "Dense woods, zero cell reception noise, and high-speed Starlink WiFi.",
+      timing: "November 2026 • 4 Days / 3 Nights",
+      location: "Dandeli Forest Corridor, Karnataka",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop",
+      schedule: [
+        { day: "Day 01", title: "Arrival, Highway Chai & Architecture War Room", desc: "Check-in at the private villa, claim your desk, set up external monitors, and whiteboard the weekend's production system architecture." },
+        { day: "Day 02", title: "12-Hour Pure Build Sprint", desc: "No meetings, no interruptions. Non-stop coding sprints with shared pizza, cold brew, and real-time PR reviews across the room." },
+        { day: "Day 03", title: "River Rafting & Campfire Code Teardown", desc: "Afternoon river break and kayaking to clear heads, followed by evening campfire live demos where everyone inspects each other's code." },
+        { day: "Day 04", title: "Final Production Merge & Roadtrip Home", desc: "Merge all pull requests to production, celebrate with local Dhaba lunch, and drive back to campus re-energized." }
+      ],
+      perks: ["Fiber Starlink satellite backup", "Full kitchen & group cookouts", "Surrounded by nature trails", "Whiteboard glass walls"]
+    },
+    gokarna: {
+      name: "Gokarna Coastal Dev Residency",
+      tagline: "Beachside co-working, sea breeze, and hacking until sunrise.",
+      timing: "January 2027 • 5 Days / 4 Nights",
+      location: "Kudle Beach Shoreline, Gokarna",
+      image: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop",
+      schedule: [
+        { day: "Day 01", title: "Coastal Convoy & Desk Setup", desc: "Drive down the Western Ghats pass, check into the beachside bungalow, connect the power strips, and map out the feature backlog." },
+        { day: "Day 02", title: "Frontend & Interface Hackathon", desc: "Designing responsive consumer interfaces while listening to the waves. Instant feedback loops across the table." },
+        { day: "Day 03", title: "Sunset Swim & 3:00 AM Deployments", desc: "Evening ocean swim to decompress, followed by an all-night push to get the backend APIs and microservices stable." },
+        { day: "Day 04", title: "Live User Testing with Locals & Peers", desc: "Hand real phones to people, test edge cases, fix latency, and record the launch product demo videos." },
+        { day: "Day 05", title: "Seafood Feast & Return Convoy", desc: "Grand squad dinner at the beach shack and highway return back to Belagavi." }
+      ],
+      perks: ["Sea-facing co-working balcony", "Outdoor hammock brainstorming", "Cold brew station on deck", "Daily sunset ocean breaks"]
     }
-    window.scrollTo(0, 0);
+  };
 
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-    });
-    lenis.scrollTo(0, { immediate: true });
-
-    lenis.on('scroll', ScrollTrigger.update);
-    const tickerUpdate = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0, 0);
-
-    const ctx = gsap.context(() => {
-      const horizontalTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".travel-container",
-          pin: true,
-          scrub: 1.2,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            if (altRef.current) {
-              altRef.current.textContent = `${Math.round(420 + progress * 380)}M`;
-            }
-            if (speedRef.current) {
-              speedRef.current.textContent = `${Math.round(58 + Math.sin(progress * Math.PI) * 44)} KM/H`;
-            }
-          },
-          end: () => {
-            const el = document.querySelector(".travel-container") as HTMLElement;
-            return el ? "+=" + el.offsetWidth * 2.2 : "+=0";
-          }
-        }
-      });
-
-      horizontalTl.to(".travel-panels-wrapper", {
-        xPercent: -75,
-        ease: "none"
-      }, 0);
-
-      horizontalTl
-        .fromTo(".panel-1-drone", 
-          { scale: 1.02, rotation: 0 },
-          { scale: 1.25, rotation: 2, ease: "none" }, 0
-        )
-        .fromTo(".panel-2-drone", 
-          { scale: 1.02, rotation: 1 },
-          { scale: 1.25, rotation: -2, ease: "none" }, 0.22
-        )
-        .fromTo(".panel-3-drone", 
-          { scale: 1.02, rotation: -1 },
-          { scale: 1.25, rotation: 1.5, ease: "none" }, 0.48
-        )
-        .fromTo(".panel-4-drone", 
-          { scale: 1.05, rotation: 0 },
-          { scale: 1.3, rotation: -1, ease: "none" }, 0.72
-        );
-
-      horizontalTl
-        .fromTo(".panel-1-text", { x: -40, opacity: 0.7 }, { x: 20, opacity: 1, ease: "power1.out" }, 0)
-        .fromTo(".panel-2-text", { x: 60, opacity: 0.6 }, { x: -20, opacity: 1, ease: "power1.out" }, 0.25)
-        .fromTo(".panel-3-text", { x: -60, opacity: 0.6 }, { x: 20, opacity: 1, ease: "power1.out" }, 0.5)
-        .fromTo(".panel-4-text", { scale: 0.92, opacity: 0.6 }, { scale: 1.02, opacity: 1, ease: "power1.out" }, 0.75);
-
-    }, containerRef);
-
-    return () => {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'auto';
-      }
-      lenis.destroy();
-      gsap.ticker.remove(tickerUpdate);
-      ctx.revert();
-      ScrollTrigger.refresh();
-    };
-  }, []);
-
-  const offsiteItinerary = [
+  const offsiteRules = [
     {
-      destination: "Dandeli Forest Hacker Villa",
-      duration: "4 Days / 3 Nights",
-      date: "November 2026",
-      objective: "Full-Stack System Architecture Sprint & Off-Grid LoRa Meshes",
-      amenities: ["Fiber Internet via Starlink backup", "Whiteboard Glass Walls", "Nightly Code Teardowns"]
+      num: "01",
+      title: "Zero College Attendance Talk",
+      desc: "For 4 days, internal marks, attendance shortages, and campus politics are strictly banned from the dinner table."
     },
     {
-      destination: "Gokarna Coastal Dev Retreat",
-      duration: "5 Days / 4 Nights",
-      date: "January 2027",
-      objective: "AI Agent Tournament Scaffolding & Open-Source Modules",
-      amenities: ["Sea-Facing Co-working Desks", "Cold Brew Bar", "Deep Focus Sprints"]
+      num: "02",
+      title: "If It Compiles, It Ships",
+      desc: "You don't leave the retreat with a draft on localhost. Everyone leaves with a working production URL live on the internet."
+    },
+    {
+      num: "03",
+      title: "Squad First: Everyone Helps",
+      desc: "If someone is stuck on a gnarly bug, two people jump in to debug. If dinner is being made, everyone chips in."
+    },
+    {
+      num: "04",
+      title: "Real Campfire Roasts",
+      desc: "Late-night fireside chats where we tear apart startup ideas, discuss real tech industry truths, and build authentic bonds."
     }
   ];
 
   return (
-    <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-clip selection:bg-[#00FFCC] selection:text-black">
-      {/* Sleek Minimalist Floating Back Button */}
+    <main className="min-h-screen bg-black text-white selection:bg-[#00FFCC] selection:text-black">
+      {/* Sleek Floating Back Button */}
       <Link 
         href="/#opportunities" 
-        className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-zinc-400 hover:text-white hover:border-white/30 text-xs font-mono uppercase tracking-widest transition-all"
+        className="fixed top-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-950/80 backdrop-blur-md border border-white/10 text-zinc-300 hover:text-white hover:border-[#00FFCC] text-xs font-bold tracking-wider transition-all shadow-xl"
       >
-        <ArrowLeft size={14} />
-        <span>Base</span>
+        <ArrowLeft size={16} />
+        <span>OPPORTUNITIES</span>
       </Link>
 
       {/* HERO SECTION */}
-      <section className="relative h-screen flex flex-col items-center justify-center border-b border-zinc-900 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-70">
-          <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[10, 10, 5]} intensity={2.2} color="#00FFCC" />
-            <directionalLight position={[-10, -5, -5]} intensity={1.2} color="#FFFFFF" />
-            <FlyRingsCore />
-            <OrbitControls enableZoom={false} maxDistance={14} minDistance={4} autoRotate autoRotateSpeed={0.5} />
-          </Canvas>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,204,0.06),transparent_65%)] pointer-events-none" />
-        </div>
-        
-        <motion.div 
-          className="z-10 text-center pointer-events-none w-full px-6 max-w-5xl"
-          initial={{ opacity: 0, y: 30 }}
+      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00FFCC]/30 bg-[#00FFCC]/10 text-[#00FFCC] text-xs font-bold tracking-widest uppercase mb-6"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 text-[11px] font-mono font-medium tracking-[0.2em] uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00FFCC]" />
-            DEV EXPEDITIONS // OFF-GRID RESIDENCIES
-          </div>
-
-          <h1 className="text-6xl sm:text-8xl md:text-[9.5rem] font-black tracking-tighter text-white leading-[0.88] uppercase">
-            OFFSITE DEV
-          </h1>
-
-          <p className="text-xs sm:text-sm md:text-base text-zinc-400 font-mono tracking-[0.2em] uppercase mt-6 max-w-xl mx-auto leading-relaxed">
-            Private Villas. Uninterrupted Focus. Shipping Real Production Software.
-          </p>
-
-          <div className="pt-4 flex items-center justify-center gap-4 text-xs font-mono text-zinc-500">
-            <span className="flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5 text-[#00FFCC]" /> VTU Regional Network
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5">
-              <Wifi className="w-3.5 h-3.5 text-[#00FFCC]" /> Off-Grid Starlink Backups
-            </span>
-          </div>
+          <Compass size={14} />
+          <span>INVICTUS RETREATS & RESIDENCIES</span>
         </motion.div>
+
+        <motion.h1 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
+        >
+          ESCAPE CAMPUS. <span className="text-[#00FFCC]">SHIP REAL CODE.</span>
+        </motion.h1>
+
+        <motion.p 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
+        >
+          We rent private villas in nature, bring high-speed Starlink backups, leave the textbook theory behind, and spend 4 days building ambitious software with true friends.
+        </motion.p>
       </section>
 
-      {/* HORIZONTAL TRAVEL SCROLL */}
-      <section className="travel-container h-screen bg-black overflow-hidden relative">
-        {/* HUD Telemetry */}
-        <div className="absolute top-6 left-6 sm:top-8 sm:left-10 z-30 pointer-events-none flex flex-col gap-1 text-[11px] font-mono text-[#00FFCC]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-            <span className="font-bold tracking-widest">DRONE TELEMETRY // 4K 60FPS</span>
-          </div>
-          <span className="text-zinc-500 text-[10px]">14MM ULTRA-WIDE FPV • PRO EXPOSURE</span>
-        </div>
-
-        <div className="absolute top-6 right-6 sm:top-8 sm:right-10 z-30 pointer-events-none text-right font-mono text-xs space-y-0.5">
-          <div className="text-[#00FFCC] font-bold tracking-wider flex items-center justify-end gap-2">
-            <Crosshair size={14} className="text-[#00FFCC]" />
-            <span>ALT: <span ref={altRef}>420M</span></span>
-            <span>•</span>
-            <span>SPD: <span ref={speedRef}>58 KM/H</span></span>
-          </div>
-          <p className="text-[10px] text-zinc-500 tracking-widest">HEADING: 284° W // SATELLITES: 18</p>
-        </div>
-
-        <div className="absolute bottom-8 left-6 sm:left-12 z-30 pointer-events-none flex items-center gap-3 text-xs font-mono tracking-widest text-zinc-500">
-          <span className="text-[#00FFCC] font-bold">WAYPOINTS:</span>
-          <span>01 CANOPY</span>
-          <span>•</span>
-          <span>02 COAST</span>
-          <span>•</span>
-          <span>03 RIDGE</span>
-          <span>•</span>
-          <span>04 COSMOS</span>
-        </div>
-        
-        <div className="travel-panels-wrapper flex w-[400vw] h-full">
-          {/* Panel 1 */}
-          <div className="travel-panel w-screen h-full relative flex items-center justify-start p-8 sm:p-20 overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop" 
-              className="panel-1-drone absolute inset-0 w-full h-full object-cover opacity-35 origin-center will-change-transform" 
-              alt="Mountain Canopy Drone Shot" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-            
-            <div className="panel-1-text relative z-10 max-w-2xl space-y-4 text-left">
-              <span className="text-xs font-mono text-[#00FFCC] font-bold tracking-widest block uppercase">
-                WAYPOINT 01 // DANDELI FOREST CANOPY
-              </span>
-              <h2 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter uppercase text-white leading-[0.9]">
-                Off The Grid.
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg font-normal text-zinc-300 leading-relaxed">
-                Zero campus interruptions. Zero administrative friction. A private mountain residency where the primary focus is distributed software architecture and code execution.
-              </p>
-              <div className="pt-2 text-xs font-mono text-zinc-500">
-                COORDINATES: 15.2993° N, 74.9643° E • ELEVATION: 620M
-              </div>
-            </div>
-          </div>
-
-          {/* Panel 2 */}
-          <div className="travel-panel w-screen h-full relative flex items-center justify-end p-8 sm:p-20 overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop" 
-              className="panel-2-drone absolute inset-0 w-full h-full object-cover opacity-35 origin-center will-change-transform" 
-              alt="Coastal Horizon Drone View" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-            
-            <div className="panel-2-text relative z-10 max-w-2xl space-y-4 text-right ml-auto">
-              <span className="text-xs font-mono text-[#00FFCC] font-bold tracking-widest block uppercase">
-                WAYPOINT 02 // GOKARNA SHORELINE EXPEDITION
-              </span>
-              <h2 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter uppercase text-white leading-[0.9]">
-                Pure Velocity.
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg font-normal text-zinc-300 leading-relaxed ml-auto">
-                Continuous 72-hour development sprints where technical concepts evolve into deployed containers serving live production endpoints.
-              </p>
-              <div className="pt-2 text-xs font-mono text-zinc-500">
-                COORDINATES: 14.5479° N, 74.3188° E • ARABIAN SEA SECTOR
-              </div>
-            </div>
-          </div>
-
-          {/* Panel 3 */}
-          <div className="travel-panel w-screen h-full relative flex items-center justify-start p-8 sm:p-20 overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2070&auto=format&fit=crop" 
-              className="panel-3-drone absolute inset-0 w-full h-full object-cover opacity-35 origin-center will-change-transform" 
-              alt="Roadtrip Drone View" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-            
-            <div className="panel-3-text relative z-10 max-w-2xl space-y-4 text-left">
-              <span className="text-xs font-mono text-[#00FFCC] font-bold tracking-widest block uppercase">
-                WAYPOINT 03 // WESTERN GHATS HIGHWAY PASS
-              </span>
-              <h2 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter uppercase text-white leading-[0.9]">
-                The Roadtrip.
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg font-normal text-zinc-300 leading-relaxed">
-                Late night highway convoys, local highway chai, and deep whiteboard debates that spark next-generation open source projects before sunrise.
-              </p>
-              <div className="pt-2 text-xs font-mono text-zinc-500">
-                ALTITUDE: 940M RIDGE • TRANSIT CORRIDOR
-              </div>
-            </div>
-          </div>
-
-          {/* Panel 4 */}
-          <div className="travel-panel w-screen h-full relative flex items-center justify-center p-8 sm:p-20 overflow-hidden bg-black">
-            <img 
-              src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop" 
-              className="panel-4-drone absolute inset-0 w-full h-full object-cover opacity-30 origin-center will-change-transform" 
-              alt="Night Sky Stars Drone Shot" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black" />
-            
-            <div className="panel-4-text relative z-10 max-w-2xl text-center space-y-5">
-              <span className="text-xs font-mono text-[#00FFCC] font-bold tracking-widest uppercase block">
-                WAYPOINT 04 // MERGE & DEPLOY
-              </span>
-              <h2 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter uppercase text-white leading-none">
-                Bonded by Code.
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed font-normal mx-auto">
-                Real software built alongside genuine peers. The camaraderie of shipping live clusters under the open night sky.
-              </p>
-              <div className="pt-4">
-                <Link
-                  href="/#opportunities"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#00FFCC] text-black font-mono font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full"
-                >
-                  <span>Explore Expeditions</span>
-                  <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CONFIRMED COHORTS */}
-      <section className="py-24 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-zinc-900">
+      {/* INTERACTIVE EXPEDITION SELECTOR */}
+      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12">
           <div>
-            <span className="text-xs font-mono font-bold tracking-[0.25em] text-[#00FFCC] uppercase mb-2 block">
-              // UPCOMING RESIDENCIES
+            <span className="text-xs font-bold uppercase tracking-widest text-[#00FFCC] block mb-1">
+              CHOOSE YOUR EXPEDITION
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-              Scheduled Retreats
+            <h2 className="text-3xl sm:text-4xl font-black uppercase text-white tracking-tight">
+              Upcoming Sanctioned Retreats
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 font-mono max-w-md">
-            Subsidized lodging, high-speed Starlink backups, and full hardware kits provided.
-          </p>
+
+          {/* Toggle Buttons */}
+          <div className="inline-flex p-1.5 rounded-full bg-zinc-900 border border-zinc-800">
+            <button
+              onClick={() => setActiveVilla("dandeli")}
+              className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all ${
+                activeVilla === "dandeli"
+                  ? "bg-[#00FFCC] text-black shadow-lg"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Dandeli Forest
+            </button>
+            <button
+              onClick={() => setActiveVilla("gokarna")}
+              className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all ${
+                activeVilla === "gokarna"
+                  ? "bg-[#00FFCC] text-black shadow-lg"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Gokarna Beach
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {offsiteItinerary.map((cohort, idx) => (
-            <div 
-              key={idx}
-              className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-[#00FFCC]/40 transition-all flex flex-col justify-between group"
-            >
-              <div>
-                <div className="flex items-center justify-between text-xs font-mono text-zinc-400 mb-4 pb-3 border-b border-zinc-900">
-                  <span className="flex items-center gap-1.5 text-[#00FFCC] font-bold">
-                    <Calendar className="w-3.5 h-3.5" /> {cohort.date}
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-300">
-                    {cohort.duration}
-                  </span>
+        {/* Dynamic Villa Card */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeVilla}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35 }}
+            className="rounded-3xl bg-zinc-950 border border-zinc-800 overflow-hidden"
+          >
+            {/* Header Image Banner */}
+            <div className="h-72 sm:h-96 w-full relative overflow-hidden">
+              <img 
+                src={villaDetails[activeVilla].image} 
+                alt={villaDetails[activeVilla].name} 
+                className="w-full h-full object-cover filter brightness-75"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
+              
+              <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 text-[#00FFCC] text-xs font-bold uppercase tracking-wider mb-2">
+                    <MapPin size={15} />
+                    <span>{villaDetails[activeVilla].location}</span>
+                  </div>
+                  <h3 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">
+                    {villaDetails[activeVilla].name}
+                  </h3>
                 </div>
+                <div className="px-4 py-2 rounded-full bg-black/80 backdrop-blur-md border border-zinc-700 text-xs font-mono text-zinc-300 self-start sm:self-auto">
+                  {villaDetails[activeVilla].timing}
+                </div>
+              </div>
+            </div>
 
-                <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-zinc-500 block mb-1">
-                  COHORT 0{idx + 1}
-                </span>
-                <h3 className="text-2xl font-black tracking-tight text-white mb-3 group-hover:text-[#00FFCC] transition-colors">
-                  {cohort.destination}
-                </h3>
+            {/* Content Details */}
+            <div className="p-8 sm:p-12 space-y-10">
+              <p className="text-base sm:text-xl text-zinc-300 max-w-3xl leading-relaxed">
+                {villaDetails[activeVilla].tagline}
+              </p>
 
-                <p className="text-xs sm:text-sm text-zinc-400 font-normal mb-6 leading-relaxed">
-                  {cohort.objective}
-                </p>
-
-                <div className="space-y-2 pt-4 border-t border-zinc-900 text-xs text-zinc-400">
-                  {cohort.amenities.map((am, i) => (
-                    <div key={i} className="flex items-center gap-2 font-mono">
-                      <CheckCircle className="w-3.5 h-3.5 text-[#00FFCC] shrink-0" />
-                      <span>{am}</span>
+              {/* Day-by-Day Itinerary */}
+              <div>
+                <h4 className="text-sm font-bold uppercase tracking-wider text-[#00FFCC] mb-6">
+                  Cohort Schedule & Itinerary
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {villaDetails[activeVilla].schedule.map((item, idx) => (
+                    <div key={idx} className="p-5 rounded-2xl bg-black/60 border border-zinc-900">
+                      <span className="text-xs font-mono font-bold text-[#00FFCC] uppercase block mb-1">
+                        {item.day}
+                      </span>
+                      <h5 className="font-bold text-white text-base mb-2">{item.title}</h5>
+                      <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">{item.desc}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-zinc-900">
-                <Link
-                  href="/#opportunities"
-                  className="block text-center py-3 bg-zinc-900 border border-zinc-800 hover:border-white text-zinc-300 hover:text-white text-xs font-mono font-bold tracking-widest uppercase transition-all rounded-xl"
-                >
-                  Cohort Overview
-                </Link>
+              {/* Amenities */}
+              <div className="pt-6 border-t border-zinc-900 flex flex-wrap gap-3">
+                {villaDetails[activeVilla].perks.map((p, i) => (
+                  <span key={i} className="px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300 flex items-center gap-1.5">
+                    <CheckCircle2 size={13} className="text-[#00FFCC]" /> {p}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </section>
+
+      {/* THE 4 UNWRITTEN RULES */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#00FFCC] block mb-2">
+            OFFSITE CULTURE
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+            The 4 Unwritten Ground Rules
+          </h2>
+          <p className="text-zinc-400 text-sm sm:text-base mt-3">
+            An Invictus retreat is not a standard college trip. It&apos;s a focused creative sanctuary.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {offsiteRules.map((r, i) => (
+            <div key={i} className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-[#00FFCC]/40 transition-all flex flex-col justify-between">
+              <div>
+                <span className="text-4xl font-mono font-black text-zinc-700 block mb-4">{r.num}</span>
+                <h3 className="text-lg font-bold uppercase text-white mb-3">{r.title}</h3>
+                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">{r.desc}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* MINIMALIST CTA */}
-      <section className="py-28 px-6 bg-black text-center border-t border-zinc-900">
-        <div className="max-w-2xl mx-auto space-y-6">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00FFCC] block">
-            // JOIN NEXT COHORT
-          </span>
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase text-white leading-tight">
-            Build Outside The Classroom.
-          </h2>
-          <p className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed">
-            The most meaningful projects emerge when dedicated developers collaborate without distractions. Join the upcoming offsite roster.
+      {/* INTERACTIVE PACKING CHECKLIST */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="p-8 sm:p-12 rounded-3xl bg-zinc-950 border border-zinc-800 max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <Luggage className="w-6 h-6 text-[#00FFCC]" />
+            <h3 className="text-2xl font-black uppercase text-white tracking-tight">
+              Interactive Offsite Packing Checklist
+            </h3>
+          </div>
+          <p className="text-xs sm:text-sm text-zinc-400 mb-8">
+            Click each item before boarding the van. Don&apos;t be the person asking for a charger at 2 AM.
           </p>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { id: "laptop", label: "Laptop & 65W/100W GaN Fast Charger" },
+              { id: "extension", label: "Multi-plug 4-socket Surge Extension Cord" },
+              { id: "docs", label: "Downloaded Offline Docs (Zeal / DevDocs)" },
+              { id: "hotspot", label: "Secondary Mobile Hotspot SIM" },
+              { id: "hoodie", label: "Warm Hoodie for late-night outdoor hacking" },
+              { id: "swimwear", label: "Swimwear / River Shoes for the day breaks" }
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => toggleItem(item.id)}
+                className={`p-4 rounded-xl border text-left flex items-center justify-between transition-all ${
+                  checkedItems[item.id]
+                    ? "bg-[#00FFCC]/10 border-[#00FFCC]/50 text-white"
+                    : "bg-black/60 border-zinc-900 text-zinc-500 hover:border-zinc-800"
+                }`}
+              >
+                <span className="text-xs sm:text-sm font-medium">{item.label}</span>
+                <div className={`w-5 h-5 rounded-md flex items-center justify-center border ${
+                  checkedItems[item.id] ? "bg-[#00FFCC] border-[#00FFCC] text-black" : "border-zinc-700"
+                }`}>
+                  {checkedItems[item.id] && <CheckCircle2 size={14} className="stroke-[3]" />}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="py-24 px-6 text-center border-t border-zinc-900 bg-black">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">
+            Claim Your Villa Desk.
+          </h2>
+          <p className="text-zinc-400 text-base leading-relaxed">
+            Cohorts are capped at 15 developers to ensure everyone gets focused mentorship and private workspace.
+          </p>
           <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a 
+              href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-8 py-4 bg-[#00FFCC] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full shadow-[0_0_25px_rgba(0,255,204,0.3)]"
+            >
+              Apply via WhatsApp Community
+            </a>
             <Link 
               href="/#opportunities" 
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#00FFCC] text-black font-bold tracking-widest uppercase text-xs hover:bg-white transition-all rounded-full"
+              className="w-full sm:w-auto px-8 py-4 border border-zinc-800 text-zinc-300 font-bold tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
             >
-              All Opportunities
-            </Link>
-            <Link 
-              href="/events" 
-              className="w-full sm:w-auto px-8 py-3.5 border border-zinc-800 text-zinc-300 font-mono font-medium tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
-            >
-              Events Calendar
+              Explore All Opportunities
             </Link>
           </div>
         </div>

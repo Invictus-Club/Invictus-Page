@@ -1,261 +1,215 @@
 /* eslint-disable */
 "use client";
 
-import { motion } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, Plane } from "@react-three/drei";
-import { useRef, useEffect } from "react";
-import * as THREE from "three";
-import Lenis from "lenis";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
   ArrowLeft, 
   Presentation, 
   Layers, 
   Eye, 
-  CheckCircle,
+  CheckCircle2, 
+  QrCode, 
+  Maximize2,
   FileCheck,
-  Maximize2
+  AlertTriangle
 } from "lucide-react";
 
-// Minimal Architectural Monochromatic Gallery Planes
-function ArchitecturalPostersMesh() {
-  const group = useRef<THREE.Group>(null);
-  useFrame((state, delta) => {
-    if (group.current) {
-      group.current.rotation.y += delta * 0.12;
-    }
-  });
-
-  return (
-    <group ref={group}>
-      {Array.from({ length: 8 }).map((_, i) => (
-        <Float 
-          key={i} 
-          speed={1.5} 
-          rotationIntensity={0.4} 
-          floatIntensity={0.8} 
-          position={[
-            Math.sin((i / 8) * Math.PI * 2) * 4.2,
-            ((Math.sin(i * 1.5) + 1) / 2 - 0.5) * 2.5,
-            Math.cos((i / 8) * Math.PI * 2) * 4.2
-          ]}
-        >
-          <Plane args={[1.2, 1.7]}>
-            <meshStandardMaterial 
-              color={i % 2 === 0 ? "#1c1c1c" : "#2a2a2a"} 
-              side={THREE.DoubleSide} 
-              roughness={0.25} 
-              metalness={0.7} 
-            />
-          </Plane>
-        </Float>
-      ))}
-    </group>
-  );
-}
-
 export default function PaperPosterPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeHotspot, setActiveHotspot] = useState<number>(0);
 
-  useEffect(() => {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-    });
-    lenis.scrollTo(0, { immediate: true });
-
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'auto';
-      }
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
-  }, []);
-
-  const posterFormats = [
+  const posterSections = [
     {
-      icon: Eye,
-      title: "Visual Synthesis & Hierarchy",
-      desc: "Transform dense algorithmic equations and multi-page technical manuscripts into high-contrast A0/36\"x48\" posters that communicate key findings in 30 seconds."
+      title: "10-Second Billboard Headline",
+      tagline: "Readable from 10 feet away across a busy hall",
+      advice: "Your title should state the actual discovery or metric, not generic filler like 'A Study On Distributed Networks'. Use 64pt+ bold typography.",
+      example: "“LoRa Mesh Delivers 98.4% Telemetry Under Zero Cellular Coverage”"
     },
     {
-      icon: Presentation,
-      title: "Standup Jury Defense",
-      desc: "Practice walking evaluators through problem friction, empirical methodology, and benchmark results without reading from prompt cards."
+      title: "The Core Visual Architecture",
+      tagline: "Replaces 4 paragraphs of dense text",
+      advice: "Evaluators scan before they read. An intuitive, clean vector diagram showing the input, transformation layer, and output gets 80% of the attention.",
+      example: "Step-by-step data pipeline with high-contrast arrows and clean icon tags."
     },
     {
-      icon: Layers,
-      title: "Scientific Peer Engagement",
-      desc: "Expose research findings to symposium attendees, faculty evaluators, and potential collaborators across engineering departments."
+      title: "The Decisive Benchmark Plot",
+      tagline: "One killer graph beats 10 data tables",
+      advice: "Never paste raw Excel tables. Highlight the single comparison chart showing your system outperforming existing baselines with bold labels.",
+      example: "Latency curve comparison: 4-bit Quantization vs FP16 baseline across 100 trials."
+    },
+    {
+      title: "The 30-Second Takeaway & QR",
+      tagline: "Immediate follow-through for interested faculty",
+      advice: "Include a sharp 3-bullet executive summary and a high-contrast QR code linking directly to the open-source GitHub repo or camera-ready PDF.",
+      example: "Direct link to arXiv preprint + interactive web demo on Vercel."
     }
   ];
 
+  const commonMistakes = [
+    { title: "The Wall of Text", desc: "Printing a 6-page research paper onto an A0 poster. Nobody reads paragraphs on an exhibition floor." },
+    { title: "Low-Res Screenshots", desc: "Pasting 72 DPI screen grabs that turn into pixelated mush when printed at 300 DPI." },
+    { title: "Invisible Contrast", desc: "Using light gray text on white or neon text on black that strains evaluator eyes under hall lighting." }
+  ];
+
   return (
-    <main ref={containerRef} className="bg-black text-white min-h-screen font-sans overflow-x-clip selection:bg-white selection:text-black">
-      {/* Sleek Minimalist Floating Back Button */}
+    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+      {/* Sleek Floating Back Button */}
       <Link 
         href="/#opportunities" 
-        className="fixed top-6 left-6 sm:top-8 sm:left-8 z-50 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-zinc-400 hover:text-white hover:border-white/30 text-xs font-mono uppercase tracking-widest transition-all"
+        className="fixed top-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-950/80 backdrop-blur-md border border-white/10 text-zinc-300 hover:text-white hover:border-white text-xs font-bold tracking-wider transition-all shadow-xl"
       >
-        <ArrowLeft size={14} />
-        <span>Base</span>
+        <ArrowLeft size={16} />
+        <span>OPPORTUNITIES</span>
       </Link>
 
       {/* HERO SECTION */}
-      <section className="relative h-screen flex flex-col items-center justify-center border-b border-zinc-900">
-        <div className="absolute inset-0 z-0 opacity-60">
-          <Canvas camera={{ position: [0, 1.5, 8.5], fov: 45 }}>
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[10, 10, 5]} intensity={2.0} color="#FFFFFF" />
-            <directionalLight position={[-10, -5, -5]} intensity={1.0} color="#888888" />
-            <ArchitecturalPostersMesh />
-            <OrbitControls enableZoom={false} maxDistance={14} minDistance={4} autoRotate autoRotateSpeed={0.4} />
-          </Canvas>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05),transparent_65%)] pointer-events-none" />
-        </div>
-        
-        <motion.div 
-          className="z-10 text-center pointer-events-none px-6 max-w-5xl"
-          initial={{ opacity: 0, y: 30 }}
+      <section className="relative pt-36 pb-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-zinc-300 text-xs font-bold tracking-widest uppercase mb-6"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] text-zinc-400 text-[11px] font-mono font-medium tracking-[0.2em] uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-white" />
-            SCIENTIFIC EXHIBITION // VISUAL RESEARCH
+          <Presentation size={14} className="text-[#FFD60A]" />
+          <span>INVICTUS GALLERY & POSTER SESSIONS</span>
+        </motion.div>
+
+        <motion.h1 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] text-white max-w-5xl"
+        >
+          POSTERS ARE <span className="text-zinc-400">RESEARCH SHOWPIECES.</span>
+        </motion.h1>
+
+        <motion.p 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-base sm:text-xl text-zinc-400 font-medium max-w-2xl mt-8 leading-relaxed"
+        >
+          Turn dense academic papers into striking, high-impact exhibition posters that stop evaluators in their tracks across crowded symposium halls.
+        </motion.p>
+      </section>
+
+      {/* INTERACTIVE POSTER ANATOMY INSPECTOR */}
+      <section className="py-16 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#FFD60A] block mb-2">
+            ANATOMY OF A WINNING POSTER
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+            Click A Component To Inspect
+          </h2>
+          <p className="text-zinc-400 text-sm sm:text-base mt-3">
+            Click each key quadrant of a standard A0 scientific presentation board to see what judges evaluate.
+          </p>
+        </div>
+
+        {/* Component Selector Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto mb-10">
+          {posterSections.map((sec, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveHotspot(i)}
+              className={`p-4 rounded-2xl text-left border transition-all ${
+                activeHotspot === i
+                  ? "bg-white text-black shadow-lg"
+                  : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700"
+              }`}
+            >
+              <span className="text-xs font-mono font-bold block mb-1">Zone 0{i + 1}</span>
+              <h4 className="font-bold text-sm leading-snug">{sec.title}</h4>
+            </button>
+          ))}
+        </div>
+
+        {/* Active Inspection Card */}
+        <motion.div
+          key={activeHotspot}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-8 sm:p-12 rounded-3xl bg-zinc-950 border border-zinc-800 max-w-4xl mx-auto space-y-6"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
+            <div>
+              <span className="text-xs font-mono font-bold text-[#FFD60A] uppercase tracking-widest block mb-1">
+                INSPECTION FOCUS: ZONE 0{activeHotspot + 1}
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-black uppercase text-white">
+                {posterSections[activeHotspot].title}
+              </h3>
+            </div>
+            <span className="px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-700 text-xs text-zinc-300 font-medium self-start sm:self-auto">
+              {posterSections[activeHotspot].tagline}
+            </span>
           </div>
 
-          <h1 className="text-5xl sm:text-7xl md:text-[9rem] font-black tracking-tighter text-white leading-[0.88] uppercase">
-            PAPER POSTER
-          </h1>
+          <div className="space-y-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 block mb-2">
+                Evaluator Guideline:
+              </span>
+              <p className="text-sm sm:text-base text-zinc-200 leading-relaxed font-normal bg-black/60 p-4 rounded-2xl border border-zinc-900">
+                {posterSections[activeHotspot].advice}
+              </p>
+            </div>
 
-          <p className="text-xs sm:text-sm md:text-base text-zinc-400 font-mono tracking-[0.2em] uppercase mt-6 max-w-xl mx-auto leading-relaxed">
-            Distilling Complex Technical Research Into High-Density Visual Briefings.
-          </p>
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#FFD60A] block mb-1">
+                Real Winning Example:
+              </span>
+              <p className="text-xs sm:text-sm text-zinc-400 font-mono italic">
+                {posterSections[activeHotspot].example}
+              </p>
+            </div>
+          </div>
         </motion.div>
       </section>
 
-      {/* METHODOLOGY */}
-      <section className="py-24 sm:py-32 px-6 md:px-16 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-zinc-900">
-          <div>
-            <span className="text-xs font-mono font-bold tracking-[0.25em] text-zinc-400 uppercase mb-2 block">
-              // 01 / METHODOLOGY
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-              Exhibition Design Principles
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-zinc-400 font-mono max-w-md">
-            Architecting research displays that capture attention on competitive symposium floors.
-          </p>
+      {/* COMMON MISTAKES TO AVOID */}
+      <section className="py-20 px-6 sm:px-12 md:px-16 max-w-7xl mx-auto border-t border-zinc-900">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <span className="text-xs font-bold uppercase tracking-widest text-red-400 block mb-2">
+            WHAT GETS YOU IGNORED
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight uppercase">
+            3 Costly Exhibition Errors
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {posterFormats.map((item, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-white/20 transition-all flex flex-col justify-between group">
-              <div>
-                <item.icon className="w-6 h-6 text-zinc-300 mb-6 group-hover:text-white transition-colors" />
-                <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-3">{item.title}</h3>
-                <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed">{item.desc}</p>
-              </div>
-              <div className="mt-8 pt-4 border-t border-zinc-900 text-xs font-mono text-zinc-500 flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-zinc-400 shrink-0" /> Academic Standard
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          {commonMistakes.map((m, i) => (
+            <div key={i} className="p-8 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
+              <AlertTriangle className="w-6 h-6 text-red-400" />
+              <h4 className="font-bold text-lg text-white">{m.title}</h4>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">{m.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* SAMPLE POSTER ARCHIVE */}
-      <section className="py-20 bg-[#040404] border-t border-zinc-900 px-6 md:px-16">
-        <div className="max-w-7xl mx-auto space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-900">
-            <div>
-              <span className="text-xs font-mono font-bold tracking-[0.25em] text-zinc-400 uppercase mb-2 block">
-                // 02 / RECENT ARCHIVE
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase text-white">
-                Symposium Exhibitions
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-              Standard Format: A0 Architectural (841 x 1189 mm)
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-white/20 transition-all flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider block mb-2">VTU Research Showcase // 1st Place</span>
-                <h4 className="text-2xl font-black tracking-tight text-white mb-3">Fault-Tolerant Consensus In High-Latency Networks</h4>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal">
-                  Structured comparison diagram contrasting Raft and PBFT latency curves across simulated cross-continental cluster drops.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-zinc-900 text-xs font-mono text-zinc-500">
-                Format: High-Contrast Obsidian Monolith
-              </div>
-            </div>
-
-            <div className="p-8 rounded-2xl bg-zinc-950/70 border border-white/[0.08] hover:border-white/20 transition-all flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider block mb-2">State Innovation Meet // Best Visual Data</span>
-                <h4 className="text-2xl font-black tracking-tight text-white mb-3">Edge Quantization Benchmarks for Local NLP</h4>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal">
-                  Comparative analysis charts showing perplexity trade-offs between 4-bit and 2-bit GPTQ weights on mobile ARM silicon.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-zinc-900 text-xs font-mono text-zinc-500">
-                Format: Dual-Column Quantitative Poster
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* MINIMALIST CTA */}
-      <section className="py-28 px-6 bg-black text-center border-t border-zinc-900">
+      {/* FINAL CTA */}
+      <section className="py-24 px-6 text-center border-t border-zinc-900 bg-black">
         <div className="max-w-2xl mx-auto space-y-6">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-zinc-400 block">
-            // EXHIBIT IN THE GALLERY
-          </span>
-          <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase text-white leading-tight">
-            Exhibit Your Findings.
+          <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight">
+            Print Your Research Showpiece.
           </h2>
-          <p className="text-sm sm:text-base text-zinc-400 font-normal leading-relaxed">
-            Invictus helps researchers format, typeset, and print technical posters for upcoming collegiate and national paper presentations.
+          <p className="text-zinc-400 text-base leading-relaxed">
+            Invictus provides high-resolution Figma and LaTeX poster templates tuned specifically for VTU and IEEE conference specifications.
           </p>
-
           <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link 
-              href="/events"
-              className="w-full sm:w-auto px-8 py-3.5 bg-white text-black font-bold tracking-widest uppercase text-xs hover:bg-zinc-200 transition-all rounded-full"
+              href="/events" 
+              className="w-full sm:w-auto px-8 py-4 bg-white text-black font-bold tracking-widest uppercase text-xs hover:bg-zinc-200 transition-all rounded-full shadow-lg"
             >
-              Poster Competitions
+              Browse Upcoming Symposia
             </Link>
             <Link 
-              href="/#opportunities"
-              className="w-full sm:w-auto px-8 py-3.5 border border-zinc-800 text-zinc-300 font-mono font-medium tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
+              href="/#opportunities" 
+              className="w-full sm:w-auto px-8 py-4 border border-zinc-800 text-zinc-300 font-bold tracking-widest uppercase text-xs hover:border-white hover:text-white transition-all rounded-full"
             >
               All Opportunities
             </Link>
