@@ -4,7 +4,7 @@ import MerchPortalClient from "./MerchPortalClient";
 export const metadata: Metadata = {
   title: "Invictus Armory | Official Club Merch & Induction Portal",
   description:
-    "Official Invictus Tech Guild merchandise store & club induction portal. Club membership pack (ID card, cool lanyard, totebag, pen) at ₹200, cyber hoodies (₹699), heavyweight dev tees (₹399), thermal flasks (₹199), canvas totebags (₹99), and the complete combo at ₹1,111.",
+    "Official Invictus Tech Guild merchandise store & club induction portal. Compulsory club membership pack (ID card, cool lanyard, totebag, pen) at ₹200, cyber hoodies (₹699), heavyweight dev tees (₹449), thermal bottles (₹199), developer notepads (₹99), and curated combos.",
   keywords: [
     "Invictus Merch",
     "Invictus Club",

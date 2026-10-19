@@ -24,10 +24,10 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
   };
 
   const isCombo = !!item.isCombo;
-  const isTotebag = item.id === "invictus-totebag";
+  const isTotebag = item.id === "invictus-totebag" || item.id === "invictus-notepad";
   const isBottle = item.id === "invictus-bottle";
 
-  // Timing heights: Totebag gets 145vh to stay longer; Bottle gets 90vh to prepone faster
+  // Timing heights: Totebag/Notepad gets 145vh to stay longer; Bottle gets 90vh to prepone faster
   const sectionHeight = isTotebag
     ? "min-h-[145vh]"
     : isBottle
@@ -45,7 +45,7 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
         <div>
           {item.isMembership ? (
             <span className="text-xs font-mono font-black text-black btn-metallic-gold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-lg">
-              CLUB MEMBERSHIP (DEFAULT INCLUDED)
+              CLUB MEMBERSHIP (COMPULSORY BASE)
             </span>
           ) : isCombo ? (
             <span className="text-xs font-mono font-black text-black btn-metallic-gold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-lg">
@@ -111,7 +111,7 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
             {isAdded
               ? "✓ ADDED TO BAG"
               : item.isMembership
-              ? "+ ADD MEMBERSHIP"
+              ? "✓ INCLUDED BY DEFAULT (COMPULSORY BASE)"
               : isCombo
               ? "+ ADD COMPLETE COMBO"
               : "+ ADD AS ADD-ON"}

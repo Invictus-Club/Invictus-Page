@@ -90,13 +90,15 @@ export function MerchCartDrawer({
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-xs font-mono text-zinc-500 border-b border-zinc-900 pb-2">
                     <span>ITEMS IN BAG</span>
-                    <button
-                      type="button"
-                      onClick={onClearCart}
-                      className="text-red-400 hover:underline cursor-pointer"
-                    >
-                      [ CLEAR ALL ]
-                    </button>
+                    {cart.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={onClearCart}
+                        className="text-red-400 hover:underline cursor-pointer"
+                      >
+                        [ CLEAR ADD-ONS ]
+                      </button>
+                    )}
                   </div>
 
                   {cart.map((c) => (
@@ -110,6 +112,11 @@ export function MerchCartDrawer({
                         </div>
                         <div className="truncate">
                           <div className="font-bold text-sm text-white truncate">{c.item.name}</div>
+                          {c.item.isMembership && (
+                            <div className="text-[10px] font-mono text-[#FFD60A] font-bold mt-0.5">
+                              [COMPULSORY BASE // MANDATORY]
+                            </div>
+                          )}
                           {c.size && (
                             <div className="text-[11px] font-mono text-zinc-400 mt-0.5">
                               SIZE: {c.size}
@@ -122,22 +129,30 @@ export function MerchCartDrawer({
                       </div>
 
                       <div className="flex flex-col items-end gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => onRemoveItem(c.id)}
-                          className="text-zinc-500 hover:text-red-400 font-mono text-sm px-1 cursor-pointer"
-                        >
-                          ×
-                        </button>
-
-                        <div className="flex items-center bg-black/60 rounded border border-white/10 text-xs">
+                        {!c.item.isMembership ? (
                           <button
                             type="button"
-                            onClick={() => onUpdateQuantity(c.id, -1)}
-                            className="px-2 py-0.5 text-zinc-400 hover:text-white cursor-pointer"
+                            onClick={() => onRemoveItem(c.id)}
+                            className="text-zinc-500 hover:text-red-400 font-mono text-sm px-1 cursor-pointer"
                           >
-                            -
+                            ×
                           </button>
+                        ) : (
+                          <span className="text-[9px] font-mono text-[#FFD60A] font-bold border border-[#FFD60A]/40 px-1 py-0.5 rounded bg-[#FFD60A]/10">
+                            MANDATORY
+                          </span>
+                        )}
+
+                        <div className="flex items-center bg-black/60 rounded border border-white/10 text-xs">
+                          {!c.item.isMembership && (
+                            <button
+                              type="button"
+                              onClick={() => onUpdateQuantity(c.id, -1)}
+                              className="px-2 py-0.5 text-zinc-400 hover:text-white cursor-pointer"
+                            >
+                              -
+                            </button>
+                          )}
                           <span className="px-2 font-mono font-bold text-white">{c.quantity}</span>
                           <button
                             type="button"

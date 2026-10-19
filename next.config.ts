@@ -9,6 +9,26 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/achievements",
+        destination: "/wins",
+        permanent: true,
+      },
+      {
+        source: "/achievement",
+        destination: "/wins",
+        permanent: true,
+      },
+      {
+        source: "/hall-of-fame",
+        destination: "/wins",
+        permanent: true,
+      },
+      {
+        source: "/halloffame",
+        destination: "/wins",
+        permanent: true,
+      },
+      {
         source: "/profile",
         destination: "/",
         permanent: true,

@@ -10,7 +10,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
+import { ArrowRight, ChevronRight, Menu, X, User } from "lucide-react";
 import Lenis from "lenis";
 import winsData from "@/data/wins";
 import eventsData from "@/data/events";
@@ -84,7 +84,7 @@ function Navbar() {
           <Link href="#about-showcase" className="hover:text-[#FFD60A] transition-colors">ABOUT</Link>
           <Link href="#opportunities" className="hover:text-[#FFD60A] transition-colors">OPPORTUNITIES</Link>
           <Link href="#events" className="hover:text-[#FFD60A] transition-colors">EVENTS</Link>
-          <Link href="#achievements" className="hover:text-[#FFD60A] transition-colors">ACHIEVEMENTS</Link>
+          <Link href="/wins" className="hover:text-[#FFD60A] transition-colors">ACHIEVEMENTS</Link>
           <Link href="/merch" className="hover:text-[#FFD60A] transition-colors flex items-center gap-1.5 font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FFD60A] animate-pulse"></span>
             MERCH
@@ -128,11 +128,12 @@ function Navbar() {
               EVENTS
             </Link>
             <Link 
-              href="#achievements" 
+              href="/wins" 
               onClick={() => setMobileMenuOpen(false)}
-              className="py-2 border-b border-gray-900 hover:text-[#FFD60A] transition-colors"
+              className="py-2 border-b border-gray-900 hover:text-[#FFD60A] transition-colors flex items-center justify-between"
             >
-              ACHIEVEMENTS
+              <span>ACHIEVEMENTS</span>
+              <span className="text-[10px] bg-white/10 text-zinc-300 px-2 py-0.5 rounded-full border border-white/20 font-mono">HALL OF FAME</span>
             </Link>
             <Link 
               href="/merch" 
@@ -394,14 +395,19 @@ export default function PremiumInvictus() {
   // TEAM DATA (Store images in public/team/)
   // ----------------------------------------------------
   const teamData = [
-    { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "/team/chaitrali-mam.jpg", type: "lead" },
+    { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "", type: "lead" },
     { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpeg", type: "lead" },
-    { name: "Preetam Malawade", position: "Vice President", image: "https://lh3.googleusercontent.com/d/1gD7rLpt4RWaQLn1QtaJzTlzcQzX1EWUf", type: "lead" },
-    { name: "Pratik", position: "Technical Lead", image: "/team/pratik.jpg", type: "normal" },
+    { name: "Rahul Shirol", position: "Vice President", image: "", type: "lead" },
+    { name: "Pratik", position: "Technical Lead", image: "https://lh3.googleusercontent.com/d/1hITTIYIS5LHiiFtIIN7t_54CLgtr0mEe", type: "normal" },
     { name: "Melwin Fernandes", position: "Design Lead", image: "https://lh3.googleusercontent.com/d/1bpWtPdk6M7lDl-iYQfCo0pTvlCJ2J0uA", type: "normal" },
-    { name: "Advika Gurav", position: "Events Lead", image: "https://lh3.googleusercontent.com/d/13-l5exYP-DRwWY2Y8YYMbdylhPsrFCqC", type: "normal" },
+    { name: "Preetam Malawade", position: "General Secretary", image: "https://lh3.googleusercontent.com/d/1AFJUrGi-fMYftVP6bebx_rJ1m_5zbAv-", type: "normal" },
     { name: "Sagar Hulikavi", position: "Operations Lead", image: "https://lh3.googleusercontent.com/d/1YFHUJXHR9-f2Tp7nrGgmA_zw_aehpWmu", type: "normal" },
-    { name: "Laxmikanth J", position: "Marketing Lead", image: "https://lh3.googleusercontent.com/d/1_8hHzzydm01OZlmByiCz-GjauwCuMkSP", type: "normal" }
+    { name: "Laxmikanth J", position: "Marketing Lead", image: "https://lh3.googleusercontent.com/d/1_8hHzzydm01OZlmByiCz-GjauwCuMkSP", type: "normal" },
+    { name: "Nandita Bhajantri", position: "PR & Outreach Lead", image: "https://lh3.googleusercontent.com/d/17ket2Mii8P2sGUXC6sNq8YOz28U5L_xq", type: "normal" },
+    { name: "Advika Gurav", position: "Events Lead", image: "https://lh3.googleusercontent.com/d/1cbAC922wUAU_nbx_wZXoMWx4wgqQeyQv", type: "normal" },
+    { name: "Shreesha Desai", position: "Documentation Lead", image: "https://lh3.googleusercontent.com/d/1qj0fQdY0ngzJ1s3wonuiB8Hef1DUiynf", type: "normal" },
+    { name: "Aditya Patange", position: "Media Lead", image: "https://lh3.googleusercontent.com/d/1k92QtXLzh2XCDgfb3jkjb5Ik8j4dYi6y", type: "normal" },
+    { name: "Nandita Salunke", position: "Community Lead", image: "https://lh3.googleusercontent.com/d/1vgwd3HYV3XMSuM8M5Q_JR96HVSQW1EC5", type: "normal" }
   ];
 
   return (
@@ -641,9 +647,24 @@ export default function PremiumInvictus() {
 
       {/* 7. ACHIEVEMENTS */}
       <section id="achievements" className="py-20 sm:py-32 px-6 md:px-16 border-b border-gray-800">
-        <h2 className="text-5xl sm:text-7xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.85] sm:leading-[0.8] mb-12 sm:mb-20 text-stroke">
-          WE SHOW UP.
-        </h2>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-20">
+          <div>
+            <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold tracking-[0.25em] uppercase text-[#FFD60A] mb-3">
+              <span>ACHIEVEMENTS & VICTORIES</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#FFD60A]/10 border border-[#FFD60A]/30 text-[9px] font-mono text-[#FFD60A]">HALL OF FAME</span>
+            </div>
+            <h2 className="text-5xl sm:text-7xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.85] sm:leading-[0.8] text-stroke">
+              WE SHOW UP.
+            </h2>
+          </div>
+          <Link
+            href="/wins"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#FFD60A] text-black font-mono font-black text-xs uppercase tracking-wider hover:brightness-110 transition-all shadow-[0_0_35px_rgba(255,214,10,0.35)] shrink-0 self-start md:self-auto cursor-pointer"
+          >
+            <span>OPEN HALL OF FAME</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12 border-b border-gray-800 pb-12 sm:pb-20">
           <div>
@@ -667,7 +688,12 @@ export default function PremiumInvictus() {
         {/* Timeline placeholder (Data driven) */}
         <div className="pt-12 sm:pt-20">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl sm:text-2xl font-bold tracking-tight uppercase">Hall of Fame</h3>
+            <Link href="/wins" className="group flex items-center gap-3">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight uppercase group-hover:text-[#FFD60A] transition-colors">
+                Hall of Fame
+              </h3>
+              <span className="text-xs font-mono text-[#FFD60A] opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+            </Link>
             <Link href="/wins" className="text-xs sm:text-sm font-bold tracking-widest hover:text-[#FFD60A] transition-colors flex items-center gap-2">
               SEE ALL <ArrowRight size={16} />
             </Link>
@@ -691,6 +717,15 @@ export default function PremiumInvictus() {
                 </div>
               </Link>
             ))}
+          </div>
+          <div className="pt-8 flex justify-center">
+            <Link
+              href="/wins"
+              className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full border border-[#FFD60A]/40 bg-zinc-950 text-[#FFD60A] font-mono text-xs font-bold uppercase tracking-widest hover:bg-[#FFD60A] hover:text-black transition-all hover:shadow-[0_0_30px_rgba(255,214,10,0.3)] cursor-pointer"
+            >
+              <span>ENTER HALL OF FAME — ALL VICTORIES</span>
+              <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       </section>
@@ -740,17 +775,25 @@ export default function PremiumInvictus() {
         </div>
         
         {/* LEADERSHIP (INSANE REVEAL) */}
-        <div className="lead-section grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+        <div className="lead-section grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto mb-16">
           {teamData.filter(m => m.type === 'lead').map((member, i) => (
-            <div key={i} className="lead-character w-[80%] md:w-full mx-auto relative flex flex-col group cursor-pointer perspective-1000">
-              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-black shadow-[0_0_50px_rgba(255,214,10,0.1)] border border-gray-800">
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="lead-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
-                  onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
-                />
-                <div className="curtain absolute inset-0 bg-[#050505] z-10" />
+            <div key={i} className="lead-character w-[85%] md:w-full mx-auto relative flex flex-col group cursor-pointer perspective-1000">
+              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-black shadow-[0_0_50px_rgba(255,214,10,0.1)] border border-gray-800 group-hover:border-[#FFD60A]/40 transition-colors duration-500">
+                {member.image ? (
+                  <img 
+                    src={member.image} 
+                    alt={member.name} 
+                    className="lead-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
+                    onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
+                  />
+                ) : (
+                  <div className="lead-img absolute inset-0 w-full h-full bg-gradient-to-b from-[#141414] via-[#0a0a0a] to-[#050505] flex flex-col items-center justify-center border border-white/5">
+                    <div className="w-24 h-24 rounded-full bg-black/60 border border-white/10 flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] group-hover:border-[#FFD60A]/40 group-hover:shadow-[0_0_30px_rgba(255,214,10,0.2)] transition-all duration-500">
+                      <User className="w-12 h-12 text-zinc-600 group-hover:text-[#FFD60A] transition-colors duration-500" />
+                    </div>
+                  </div>
+                )}
+                <div className="curtain absolute inset-0 bg-[#050505] z-10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
                 
                 <div className="absolute bottom-6 left-6 right-6 z-20">
@@ -772,16 +815,22 @@ export default function PremiumInvictus() {
         </div>
 
         {/* OTHER MEMBERS (NORMAL REVEAL) */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto">
           {teamData.filter(m => m.type === 'normal').map((member, i) => (
             <div key={i} className="team-member flex flex-col group cursor-pointer">
               <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 border border-gray-800 group-hover:border-gray-500 transition-colors bg-black">
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="team-drone-shot absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
-                  onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
-                />
+                {member.image ? (
+                  <img 
+                    src={member.image} 
+                    alt={member.name} 
+                    className="team-drone-shot absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" 
+                    onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
+                  />
+                ) : (
+                  <div className="team-drone-shot absolute inset-0 w-full h-full bg-zinc-950 flex flex-col items-center justify-center">
+                    <User className="w-8 h-8 text-zinc-700" />
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               </div>
               <h3 className="text-base sm:text-lg font-black tracking-tighter text-white group-hover:text-[#FFD60A] transition-colors">{member.name}</h3>
@@ -818,7 +867,8 @@ export default function PremiumInvictus() {
             <span className="text-white text-lg block mb-2">INVICTUS</span>
             <span className="font-normal text-gray-600 lowercase tracking-normal">Learn, build, compete and grow together.</span>
           </div>
-          <div className="flex flex-wrap gap-4 sm:gap-6">
+          <div className="flex flex-wrap gap-4 sm:gap-6 items-center">
+            <Link href="/wins" className="text-[#FFD60A] hover:underline font-bold transition">Hall of Fame</Link>
             <a href="https://chat.whatsapp.com/EKzm2FVmGWr6nOSf66MdQz" target="_blank" rel="noreferrer" className="hover:text-white transition">WhatsApp</a>
             <a href="https://www.linkedin.com/company/your-page" target="_blank" rel="noreferrer" className="hover:text-white transition">LinkedIn</a>
             <a href="https://www.instagram.com/vtu.invictus" target="_blank" rel="noreferrer" className="hover:text-white transition">Instagram</a>

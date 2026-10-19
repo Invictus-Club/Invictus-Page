@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { MerchItem } from "@/data/merch";
 import { playCartSound, playCyberBeep } from "@/lib/merch-audio";
 
@@ -248,97 +249,144 @@ export function SimpleCheckoutTerminal({
               </div>
             </form>
 
-            {/* Right: Cart Manifest (Classy Titanium Gunmetal Gloss) */}
-            <div className="relative overflow-hidden md:col-span-6 p-6 sm:p-8 rounded-3xl card-metallic-titanium space-y-4">
-              {/* Top Specular Chamfer Highlight */}
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none" />
-              {/* Anisotropic Light Sweep */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_25%_0%,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.01)_45%,transparent_70%)] pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.04] pointer-events-none" />
+            {/* Right Column: Bag Summary Manifest + Merch Combos Card */}
+            <div className="md:col-span-6 space-y-6">
+              {/* Bag Summary Manifest (Classy Titanium Gunmetal Gloss) */}
+              <div className="relative overflow-hidden p-6 sm:p-8 rounded-3xl card-metallic-titanium space-y-4">
+                {/* Top Specular Chamfer Highlight */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none" />
+                {/* Anisotropic Light Sweep */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_25%_0%,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.01)_45%,transparent_70%)] pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.04] pointer-events-none" />
 
-              <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-xs font-mono text-zinc-300 font-bold uppercase tracking-wider">
-                  BAG SUMMARY ({cart.length})
-                </span>
-                {cart.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={onClearCart}
-                    className="text-xs font-mono text-red-400 hover:text-red-300 hover:underline cursor-pointer"
-                  >
-                    CLEAR
-                  </button>
-                )}
-              </div>
-
-              {cart.length === 0 ? (
-                <div className="relative z-10 py-8 text-center space-y-4">
-                  <div className="text-sm font-mono text-zinc-400">YOUR BAG IS EMPTY</div>
-                  <div className="space-y-2">
+                <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="text-xs font-mono text-zinc-300 font-bold uppercase tracking-wider">
+                    BAG SUMMARY ({cart.length})
+                  </span>
+                  {cart.length > 1 && (
                     <button
                       type="button"
-                      onClick={onAddMembership}
-                      className="w-full py-4 px-4 rounded-xl btn-metallic-gold font-mono font-black text-xs uppercase cursor-pointer"
+                      onClick={onClearCart}
+                      className="text-xs font-mono text-red-400 hover:text-red-300 hover:underline cursor-pointer"
                     >
-                      + ADD CLUB MEMBERSHIP (DEFAULT) — ₹200
+                      CLEAR ADD-ONS
                     </button>
-                    <button
-                      type="button"
-                      onClick={onAddCompleteCombo}
-                      className="w-full py-3 px-4 rounded-xl btn-metallic-titanium font-mono font-bold text-xs uppercase cursor-pointer"
-                    >
-                      + ADD COMPLETE COMBO — ₹1,111
-                    </button>
-                  </div>
+                  )}
                 </div>
-              ) : (
-                <div className="relative z-10 space-y-3 max-h-64 overflow-y-auto pr-1">
-                  {cart.map((c) => (
-                    <div
-                      key={c.id}
-                      className="p-3.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-xs shadow-inner"
-                    >
-                      <div className="truncate pr-2">
-                        <div className="font-bold text-white truncate">{c.item.name}</div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          {c.item.isMembership && (
-                            <span className="text-[10px] font-mono text-[#FFD60A] font-bold">
-                              [BASE MEMBERSHIP]
+
+                {cart.length === 0 ? (
+                  <div className="relative z-10 py-8 text-center space-y-4">
+                    <div className="text-sm font-mono text-zinc-400">YOUR BAG IS EMPTY</div>
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={onAddMembership}
+                        className="w-full py-4 px-4 rounded-xl btn-metallic-gold font-mono font-black text-xs uppercase cursor-pointer"
+                      >
+                        + ADD CLUB MEMBERSHIP (COMPULSORY BASE) — ₹200
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative z-10 space-y-3 max-h-64 overflow-y-auto pr-1">
+                    {cart.map((c) => (
+                      <div
+                        key={c.id}
+                        className="p-3.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-xs shadow-inner"
+                      >
+                        <div className="truncate pr-2">
+                          <div className="font-bold text-white truncate">{c.item.name}</div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {c.item.isMembership && (
+                              <span className="text-[10px] font-mono text-[#FFD60A] font-bold">
+                                [COMPULSORY BASE // MANDATORY]
+                              </span>
+                            )}
+                            {c.item.isCombo && (
+                              <span className="text-[10px] font-mono text-[#FFD60A] font-bold">
+                                [MERCH COMBO]
+                              </span>
+                            )}
+                            {!c.item.isMembership && !c.item.isCombo && (
+                              <span className="text-[10px] font-mono text-zinc-400 font-bold">
+                                [ADD-ON]
+                              </span>
+                            )}
+                            {c.size && (
+                              <span className="text-[10px] font-mono text-zinc-400">SIZE: {c.size}</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="font-mono font-bold text-[#FFD60A] text-sm">
+                            ₹{c.item.price * c.quantity}
+                          </span>
+                          {!c.item.isMembership ? (
+                            <button
+                              type="button"
+                              onClick={() => onRemoveItem(c.id)}
+                              className="text-zinc-400 hover:text-red-400 text-sm font-mono px-1 cursor-pointer"
+                            >
+                              ×
+                            </button>
+                          ) : (
+                            <span className="text-[9px] font-mono text-[#FFD60A] font-bold border border-[#FFD60A]/40 px-1.5 py-0.5 rounded bg-[#FFD60A]/10">
+                              MANDATORY
                             </span>
-                          )}
-                          {!c.item.isMembership && !c.item.isCombo && (
-                            <span className="text-[10px] font-mono text-zinc-400 font-bold">
-                              [ADD-ON]
-                            </span>
-                          )}
-                          {c.size && (
-                            <span className="text-[10px] font-mono text-zinc-400">SIZE: {c.size}</span>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="font-mono font-bold text-[#FFD60A] text-sm">
-                          ₹{c.item.price * c.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => onRemoveItem(c.id)}
-                          className="text-zinc-400 hover:text-red-400 text-sm font-mono px-1 cursor-pointer"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
 
-              <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="text-sm font-mono text-zinc-300 font-bold uppercase">TOTAL:</span>
-                <span className="text-3xl font-black text-[#FFD60A] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  ₹{grandTotal}
-                </span>
+                <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-sm font-mono text-zinc-300 font-bold uppercase">TOTAL:</span>
+                  <span className="text-3xl font-black text-[#FFD60A] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    ₹{grandTotal}
+                  </span>
+                </div>
+
+                <div className="relative z-10 text-[10px] font-mono text-zinc-400 border-t border-white/5 pt-2">
+                  * Club membership (₹200) is compulsory and covers ID Card, Lanyard, Totebag & Pen.
+                </div>
               </div>
+
+              {/* Merch Combos Rectangle (Redirects to /merch/combos) */}
+              <Link
+                href="/merch/combos"
+                className="group relative overflow-hidden p-6 sm:p-7 rounded-3xl card-metallic-gold block text-left transition-all duration-300 hover:scale-[1.01] hover:border-[#FFD60A] hover:shadow-[0_16px_50px_rgba(212,175,55,0.25)] cursor-pointer"
+              >
+                {/* Specular Chamfer Highlight */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#FFF3C2]/90 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_25%_0%,rgba(255,225,140,0.14)_0%,rgba(212,175,55,0.03)_50%,transparent_70%)] pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-white/[0.05] pointer-events-none" />
+
+                <div className="relative z-10 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-block px-3 py-1 rounded-full bg-[#FFD60A]/20 border border-[#FFD60A]/40 text-[#FFD60A] font-mono text-[10px] font-black uppercase tracking-wider">
+                      ★ CURATED VALUE PACKS
+                    </span>
+                    <span className="font-mono text-xs text-[#FFD60A] font-bold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                      VIEW ALL COMBOS →
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white group-hover:text-[#FFD60A] transition-colors">
+                      EXPLORE MERCH COMBOS
+                    </h3>
+                    <p className="text-xs font-mono text-zinc-300 mt-1 line-clamp-2 leading-relaxed">
+                      Bundle cyber hoodies (₹699), dev tees (₹449), thermal bottles (₹199), & notepads (₹99). Save up to ₹247!
+                    </p>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between border-t border-white/10 text-[11px] font-mono text-zinc-400">
+                    <span className="text-zinc-300 font-bold">6 EXCLUSIVE TEMPLATES</span>
+                    <span className="text-[#FFD60A] font-bold">DISCOVER BUNDLES ↗</span>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         )}

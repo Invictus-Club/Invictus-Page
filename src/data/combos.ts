@@ -1,7 +1,11 @@
 // =========================================================================
 // INVICTUS MERCH COMBOS & BUNDLE TEMPLATES
 // You can easily edit any combo name, price, badge, or included items by hand!
+// Note: Totebag, ID Card, and Lanyard are covered in the compulsory ₹200 membership.
+// Standalone reference: Hoodie ₹699, Dev Tee ₹449, Thermal Bottle ₹199, Notepad ₹99.
 // =========================================================================
+
+import { MerchItem } from "./merch";
 
 export interface MerchComboTemplate {
   id: string;
@@ -18,101 +22,113 @@ export interface MerchComboTemplate {
 
 export const MERCH_COMBOS: MerchComboTemplate[] = [
   {
-    id: "combo-starter",
-    name: "STARTER DEV PACK",
-    badge: "MOST POPULAR",
-    price: 549,
-    originalPrice: 599,
-    savings: "SAVE ₹50",
-    tagline: "Club membership induction plus heavyweight dev tee.",
-    description: "The ideal initiation bundle for freshmen and new club inductees.",
+    id: "combo-starter-gear",
+    name: "DEV TEE & NOTEPAD PACK",
+    badge: "STARTER DEV GEAR",
+    price: 499,
+    originalPrice: 548,
+    savings: "SAVE ₹49",
+    tagline: "Heavyweight 240 GSM dev tee + grid-lined hardcover notepad.",
+    description: "The clean coding essentials for daily classes and system design.",
     includes: [
-      "Official Club Membership (ID Card + Lanyard + Pen)",
       "Heavyweight Dev Tee (240 GSM Combed Cotton)",
-      "Exclusive Invictus Holographic Decals",
-      "Access to Members-Only WhatsApp Group",
-    ],
-  },
-  {
-    id: "combo-cyber-stealth",
-    name: "CYBER STEALTH PACK",
-    badge: "COLD-LAB ESSENTIAL",
-    price: 849,
-    originalPrice: 899,
-    savings: "SAVE ₹50",
-    tagline: "400 GSM Cyber Fleece hoodie + official membership kit.",
-    description: "Engineered for overnight hackathons, chilly labs, and all-night coding sprints.",
-    includes: [
-      "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
-      "Official Club Membership (ID Card + Lanyard + Pen)",
-      "Heavy Canvas Totebag",
+      "Hardcover Developer Notepad (Grid-lined)",
       "Exclusive Invictus Holographic Decals",
     ],
   },
   {
     id: "combo-campus-daily",
-    name: "CAMPUS DAILY BUNDLE",
-    badge: "EVERYDAY CARRY",
-    price: 799,
-    originalPrice: 897,
-    savings: "SAVE ₹98",
-    tagline: "Everything you need for a full day of engineering classes.",
-    description: "Hot brew, comfortable developer tee, sturdy bag, and official membership credentials.",
+    name: "CAMPUS DAILY DUO",
+    badge: "EVERYDAY ESSENTIALS",
+    price: 599,
+    originalPrice: 648,
+    savings: "SAVE ₹49",
+    tagline: "Heavyweight dev tee + vacuum insulated thermal bottle.",
+    description: "Stay hydrated and comfortable through lecture marathons and lab practicals.",
     includes: [
-      "Official Club Membership (ID Card + Lanyard + Pen)",
-      "Heavyweight Dev Tee (Pre-shrunk)",
-      "Stealth Thermal Flask (500ml Vacuum Insulated)",
-      "Heavy Canvas Totebag",
+      "Heavyweight Dev Tee (240 GSM Combed Cotton)",
+      "Stealth Thermal Bottle (500ml Vacuum Insulated)",
+      "Exclusive Invictus Holographic Decals",
     ],
   },
   {
-    id: "combo-elite-all-in-one",
-    name: "ELITE TECH COLLECTIVE (ALL-IN-ONE)",
-    badge: "BEST VALUE // COMPLETE VAULT",
-    price: 1111,
-    originalPrice: 1596,
-    savings: "SAVE ₹485",
-    isFeatured: true, // Displayed in luxury champagne gold gloss
-    tagline: "The entire Invictus merch collection in one complete box.",
-    description: "Every single piece of apparel, gear, and membership privileges at our maximum discounted rate.",
+    id: "combo-cyber-stealth",
+    name: "CYBER STEALTH HOODIE PACK",
+    badge: "COLD-LAB ESSENTIAL",
+    price: 749,
+    originalPrice: 798,
+    savings: "SAVE ₹49",
+    tagline: "400 GSM Cyber Fleece hoodie + grid-lined developer notepad.",
+    description: "Engineered for chilly air-conditioned computer labs and overnight hackathons.",
     includes: [
-      "Official Club Membership (ID Card + Cool Lanyard + Pen)",
-      "Stealth Cyber Hoodie (400 GSM Heavyweight)",
-      "Heavyweight Dev Tee (240 GSM)",
-      "Stealth Thermal Flask (Vacuum Insulated)",
-      "Heavy Canvas Totebag",
+      "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
+      "Hardcover Developer Notepad (Grid-lined)",
       "Exclusive Invictus Holographic Decals",
-      "Priority Access to Club Hackathons & Competitions",
     ],
   },
   {
     id: "combo-winter-coder",
-    name: "WINTER CODER PACK",
-    badge: "LIMITED EDITION",
-    price: 949,
-    originalPrice: 1097,
-    savings: "SAVE ₹148",
-    tagline: "Cyber hoodie + vacuum insulated thermal flask combo.",
-    description: "Keep warm and keep your coffee piping hot during long debugging sessions.",
+    name: "WINTER CODER COMBO",
+    badge: "LATE-NIGHT SPECIAL",
+    price: 829,
+    originalPrice: 898,
+    savings: "SAVE ₹69",
+    tagline: "400 GSM cyber hoodie + 500ml vacuum insulated thermal bottle.",
+    description: "Keep warm and keep coffee piping hot during marathon debugging sessions.",
     includes: [
-      "Stealth Cyber Hoodie (400 GSM Heavyweight Fleece)",
-      "Stealth Thermal Flask (500ml Vacuum Insulated)",
-      "Official Club Lanyard & Membership ID",
+      "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
+      "Stealth Thermal Bottle (500ml Vacuum Insulated)",
+      "Exclusive Invictus Holographic Decals",
     ],
   },
   {
-    id: "combo-minimalist",
-    name: "MINIMALIST ESSENTIALS",
-    badge: "LIGHTWEIGHT",
-    price: 449,
-    originalPrice: 498,
-    savings: "SAVE ₹49",
-    tagline: "Clean everyday developer basics.",
-    description: "The minimalist grab-and-go developer kit for clean, everyday campus wear.",
+    id: "combo-apparel-duo",
+    name: "FULL WARDROBE APPAREL PACK",
+    badge: "MOST POPULAR",
+    price: 999,
+    originalPrice: 1148,
+    savings: "SAVE ₹149",
+    tagline: "Official cyber hoodie and heavyweight dev tee bundled together.",
+    description: "Both club apparel staples crafted with heavyweight premium fabric.",
     includes: [
-      "Heavyweight Dev Tee",
-      "Heavy Canvas Totebag",
-      "Official Club Pen & Lanyard",
+      "Stealth Cyber Hoodie (400 GSM Heavyweight Fleece)",
+      "Heavyweight Dev Tee (240 GSM Combed Cotton)",
+      "Exclusive Invictus Holographic Decals Pack",
+    ],
+  },
+  {
+    id: "combo-elite-all-in-one",
+    name: "COMPLETE TECH COLLECTIVE VAULT",
+    badge: "★ BEST VALUE // ALL-IN-ONE",
+    price: 1199,
+    originalPrice: 1446,
+    savings: "SAVE ₹247",
+    isFeatured: true, // Displayed in luxury champagne gold gloss
+    tagline: "Every piece of Invictus merch: hoodie, tee, thermal bottle, and notepad.",
+    description: "All four club apparel and gear items bundled at the absolute maximum discount rate.",
+    includes: [
+      "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
+      "Heavyweight Dev Tee (240 GSM Combed Cotton)",
+      "Stealth Thermal Bottle (500ml Vacuum Insulated)",
+      "Hardcover Developer Notepad (Grid-lined)",
+      "Exclusive Invictus Holographic Decals Pack",
     ],
   },
 ];
+
+/**
+ * Converts a combo template into a MerchItem object compatible with the cart.
+ */
+export function comboToMerchItem(combo: MerchComboTemplate): MerchItem {
+  return {
+    id: combo.id,
+    name: `COMBO: ${combo.name}`,
+    price: combo.price,
+    image: combo.isFeatured ? "/merch/hoodie-699.jpeg" : "/merch/tshirt-399.jpeg",
+    secondaryImage: "/merch/bottle-199.jpeg",
+    isCombo: true,
+    tagline: combo.tagline,
+    description: combo.description,
+    sizes: ["S", "M", "L", "XL", "2XL"],
+  };
+}

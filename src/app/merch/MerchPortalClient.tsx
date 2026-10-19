@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { MERCH_ITEMS, MerchItem } from "@/data/merch";
+import { MERCH_COMBOS, comboToMerchItem } from "@/data/combos";
 import { ScrollSequenceCanvas } from "@/components/merch/ScrollSequenceCanvas";
 import { ScrollStageItem } from "@/components/merch/ScrollStageItem";
 import { SimpleCheckoutTerminal, CartItem } from "@/components/merch/SimpleCheckoutTerminal";
@@ -35,6 +36,42 @@ export default function MerchPortalClient() {
   useEffect(() => {
     setAudioEnabled(true);
     setAudioActive(getAudioEnabled());
+
+    // Check if user came from /merch/combos with a specific combo selected
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const comboParam = params.get("combo");
+      const sizeParam = params.get("size") || "L";
+
+      if (comboParam) {
+        const foundCombo = MERCH_COMBOS.find((c) => c.id === comboParam);
+        if (foundCombo) {
+          const comboMerchItem = comboToMerchItem(foundCombo);
+          // Retain compulsory ₹200 membership + add selected combo
+          setCart([
+            {
+              id: `${membershipItem.id}-std`,
+              item: membershipItem,
+              quantity: 1,
+            },
+            {
+              id: `${comboMerchItem.id}-${sizeParam}`,
+              item: comboMerchItem,
+              quantity: 1,
+              size: sizeParam,
+            },
+          ]);
+          playCartSound();
+
+          setTimeout(() => {
+            const checkoutEl = document.getElementById("checkout-section");
+            if (checkoutEl) {
+              checkoutEl.scrollIntoView({ behavior: "smooth" });
+            }
+          }, 300);
+        }
+      }
+    }
 
     const handleScroll = () => {
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -76,6 +113,10 @@ export default function MerchPortalClient() {
         .map((c) => {
           if (c.id === id) {
             const nextQty = c.quantity + delta;
+            // Membership cannot be reduced below 1 (compulsory induction)
+            if (c.item.isMembership) {
+              return { ...c, quantity: Math.max(1, nextQty) };
+            }
             return nextQty > 0 ? { ...c, quantity: nextQty } : null;
           }
           return c;
@@ -85,11 +126,19 @@ export default function MerchPortalClient() {
   };
 
   const handleRemoveItem = (id: string) => {
-    setCart((prev) => prev.filter((c) => c.id !== id));
+    // Compulsory membership cannot be removed
+    setCart((prev) => prev.filter((c) => c.id !== id || c.item.isMembership));
   };
 
   const handleClearCart = () => {
-    setCart([]);
+    // Compulsory ₹200 membership cannot be avoided; clear only resets add-ons/combos
+    setCart([
+      {
+        id: `${membershipItem.id}-std`,
+        item: membershipItem,
+        quantity: 1,
+      },
+    ]);
   };
 
   const handleAddMembership = () => {
@@ -215,6 +264,7 @@ export default function MerchPortalClient() {
           <div className="flex gap-6">
             <Link href="/" className="hover:text-white transition-colors">[ HOME ]</Link>
             <Link href="/events" className="hover:text-white transition-colors">[ EVENTS ]</Link>
+            <Link href="/wins" className="hover:text-[#FFD60A] transition-colors">[ HALL OF FAME ]</Link>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="text-[#FFD60A] hover:underline cursor-pointer"

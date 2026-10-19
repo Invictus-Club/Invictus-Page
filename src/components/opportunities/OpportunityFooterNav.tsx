@@ -108,6 +108,7 @@ export function OpportunityFooterNav({ currentId, accentColor }: OpportunityFoot
           <div className="flex gap-4">
             <Link href="/" className="hover:text-zinc-300 transition-colors">Home</Link>
             <Link href="/events" className="hover:text-zinc-300 transition-colors">Events</Link>
+            <Link href="/wins" className="hover:text-[#FFD60A] transition-colors">Hall of Fame</Link>
             <Link href="/merch" className="hover:text-[#FFD60A] transition-colors font-bold">Merch</Link>
           </div>
         </div>
