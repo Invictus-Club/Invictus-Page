@@ -396,8 +396,8 @@ export default function PremiumInvictus() {
   // ----------------------------------------------------
   const teamData = [
     { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "", type: "lead" },
-    { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpeg", type: "lead" },
-    { name: "Rahul Shirol", position: "Vice President", image: "", type: "lead" },
+    { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpeg", type: "normal" },
+    { name: "Rahul Shirol", position: "Vice President", image: "", type: "normal" },
     { name: "Preetam Malawade", position: "General Secretary", image: "https://lh3.googleusercontent.com/d/1AFJUrGi-fMYftVP6bebx_rJ1m_5zbAv-", type: "normal" },
     { name: "Pratik", position: "Event Lead", image: "https://lh3.googleusercontent.com/d/1hITTIYIS5LHiiFtIIN7t_54CLgtr0mEe", type: "normal" },
     { name: "Shruti Hugar", position: "Event Lead", image: "", type: "normal" },
@@ -408,7 +408,9 @@ export default function PremiumInvictus() {
     { name: "Nandita Salunke", position: "Event Operations", image: "https://lh3.googleusercontent.com/d/1vgwd3HYV3XMSuM8M5Q_JR96HVSQW1EC5", type: "normal" },
     { name: "Advika Gurav", position: "Female Lead", image: "https://lh3.googleusercontent.com/d/1cbAC922wUAU_nbx_wZXoMWx4wgqQeyQv", type: "normal" },
     { name: "Nandita Bhajantri", position: "PR Outreach", image: "https://lh3.googleusercontent.com/d/17ket2Mii8P2sGUXC6sNq8YOz28U5L_xq", type: "normal" },
-    { name: "Laxmikanth J", position: "Cinematography", image: "https://lh3.googleusercontent.com/d/1_8hHzzydm01OZlmByiCz-GjauwCuMkSP", type: "normal" }
+    { name: "Laxmikanth J", position: "Cinematography", image: "https://lh3.googleusercontent.com/d/1_8hHzzydm01OZlmByiCz-GjauwCuMkSP", type: "normal" },
+    { name: "Rashmi", position: "Core Team", image: "", type: "normal" },
+    { name: "Suvarna", position: "Core Team", image: "", type: "normal" }
   ];
 
   return (
@@ -775,11 +777,11 @@ export default function PremiumInvictus() {
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4">Core Team</h2>
         </div>
         
-        {/* LEADERSHIP (INSANE REVEAL) */}
-        <div className="lead-section grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto mb-16">
+        {/* FACULTY ADVISOR (BIG FEATURED CARD) */}
+        <div className="lead-section flex justify-center max-w-7xl mx-auto mb-20">
           {teamData.filter(m => m.type === 'lead').map((member, i) => (
-            <div key={i} className="lead-character w-[85%] md:w-full mx-auto relative flex flex-col group cursor-pointer perspective-1000">
-              <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-black shadow-[0_0_50px_rgba(255,214,10,0.1)] border border-gray-800 group-hover:border-[#FFD60A]/40 transition-colors duration-500">
+            <div key={i} className="lead-character w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto relative flex flex-col group cursor-pointer perspective-1000">
+              <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden mb-6 bg-black shadow-[0_0_60px_rgba(255,214,10,0.15)] border border-[#FFD60A]/30 group-hover:border-[#FFD60A] transition-colors duration-500">
                 <img 
                   src={member.image && member.image.trim() !== "" ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=09090b&color=ffd60a&bold=true&size=512`} 
                   alt={member.name} 
@@ -789,12 +791,14 @@ export default function PremiumInvictus() {
                 <div className="curtain absolute inset-0 bg-[#050505] z-10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
                 
-                <div className="absolute bottom-6 left-6 right-6 z-20">
-                  <div className="overflow-hidden mb-2">
-                    <p className="insane-pos text-[#FFD60A] text-xs font-bold tracking-[0.25em] uppercase">{member.position}</p>
+                <div className="absolute bottom-6 left-6 right-6 z-20 text-center">
+                  <div className="overflow-hidden mb-2 inline-block">
+                    <span className="insane-pos text-[#FFD60A] text-xs font-mono font-black tracking-[0.3em] uppercase px-3.5 py-1 rounded-full bg-[#FFD60A]/10 border border-[#FFD60A]/30 inline-block">
+                      {member.position}
+                    </span>
                   </div>
                   
-                  <h3 className="text-3xl md:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,1)] flex flex-wrap" style={{ perspective: 400 }}>
+                  <h3 className="text-3xl sm:text-4xl font-black tracking-tighter text-white drop-shadow-[0_2px_12px_rgba(0,0,0,1)] flex justify-center flex-wrap" style={{ perspective: 400 }}>
                     {member.name.split('').map((char, index) => (
                       <span key={index} className="insane-char inline-block" style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}>
                         {char}
@@ -807,11 +811,11 @@ export default function PremiumInvictus() {
           ))}
         </div>
 
-        {/* OTHER MEMBERS (NORMAL REVEAL) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 max-w-7xl mx-auto">
+        {/* STUDENT TEAM CARDS PADLET (NON-HIERARCHICAL NORMAL LANE) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto">
           {teamData.filter(m => m.type === 'normal').map((member, i) => (
             <div key={i} className="team-member flex flex-col group cursor-pointer">
-              <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 border border-gray-800 group-hover:border-gray-500 transition-colors bg-black">
+              <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 border border-gray-800 group-hover:border-[#FFD60A]/50 transition-all duration-300 bg-black group-hover:shadow-[0_0_25px_rgba(255,214,10,0.15)]">
                 <img 
                   src={member.image && member.image.trim() !== "" ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=09090b&color=ffd60a&bold=true&size=512`} 
                   alt={member.name} 
