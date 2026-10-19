@@ -780,20 +780,12 @@ export default function PremiumInvictus() {
           {teamData.filter(m => m.type === 'lead').map((member, i) => (
             <div key={i} className="lead-character w-[85%] md:w-full mx-auto relative flex flex-col group cursor-pointer perspective-1000">
               <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-black shadow-[0_0_50px_rgba(255,214,10,0.1)] border border-gray-800 group-hover:border-[#FFD60A]/40 transition-colors duration-500">
-                {member.image ? (
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="lead-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
-                    onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
-                  />
-                ) : (
-                  <div className="lead-img absolute inset-0 w-full h-full bg-gradient-to-b from-[#141414] via-[#0a0a0a] to-[#050505] flex flex-col items-center justify-center border border-white/5">
-                    <div className="w-24 h-24 rounded-full bg-black/60 border border-white/10 flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] group-hover:border-[#FFD60A]/40 group-hover:shadow-[0_0_30px_rgba(255,214,10,0.2)] transition-all duration-500">
-                      <User className="w-12 h-12 text-zinc-600 group-hover:text-[#FFD60A] transition-colors duration-500" />
-                    </div>
-                  </div>
-                )}
+                <img 
+                  src={member.image && member.image.trim() !== "" ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=09090b&color=ffd60a&bold=true&size=512`} 
+                  alt={member.name} 
+                  className="lead-img absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
+                  onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=09090b&color=ffd60a&bold=true&size=512`; }}
+                />
                 <div className="curtain absolute inset-0 bg-[#050505] z-10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
                 
@@ -820,18 +812,12 @@ export default function PremiumInvictus() {
           {teamData.filter(m => m.type === 'normal').map((member, i) => (
             <div key={i} className="team-member flex flex-col group cursor-pointer">
               <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 border border-gray-800 group-hover:border-gray-500 transition-colors bg-black">
-                {member.image ? (
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="team-drone-shot absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" 
-                    onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=111827&color=ffd60a&bold=true`; }}
-                  />
-                ) : (
-                  <div className="team-drone-shot absolute inset-0 w-full h-full bg-zinc-950 flex flex-col items-center justify-center">
-                    <User className="w-8 h-8 text-zinc-700" />
-                  </div>
-                )}
+                <img 
+                  src={member.image && member.image.trim() !== "" ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=09090b&color=ffd60a&bold=true&size=512`} 
+                  alt={member.name} 
+                  className="team-drone-shot absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" 
+                  onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=09090b&color=ffd60a&bold=true&size=512`; }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               </div>
               <h3 className="text-base sm:text-lg font-black tracking-tighter text-white group-hover:text-[#FFD60A] transition-colors">{member.name}</h3>
