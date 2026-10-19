@@ -398,16 +398,17 @@ export default function PremiumInvictus() {
     { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "", type: "lead" },
     { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpeg", type: "lead" },
     { name: "Rahul Shirol", position: "Vice President", image: "", type: "lead" },
-    { name: "Pratik", position: "Technical Lead", image: "https://lh3.googleusercontent.com/d/1hITTIYIS5LHiiFtIIN7t_54CLgtr0mEe", type: "normal" },
-    { name: "Melwin Fernandes", position: "Design Lead", image: "https://lh3.googleusercontent.com/d/1bpWtPdk6M7lDl-iYQfCo0pTvlCJ2J0uA", type: "normal" },
     { name: "Preetam Malawade", position: "General Secretary", image: "https://lh3.googleusercontent.com/d/1AFJUrGi-fMYftVP6bebx_rJ1m_5zbAv-", type: "normal" },
-    { name: "Sagar Hulikavi", position: "Operations Lead", image: "https://lh3.googleusercontent.com/d/1YFHUJXHR9-f2Tp7nrGgmA_zw_aehpWmu", type: "normal" },
-    { name: "Laxmikanth J", position: "Marketing Lead", image: "https://lh3.googleusercontent.com/d/1_8hHzzydm01OZlmByiCz-GjauwCuMkSP", type: "normal" },
-    { name: "Nandita Bhajantri", position: "PR & Outreach Lead", image: "https://lh3.googleusercontent.com/d/17ket2Mii8P2sGUXC6sNq8YOz28U5L_xq", type: "normal" },
-    { name: "Advika Gurav", position: "Events Lead", image: "https://lh3.googleusercontent.com/d/1cbAC922wUAU_nbx_wZXoMWx4wgqQeyQv", type: "normal" },
-    { name: "Shreesha Desai", position: "Documentation Lead", image: "https://lh3.googleusercontent.com/d/1qj0fQdY0ngzJ1s3wonuiB8Hef1DUiynf", type: "normal" },
-    { name: "Aditya Patange", position: "Media Lead", image: "https://lh3.googleusercontent.com/d/1k92QtXLzh2XCDgfb3jkjb5Ik8j4dYi6y", type: "normal" },
-    { name: "Nandita Salunke", position: "Community Lead", image: "https://lh3.googleusercontent.com/d/1vgwd3HYV3XMSuM8M5Q_JR96HVSQW1EC5", type: "normal" }
+    { name: "Pratik", position: "Event Lead", image: "https://lh3.googleusercontent.com/d/1hITTIYIS5LHiiFtIIN7t_54CLgtr0mEe", type: "normal" },
+    { name: "Shruti Hugar", position: "Event Lead", image: "", type: "normal" },
+    { name: "Melwin Fernandes", position: "Tech Lead", image: "https://lh3.googleusercontent.com/d/1bpWtPdk6M7lDl-iYQfCo0pTvlCJ2J0uA", type: "normal" },
+    { name: "Aditya Patange", position: "Tech Lead", image: "https://lh3.googleusercontent.com/d/1k92QtXLzh2XCDgfb3jkjb5Ik8j4dYi6y", type: "normal" },
+    { name: "Shreesha Desai", position: "Hardware Lead", image: "https://lh3.googleusercontent.com/d/1qj0fQdY0ngzJ1s3wonuiB8Hef1DUiynf", type: "normal" },
+    { name: "Sagar Hulikavi", position: "Event Operations", image: "https://lh3.googleusercontent.com/d/1YFHUJXHR9-f2Tp7nrGgmA_zw_aehpWmu", type: "normal" },
+    { name: "Nandita Salunke", position: "Event Operations", image: "https://lh3.googleusercontent.com/d/1vgwd3HYV3XMSuM8M5Q_JR96HVSQW1EC5", type: "normal" },
+    { name: "Advika Gurav", position: "Female Lead", image: "https://lh3.googleusercontent.com/d/1cbAC922wUAU_nbx_wZXoMWx4wgqQeyQv", type: "normal" },
+    { name: "Nandita Bhajantri", position: "PR Outreach", image: "https://lh3.googleusercontent.com/d/17ket2Mii8P2sGUXC6sNq8YOz28U5L_xq", type: "normal" },
+    { name: "Laxmikanth J", position: "Cinematography", image: "https://lh3.googleusercontent.com/d/1_8hHzzydm01OZlmByiCz-GjauwCuMkSP", type: "normal" }
   ];
 
   return (
@@ -815,7 +816,7 @@ export default function PremiumInvictus() {
         </div>
 
         {/* OTHER MEMBERS (NORMAL REVEAL) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 max-w-7xl mx-auto">
           {teamData.filter(m => m.type === 'normal').map((member, i) => (
             <div key={i} className="team-member flex flex-col group cursor-pointer">
               <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 border border-gray-800 group-hover:border-gray-500 transition-colors bg-black">
