@@ -45,15 +45,15 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
         <div>
           {item.isMembership ? (
             <span className="text-xs font-mono font-black text-black btn-metallic-gold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-lg">
-              CLUB MEMBERSHIP (COMPULSORY BASE)
+              CLUB MEMBERSHIP
             </span>
           ) : isCombo ? (
             <span className="text-xs font-mono font-black text-black btn-metallic-gold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-lg">
-              ALL-IN PACK // ULTIMATE VAULT (₹1234)
+              ALL-IN PACK
             </span>
           ) : (
             <span className="text-xs font-mono font-bold text-zinc-300 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full uppercase tracking-wider inline-block">
-              OPTIONAL ADD-ON
+              ADD-ON
             </span>
           )}
         </div>
@@ -111,9 +111,9 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
             {isAdded
               ? "✓ ADDED TO BAG"
               : item.isMembership
-              ? "✓ INCLUDED BY DEFAULT (COMPULSORY BASE)"
+              ? "✓ INCLUDED BY DEFAULT"
               : isCombo
-              ? "+ ADD ALL-IN PACK (₹1234)"
+              ? "+ ADD ALL-IN PACK — ₹1234"
               : "+ ADD AS ADD-ON"}
           </button>
         </div>

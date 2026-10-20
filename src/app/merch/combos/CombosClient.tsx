@@ -13,7 +13,6 @@ import { playCartSound, playCyberBeep } from "@/lib/merch-audio";
 export default function CombosClient() {
   const router = useRouter();
 
-  // Selected size per pack (default "L")
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     MERCH_COMBOS.forEach((combo) => {
@@ -25,7 +24,6 @@ export default function CombosClient() {
   const [activePackId, setActivePackId] = useState<string>(MERCH_COMBOS[0].id);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
-  // Cart state: compulsory ₹200 membership is default
   const membershipItem = MERCH_ITEMS.find((i) => i.isMembership) || MERCH_ITEMS[4];
   const [cart, setCart] = useState<CartItem[]>([
     {
@@ -35,10 +33,8 @@ export default function CombosClient() {
     },
   ]);
 
-  // Track active pack on scroll for sticky header pill
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
       for (const combo of MERCH_COMBOS) {
         const el = document.getElementById(`pack-${combo.id}`);
         if (el) {
@@ -86,7 +82,6 @@ export default function CombosClient() {
     playCartSound();
     playCyberBeep(880, 0.15);
     const apparelSize = size || selectedSizes[combo.id] || "L";
-    // Route to main merch page with combo pre-selected directly in checkout section
     router.push(`/merch?combo=${combo.id}&size=${apparelSize}#checkout-section`);
   };
 
@@ -134,7 +129,7 @@ export default function CombosClient() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-[#FFD60A] selection:text-black">
-      {/* Top Persistent Header */}
+      {/* Top Header */}
       <header className="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -142,7 +137,7 @@ export default function CombosClient() {
               href="/merch"
               className="text-xs font-mono font-bold tracking-widest uppercase text-zinc-400 hover:text-[#FFD60A] transition-colors flex items-center gap-2 cursor-pointer"
             >
-              ← BACK TO MERCH STORE
+              ← Back to Merch Store
             </Link>
 
             <span className="hidden sm:inline text-zinc-800">|</span>
@@ -158,19 +153,19 @@ export default function CombosClient() {
               onClick={() => setCartDrawerOpen(true)}
               className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl btn-metallic-gold text-black font-mono font-black text-xs uppercase cursor-pointer"
             >
-              BAG ({totalCartCount}) — ₹{totalCartPrice}
+              Bag ({totalCartCount}) — ₹{totalCartPrice}
             </button>
 
             <Link
               href="/merch#checkout-section"
               className="px-3 sm:px-4 py-2 rounded-xl btn-metallic-titanium font-mono text-[11px] font-bold uppercase tracking-wider cursor-pointer"
             >
-              CHECKOUT →
+              Checkout →
             </Link>
           </div>
         </div>
 
-        {/* Sticky Pack Quick-Jump Scrubber Bar */}
+        {/* Clean Sticky Jump Bar (No brackets) */}
         <div className="w-full bg-[#0a0b0e]/95 backdrop-blur-md border-t border-white/5 py-2 px-4 overflow-x-auto hide-scrollbar">
           <div className="max-w-7xl mx-auto flex items-center justify-start sm:justify-center gap-2 min-w-max">
             {MERCH_COMBOS.map((combo, idx) => {
@@ -180,13 +175,13 @@ export default function CombosClient() {
                   key={combo.id}
                   type="button"
                   onClick={() => scrollToPack(combo.id)}
-                  className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                     isActive
-                      ? "bg-[#FFD60A] text-black shadow-[0_2px_12px_rgba(255,214,10,0.4)]"
+                      ? "bg-[#FFD60A] text-black shadow-md"
                       : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10"
                   }`}
                 >
-                  0{idx + 1}. {combo.name} [₹{combo.price}]
+                  0{idx + 1}. {combo.name} — ₹{combo.price}
                 </button>
               );
             })}
@@ -194,39 +189,20 @@ export default function CombosClient() {
         </div>
       </header>
 
-      {/* Kinetic Typography Hero Section */}
-      <section className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 pt-12 pb-6 text-center space-y-4">
-        <div className="inline-block px-3.5 py-1 rounded-full bg-[#FFD60A]/10 border border-[#FFD60A]/30 text-[#FFD60A] font-mono text-[11px] font-black uppercase tracking-widest">
-          // OFFICIAL GEAR ARCHIVE • SCROLL TO INSPECT PRODUCTS INSIDE EACH PACK
+      {/* Clean, Decluttered Hero Section */}
+      <section className="relative w-full max-w-4xl mx-auto px-4 sm:px-8 pt-12 pb-8 text-center space-y-3">
+        <div className="inline-block px-3 py-1 rounded-full bg-[#FFD60A]/10 border border-[#FFD60A]/30 text-[#FFD60A] font-mono text-xs font-bold uppercase tracking-widest">
+          Curated Bundles
         </div>
 
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black uppercase tracking-tight text-white leading-none">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none">
           CURATED <span className="text-[#FFD60A]">GEAR PACKS</span>
         </h1>
 
-        <p className="max-w-2xl mx-auto text-xs sm:text-sm font-mono text-zinc-400 uppercase tracking-widest leading-relaxed">
-          5 precision bundles tailored for developers, students, and cold labs. Official induction membership (₹200) covers ID card, lanyard, totebag & pen.
+        <p className="max-w-xl mx-auto text-xs sm:text-sm font-mono text-zinc-400 uppercase tracking-widest leading-relaxed">
+          5 official club bundles with standalone savings. Compulsory ₹200 membership covers ID card, lanyard, totebag, and pen.
         </p>
-
-        {/* Live Telemetry Bar */}
-        <div className="pt-2 flex flex-wrap justify-center gap-4 sm:gap-8 font-mono text-[11px] text-zinc-400 uppercase">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>5 PACKAGES ACTIVE</span>
-          </div>
-          <div>•</div>
-          <div>STANDALONE DISCOUNTS UP TO ₹311</div>
-          <div>•</div>
-          <div>DIRECT WHATSAPP DISPATCH</div>
-        </div>
       </section>
-
-      {/* Scrolling Kinetic Ribbon Marquee */}
-      <div className="w-full py-2 bg-gradient-to-r from-[#FFD60A]/15 via-white/10 to-[#FFD60A]/15 border-y border-white/10 marquee-container my-6">
-        <div className="marquee-content font-mono text-xs font-black uppercase tracking-widest text-[#FFD60A]">
-          ⚡ ESSENTIAL PACK ₹349 • STUDENT PACK ₹599 • PREMIUM PACK ₹799 • APPAREL PACK ₹999 • ALL-IN PACK ₹1234 • DIRECT WHATSAPP DISPATCH • SCROLL TO INSPECT EVERY ITEM INSIDE • ⚡ ESSENTIAL PACK ₹349 • STUDENT PACK ₹599 • PREMIUM PACK ₹799 • APPAREL PACK ₹999 • ALL-IN PACK ₹1234 • DIRECT WHATSAPP DISPATCH • SCROLL TO INSPECT EVERY ITEM INSIDE •
-        </div>
-      </div>
 
       {/* SCROLL-BASED STAGES FOR THE 5 PACKS */}
       <main className="relative z-10 w-full">
@@ -244,35 +220,25 @@ export default function CombosClient() {
         ))}
       </main>
 
-      {/* DESLOPT END OF COMBOS PAGE: High-Impact Summary Deck & Order Direct Dispatch */}
-      <section className="relative z-10 py-20 px-4 sm:px-8 bg-black border-t border-white/15">
-        <div className="max-w-5xl mx-auto space-y-10 text-center">
-          <div className="space-y-3">
-            <div className="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/20 text-zinc-300 font-mono text-[10px] font-bold uppercase tracking-wider">
-              INDUCTION PROTOCOL // ZERO SLOP DISPATCH
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
-              READY TO <span className="text-[#FFD60A]">DISPATCH YOUR GEAR?</span>
+      {/* CLEAN SUMMARY SECTION AT THE END */}
+      <section className="relative z-10 py-16 px-4 sm:px-8 bg-black border-t border-white/10">
+        <div className="max-w-4xl mx-auto space-y-8 text-center">
+          <div className="space-y-2">
+            <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white">
+              DISPATCH <span className="text-[#FFD60A]">YOUR PACK</span>
             </h2>
-            <p className="max-w-xl mx-auto font-mono text-xs sm:text-sm text-zinc-400 uppercase tracking-widest">
-              Choose your combo pack above or jump directly to the checkout terminal on the merch store.
+            <p className="text-xs sm:text-sm font-mono text-zinc-400 uppercase tracking-widest">
+              Direct WhatsApp order dispatch with instant confirmation.
             </p>
           </div>
 
-          {/* 5-Pack Comparison Table (Clean, Deslopt, Transparent) */}
+          {/* Clean Pack Summary Table (No brackets) */}
           <div className="relative overflow-hidden rounded-3xl card-metallic-titanium p-6 sm:p-8 text-left">
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
-            
-            <div className="font-mono text-xs text-[#FFD60A] font-black uppercase tracking-widest pb-4 border-b border-white/10 flex items-center justify-between">
-              <span>OFFICIAL 5-PACK ARSENAL MANIFEST</span>
-              <span>DIRECT ORDER DISPATCH</span>
-            </div>
-
             <div className="divide-y divide-white/10 font-mono text-xs">
               {MERCH_COMBOS.map((c, i) => (
                 <div
                   key={c.id}
-                  className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-white/[0.02] px-2 rounded-lg transition-colors"
+                  className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -282,7 +248,7 @@ export default function CombosClient() {
                         {c.savings}
                       </span>
                     </div>
-                    <div className="text-zinc-400 text-[11px]">
+                    <div className="text-zinc-400 text-xs">
                       {c.includes.join(" + ")}
                     </div>
                   </div>
@@ -290,7 +256,7 @@ export default function CombosClient() {
                   <div className="flex items-center gap-4 shrink-0">
                     <div className="text-right">
                       <div className="text-lg font-black text-[#FFD60A]">₹{c.price}</div>
-                      <div className="text-[10px] text-zinc-500 line-through">₹{c.originalPrice}</div>
+                      <div className="text-xs text-zinc-500 line-through">₹{c.originalPrice}</div>
                     </div>
 
                     <button
@@ -298,7 +264,7 @@ export default function CombosClient() {
                       onClick={() => handleCheckout(c)}
                       className="px-4 py-2.5 rounded-xl btn-metallic-gold text-black font-mono font-black text-xs uppercase cursor-pointer"
                     >
-                      SELECT PACK →
+                      Select Pack →
                     </button>
                   </div>
                 </div>
@@ -306,40 +272,40 @@ export default function CombosClient() {
             </div>
           </div>
 
-          {/* Quick Action Navigation Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          {/* Action Navigation */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Link
               href="/merch#checkout-section"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl btn-metallic-gold text-black font-mono font-black text-xs uppercase tracking-widest text-center cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl btn-metallic-gold text-black font-mono font-black text-xs uppercase tracking-widest text-center cursor-pointer"
             >
-              PROCEED TO MAIN CHECKOUT TERMINAL →
+              Go to Checkout →
             </Link>
 
             <Link
               href="/merch"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl btn-metallic-titanium font-mono font-bold text-xs uppercase tracking-widest text-center cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl btn-metallic-titanium font-mono font-bold text-xs uppercase tracking-widest text-center cursor-pointer"
             >
-              ← BROWSE INDIVIDUAL STANDALONE ITEMS
+              ← Standalone Merch
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Clean Editorial Footer */}
+      {/* Clean Footer */}
       <footer className="relative z-10 py-10 px-4 sm:px-8 bg-black border-t border-zinc-900 font-mono text-xs text-zinc-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-white font-bold">
-            INVICTUS CLUB // MERCH COMBOS & APPAREL ARSENAL
+            INVICTUS CLUB • MERCH GEAR PACKS
           </div>
           <div className="flex gap-6">
-            <Link href="/" className="hover:text-white transition-colors">[ HOME ]</Link>
-            <Link href="/merch" className="hover:text-white transition-colors">[ MERCH ]</Link>
-            <Link href="/wins" className="hover:text-[#FFD60A] transition-colors">[ HALL OF FAME ]</Link>
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/merch" className="hover:text-white transition-colors">Merch</Link>
+            <Link href="/wins" className="hover:text-[#FFD60A] transition-colors">Hall of Fame</Link>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="text-[#FFD60A] hover:underline cursor-pointer"
             >
-              [ TOP ↑ ]
+              Top ↑
             </button>
           </div>
         </div>

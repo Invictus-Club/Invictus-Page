@@ -51,7 +51,7 @@ export const MERCH_ITEMS: MerchItem[] = [
   },
   {
     id: "complete-combo",
-    name: "ALL-IN PACK (HOODIE + TEE + BOTTLE + NOTEPAD + PEN)",
+    name: "ALL-IN PACK",
     price: 1234,
     image: "/merch/all-in-pack.jpg",
     secondaryImage: "/merch/hoodie-699.jpeg",

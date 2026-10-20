@@ -299,17 +299,17 @@ export function SimpleCheckoutTerminal({
                           <div className="flex items-center gap-2 mt-0.5">
                             {c.item.isMembership && (
                               <span className="text-[10px] font-mono text-[#FFD60A] font-bold">
-                                [COMPULSORY BASE // MANDATORY]
+                                MANDATORY BASE
                               </span>
                             )}
                             {c.item.isCombo && (
                               <span className="text-[10px] font-mono text-[#FFD60A] font-bold">
-                                [MERCH COMBO]
+                                COMBO PACK
                               </span>
                             )}
                             {!c.item.isMembership && !c.item.isCombo && (
                               <span className="text-[10px] font-mono text-zinc-400 font-bold">
-                                [ADD-ON]
+                                ADD-ON
                               </span>
                             )}
                             {c.size && (
@@ -365,7 +365,7 @@ export function SimpleCheckoutTerminal({
                 <div className="relative z-10 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="inline-block px-3 py-1 rounded-full bg-[#FFD60A]/20 border border-[#FFD60A]/40 text-[#FFD60A] font-mono text-[10px] font-black uppercase tracking-wider">
-                      ★ CURATED VALUE PACKS
+                      CURATED PACKS
                     </span>
                     <span className="font-mono text-xs text-[#FFD60A] font-bold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
                       VIEW ALL COMBOS →
@@ -377,7 +377,7 @@ export function SimpleCheckoutTerminal({
                       EXPLORE MERCH COMBOS
                     </h3>
                     <p className="text-xs font-mono text-zinc-300 mt-1 line-clamp-2 leading-relaxed">
-                      Bundle Essential (₹349), Student (₹599), Premium (₹799), Apparel (₹999), & All-in Vault (₹1234). Save up to ₹311!
+                      Essential ₹349, Student ₹599, Premium ₹799, Apparel ₹999, and ALL-IN PACK ₹1234. Save up to ₹311!
                     </p>
                   </div>
 

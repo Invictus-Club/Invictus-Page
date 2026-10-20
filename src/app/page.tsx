@@ -395,7 +395,7 @@ export default function PremiumInvictus() {
   // TEAM DATA (Store images in public/team/)
   // ----------------------------------------------------
   const teamData = [
-    { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "", type: "lead" },
+    { name: "Mrs. Chaitrali Mam", position: "Faculty Advisor", image: "/team/chaitrali-mam.jpg", type: "lead" },
     { name: "Yash Koparde", position: "President", image: "/team/yash-koparde.jpeg", type: "normal" },
     { name: "Rahul Shirol", position: "Vice President", image: "", type: "normal" },
     { name: "Preetam Malawade", position: "General Secretary", image: "https://lh3.googleusercontent.com/d/1AFJUrGi-fMYftVP6bebx_rJ1m_5zbAv-", type: "normal" },
