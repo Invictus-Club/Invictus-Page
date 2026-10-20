@@ -7,6 +7,7 @@ import { MERCH_COMBOS, comboToMerchItem } from "@/data/combos";
 import { ScrollSequenceCanvas } from "@/components/merch/ScrollSequenceCanvas";
 import { ScrollStageItem } from "@/components/merch/ScrollStageItem";
 import { SimpleCheckoutTerminal, CartItem } from "@/components/merch/SimpleCheckoutTerminal";
+import { MerchCombosShowcase } from "@/components/merch/MerchCombosShowcase";
 import { MerchCartDrawer } from "@/components/merch/MerchCartDrawer";
 import {
   playCyberBeep,
@@ -241,8 +242,13 @@ export default function MerchPortalClient() {
           />
         ))}
 
-        {/* Sequence Shot 7: Transition Sequence (Gliding into Workstation - Pure background video, no AI clutter) */}
-        <div className="relative min-h-[90vh] w-full pointer-events-none" />
+        {/* Sequence Shot 7: Curated Packs & Combos Showcase (5 Curated Preset Packs) */}
+        <MerchCombosShowcase
+          onAddToCart={(combo, size) => {
+            handleAddToCart(comboToMerchItem(combo), size);
+          }}
+          onProceedToCheckout={scrollToCheckout}
+        />
 
         {/* Sequence Shot 8: Checkout & Exit Sequence -> Register via Google Form + WhatsApp Dispatch */}
         <SimpleCheckoutTerminal

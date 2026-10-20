@@ -33,7 +33,7 @@ export const MERCH_ITEMS: MerchItem[] = [
     id: "invictus-notepad",
     name: "HARDCOVER DEV NOTEPAD",
     price: 99,
-    image: "/merch/totebag-99.jpeg",
+    image: "/merch/notepad-pen.jpg",
   },
   {
     id: "invictus-bottle",
@@ -51,10 +51,10 @@ export const MERCH_ITEMS: MerchItem[] = [
   },
   {
     id: "complete-combo",
-    name: "COMPLETE COMBO (ALL-IN-ONE VAULT)",
-    price: 1199,
-    image: "/merch/hoodie-699.jpeg",
-    secondaryImage: "/merch/tshirt-399.jpeg",
+    name: "ALL-IN PACK (HOODIE + TEE + BOTTLE + NOTEPAD + PEN)",
+    price: 1234,
+    image: "/merch/all-in-pack.jpg",
+    secondaryImage: "/merch/hoodie-699.jpeg",
     sizes: ["S", "M", "L", "XL", "2XL"],
     isCombo: true,
   },

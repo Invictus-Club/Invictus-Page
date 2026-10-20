@@ -1,117 +1,267 @@
 // =========================================================================
 // INVICTUS MERCH COMBOS & BUNDLE TEMPLATES
-// You can easily edit any combo name, price, badge, or included items by hand!
-// Note: Totebag, ID Card, and Lanyard are covered in the compulsory ₹200 membership.
-// Standalone reference: Hoodie ₹699, Dev Tee ₹449, Thermal Bottle ₹199, Notepad ₹99.
+// Definitive Curated Packs:
+// 1. Essential Pack (Notepad + Pen + Bottle) — ₹349
+// 2. Student Pack (T-Shirt + Notepad + Pen) — ₹599
+// 3. Premium Pack (Hoodie + Bottle) — ₹799
+// 4. Apparel Pack (Hoodie + T-Shirt) — ₹999
+// 5. All-in Pack (Hoodie + T-Shirt + Notepad + Pen + Bottle) — ₹1234
 // =========================================================================
 
 import { MerchItem } from "./merch";
 
+export interface ComboProductItem {
+  id: string;
+  name: string;
+  spec: string;
+  category: "APPAREL" | "VESSEL" | "EQUIPMENT" | "INSTRUMENT";
+  badge: string;
+  image: string;
+}
+
 export interface MerchComboTemplate {
   id: string;
   name: string;
-  tagline: string;
   badge: string;
+  tagline: string;
   price: number;
-  originalPrice?: number;
-  savings?: string;
+  originalPrice: number;
+  savings: string;
   description: string;
   includes: string[];
+  products: ComboProductItem[];
+  hasApparel?: boolean;
+  apparelType?: "tee" | "hoodie" | "both";
   isFeatured?: boolean;
 }
 
 export const MERCH_COMBOS: MerchComboTemplate[] = [
   {
-    id: "combo-starter-gear",
-    name: "DEV TEE & NOTEPAD PACK",
-    badge: "STARTER DEV GEAR",
-    price: 499,
-    originalPrice: 548,
-    savings: "SAVE ₹49",
-    tagline: "Heavyweight 240 GSM dev tee + grid-lined hardcover notepad.",
-    description: "The clean coding essentials for daily classes and system design.",
+    id: "combo-essential-pack",
+    name: "ESSENTIAL PACK",
+    badge: "LAB & STUDY ESSENTIALS",
+    price: 349,
+    originalPrice: 397,
+    savings: "SAVE ₹48",
+    tagline: "Hardcover Developer Notepad + Executive Metal Pen + Stealth Thermal Bottle.",
+    description:
+      "The clean, daily utility arsenal. Engineered for lectures, practicals, lab calculations, and all-day hydration.",
     includes: [
-      "Heavyweight Dev Tee (240 GSM Combed Cotton)",
       "Hardcover Developer Notepad (Grid-lined)",
-      "Exclusive Invictus Holographic Decals",
+      "Executive Brass Rollerball Pen (Gold Accents)",
+      "Stealth Thermal Bottle (500ml Vacuum Insulated)",
+    ],
+    hasApparel: false,
+    products: [
+      {
+        id: "prod-notepad",
+        name: "HARDCOVER DEV NOTEPAD",
+        spec: "Grid-lined 100 GSM paper • Matte black vegan leather • Gold VTU logo",
+        category: "EQUIPMENT",
+        badge: "GRID-LINED // FOIL LOGO",
+        image: "/merch/notepad-pen.jpg",
+      },
+      {
+        id: "prod-pen",
+        name: "EXECUTIVE BRASS ROLLERBALL PEN",
+        spec: "Solid brass knurled body • 0.5mm tungsten carbide tip • Laser-engraved INVICTUS",
+        category: "INSTRUMENT",
+        badge: "KNURLED BRASS // 0.5MM",
+        image: "/merch/pen-metal.jpg",
+      },
+      {
+        id: "prod-bottle",
+        name: "STEALTH THERMAL BOTTLE",
+        spec: "500ml capacity • Double-wall vacuum insulation • 18/8 food-grade steel",
+        category: "VESSEL",
+        badge: "VACUUM INSULATED // 500ML",
+        image: "/merch/bottle-199.jpeg",
+      },
     ],
   },
   {
-    id: "combo-campus-daily",
-    name: "CAMPUS DAILY DUO",
-    badge: "EVERYDAY ESSENTIALS",
+    id: "combo-student-pack",
+    name: "STUDENT PACK",
+    badge: "CAMPUS DAILY DRIVER",
     price: 599,
-    originalPrice: 648,
-    savings: "SAVE ₹49",
-    tagline: "Heavyweight dev tee + vacuum insulated thermal bottle.",
-    description: "Stay hydrated and comfortable through lecture marathons and lab practicals.",
+    originalPrice: 647,
+    savings: "SAVE ₹48",
+    tagline: "Heavyweight Dev Tee + Hardcover Developer Notepad + Executive Metal Pen.",
+    description:
+      "The core uniform of the modern student engineer. High GSM combed cotton combined with precision analog study tools.",
     includes: [
       "Heavyweight Dev Tee (240 GSM Combed Cotton)",
-      "Stealth Thermal Bottle (500ml Vacuum Insulated)",
-      "Exclusive Invictus Holographic Decals",
-    ],
-  },
-  {
-    id: "combo-cyber-stealth",
-    name: "CYBER STEALTH HOODIE PACK",
-    badge: "COLD-LAB ESSENTIAL",
-    price: 749,
-    originalPrice: 798,
-    savings: "SAVE ₹49",
-    tagline: "400 GSM Cyber Fleece hoodie + grid-lined developer notepad.",
-    description: "Engineered for chilly air-conditioned computer labs and overnight hackathons.",
-    includes: [
-      "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
       "Hardcover Developer Notepad (Grid-lined)",
-      "Exclusive Invictus Holographic Decals",
+      "Executive Brass Rollerball Pen (Gold Accents)",
+    ],
+    hasApparel: true,
+    apparelType: "tee",
+    products: [
+      {
+        id: "prod-tee",
+        name: "HEAVYWEIGHT DEV TEE",
+        spec: "240 GSM combed cotton • Pre-shrunk boxy cut • Metallic screenprint",
+        category: "APPAREL",
+        badge: "240 GSM // BOX CUT",
+        image: "/merch/tshirt-399.jpeg",
+      },
+      {
+        id: "prod-notepad",
+        name: "HARDCOVER DEV NOTEPAD",
+        spec: "Grid-lined 100 GSM paper • Matte black vegan leather • Gold VTU logo",
+        category: "EQUIPMENT",
+        badge: "GRID-LINED // FOIL LOGO",
+        image: "/merch/notepad-pen.jpg",
+      },
+      {
+        id: "prod-pen",
+        name: "EXECUTIVE BRASS ROLLERBALL PEN",
+        spec: "Solid brass knurled body • 0.5mm tungsten carbide tip • Laser-engraved INVICTUS",
+        category: "INSTRUMENT",
+        badge: "KNURLED BRASS // 0.5MM",
+        image: "/merch/pen-metal.jpg",
+      },
     ],
   },
   {
-    id: "combo-winter-coder",
-    name: "WINTER CODER COMBO",
-    badge: "LATE-NIGHT SPECIAL",
-    price: 829,
+    id: "combo-premium-pack",
+    name: "PREMIUM PACK",
+    badge: "COLD-LAB SHIELD",
+    price: 799,
     originalPrice: 898,
-    savings: "SAVE ₹69",
-    tagline: "400 GSM cyber hoodie + 500ml vacuum insulated thermal bottle.",
-    description: "Keep warm and keep coffee piping hot during marathon debugging sessions.",
+    savings: "SAVE ₹99",
+    tagline: "Stealth Cyber Hoodie + Stealth Thermal Bottle.",
+    description:
+      "Designed for freezing AC computer labs and late-night campus hackathons. Heavy 400 GSM brushed fleece with all-night hot coffee.",
     includes: [
       "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
       "Stealth Thermal Bottle (500ml Vacuum Insulated)",
-      "Exclusive Invictus Holographic Decals",
+    ],
+    hasApparel: true,
+    apparelType: "hoodie",
+    products: [
+      {
+        id: "prod-hoodie",
+        name: "STEALTH CYBER HOODIE",
+        spec: "400 GSM heavyweight brushed fleece • Double-layered hood • Gold metal aglets",
+        category: "APPAREL",
+        badge: "400 GSM // BRUSHED FLEECE",
+        image: "/merch/hoodie-699.jpeg",
+      },
+      {
+        id: "prod-bottle",
+        name: "STEALTH THERMAL BOTTLE",
+        spec: "500ml capacity • Double-wall vacuum insulation • 18/8 food-grade steel",
+        category: "VESSEL",
+        badge: "VACUUM INSULATED // 500ML",
+        image: "/merch/bottle-199.jpeg",
+      },
     ],
   },
   {
-    id: "combo-apparel-duo",
-    name: "FULL WARDROBE APPAREL PACK",
-    badge: "MOST POPULAR",
+    id: "combo-apparel-pack",
+    name: "APPAREL PACK",
+    badge: "WARDROBE DUO // POPULAR",
     price: 999,
     originalPrice: 1148,
     savings: "SAVE ₹149",
-    tagline: "Official cyber hoodie and heavyweight dev tee bundled together.",
-    description: "Both club apparel staples crafted with heavyweight premium fabric.",
+    tagline: "Stealth Cyber Hoodie + Heavyweight Dev Tee.",
+    description:
+      "The complete Invictus apparel lineup bundled together. Heavyweight thermal warmth plus breathable daily dev tee.",
     includes: [
       "Stealth Cyber Hoodie (400 GSM Heavyweight Fleece)",
       "Heavyweight Dev Tee (240 GSM Combed Cotton)",
-      "Exclusive Invictus Holographic Decals Pack",
+    ],
+    hasApparel: true,
+    apparelType: "both",
+    products: [
+      {
+        id: "prod-hoodie",
+        name: "STEALTH CYBER HOODIE",
+        spec: "400 GSM heavyweight brushed fleece • Double-layered hood • Gold metal aglets",
+        category: "APPAREL",
+        badge: "400 GSM // BRUSHED FLEECE",
+        image: "/merch/hoodie-699.jpeg",
+      },
+      {
+        id: "prod-tee",
+        name: "HEAVYWEIGHT DEV TEE",
+        spec: "240 GSM combed cotton • Pre-shrunk boxy cut • Metallic screenprint",
+        category: "APPAREL",
+        badge: "240 GSM // BOX CUT",
+        image: "/merch/tshirt-399.jpeg",
+      },
     ],
   },
   {
-    id: "combo-elite-all-in-one",
-    name: "COMPLETE TECH COLLECTIVE VAULT",
-    badge: "★ BEST VALUE // ALL-IN-ONE",
-    price: 1199,
-    originalPrice: 1446,
-    savings: "SAVE ₹247",
-    isFeatured: true, // Displayed in luxury champagne gold gloss
-    tagline: "Every piece of Invictus merch: hoodie, tee, thermal bottle, and notepad.",
-    description: "All four club apparel and gear items bundled at the absolute maximum discount rate.",
+    id: "combo-all-in-pack",
+    name: "ALL-IN PACK",
+    badge: "★ ULTIMATE COLLECTIVE VAULT",
+    price: 1234,
+    originalPrice: 1545,
+    savings: "SAVE ₹311 (MAX VALUE)",
+    isFeatured: true,
+    tagline: "Hoodie + T-Shirt + Hardcover Notepad + Metal Pen + Thermal Bottle.",
+    description:
+      "The definitive collection. Every single official merchandise artifact engineered by the Invictus Tech Collective, packed into one supreme vault bundle at the greatest discount.",
     includes: [
       "Stealth Cyber Hoodie (400 GSM Brushed Fleece)",
       "Heavyweight Dev Tee (240 GSM Combed Cotton)",
       "Stealth Thermal Bottle (500ml Vacuum Insulated)",
       "Hardcover Developer Notepad (Grid-lined)",
-      "Exclusive Invictus Holographic Decals Pack",
+      "Executive Brass Rollerball Pen (Gold Accents)",
+    ],
+    hasApparel: true,
+    apparelType: "both",
+    products: [
+      {
+        id: "prod-all-vault",
+        name: "COMPLETE VAULT OVERVIEW",
+        spec: "Full 5-Piece Suite: Hoodie, Tee, Thermal Bottle, Hardcover Notebook, and Executive Pen",
+        category: "EQUIPMENT",
+        badge: "5-PIECE VAULT OVERVIEW",
+        image: "/merch/all-in-pack.jpg",
+      },
+      {
+        id: "prod-hoodie",
+        name: "STEALTH CYBER HOODIE",
+        spec: "400 GSM heavyweight brushed fleece • Double-layered hood • Gold metal aglets",
+        category: "APPAREL",
+        badge: "400 GSM // BRUSHED FLEECE",
+        image: "/merch/hoodie-699.jpeg",
+      },
+      {
+        id: "prod-tee",
+        name: "HEAVYWEIGHT DEV TEE",
+        spec: "240 GSM combed cotton • Pre-shrunk boxy cut • Metallic screenprint",
+        category: "APPAREL",
+        badge: "240 GSM // BOX CUT",
+        image: "/merch/tshirt-399.jpeg",
+      },
+      {
+        id: "prod-bottle",
+        name: "STEALTH THERMAL BOTTLE",
+        spec: "500ml capacity • Double-wall vacuum insulation • 18/8 food-grade steel",
+        category: "VESSEL",
+        badge: "VACUUM INSULATED // 500ML",
+        image: "/merch/bottle-199.jpeg",
+      },
+      {
+        id: "prod-notepad",
+        name: "HARDCOVER DEV NOTEPAD",
+        spec: "Grid-lined 100 GSM paper • Matte black vegan leather • Gold VTU logo",
+        category: "EQUIPMENT",
+        badge: "GRID-LINED // FOIL LOGO",
+        image: "/merch/notepad-pen.jpg",
+      },
+      {
+        id: "prod-pen",
+        name: "EXECUTIVE BRASS ROLLERBALL PEN",
+        spec: "Solid brass knurled body • 0.5mm tungsten carbide tip • Laser-engraved INVICTUS",
+        category: "INSTRUMENT",
+        badge: "KNURLED BRASS // 0.5MM",
+        image: "/merch/pen-metal.jpg",
+      },
     ],
   },
 ];
@@ -124,11 +274,11 @@ export function comboToMerchItem(combo: MerchComboTemplate): MerchItem {
     id: combo.id,
     name: `COMBO: ${combo.name}`,
     price: combo.price,
-    image: combo.isFeatured ? "/merch/hoodie-699.jpeg" : "/merch/tshirt-399.jpeg",
-    secondaryImage: "/merch/bottle-199.jpeg",
+    image: combo.isFeatured ? "/merch/all-in-pack.jpg" : combo.products[0]?.image || "/merch/all-in-pack.jpg",
+    secondaryImage: combo.products[1]?.image,
     isCombo: true,
     tagline: combo.tagline,
     description: combo.description,
-    sizes: ["S", "M", "L", "XL", "2XL"],
+    sizes: combo.hasApparel ? ["S", "M", "L", "XL", "2XL"] : undefined,
   };
 }

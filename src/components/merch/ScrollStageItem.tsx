@@ -49,7 +49,7 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
             </span>
           ) : isCombo ? (
             <span className="text-xs font-mono font-black text-black btn-metallic-gold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block shadow-lg">
-              COMPLETE COMBO
+              ALL-IN PACK // ULTIMATE VAULT (₹1234)
             </span>
           ) : (
             <span className="text-xs font-mono font-bold text-zinc-300 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full uppercase tracking-wider inline-block">
@@ -113,7 +113,7 @@ export function ScrollStageItem({ item, onAddToCart, index }: ScrollStageItemPro
               : item.isMembership
               ? "✓ INCLUDED BY DEFAULT (COMPULSORY BASE)"
               : isCombo
-              ? "+ ADD COMPLETE COMBO"
+              ? "+ ADD ALL-IN PACK (₹1234)"
               : "+ ADD AS ADD-ON"}
           </button>
         </div>

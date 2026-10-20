@@ -377,12 +377,12 @@ export function SimpleCheckoutTerminal({
                       EXPLORE MERCH COMBOS
                     </h3>
                     <p className="text-xs font-mono text-zinc-300 mt-1 line-clamp-2 leading-relaxed">
-                      Bundle cyber hoodies (₹699), dev tees (₹449), thermal bottles (₹199), & notepads (₹99). Save up to ₹247!
+                      Bundle Essential (₹349), Student (₹599), Premium (₹799), Apparel (₹999), & All-in Vault (₹1234). Save up to ₹311!
                     </p>
                   </div>
 
                   <div className="pt-2 flex items-center justify-between border-t border-white/10 text-[11px] font-mono text-zinc-400">
-                    <span className="text-zinc-300 font-bold">6 EXCLUSIVE TEMPLATES</span>
+                    <span className="text-zinc-300 font-bold">5 CURATED PACKS</span>
                     <span className="text-[#FFD60A] font-bold">DISCOVER BUNDLES ↗</span>
                   </div>
                 </div>
