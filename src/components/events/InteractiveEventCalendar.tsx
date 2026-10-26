@@ -18,7 +18,10 @@ import {
   ArrowUpRight,
   Flame,
   Layers,
-  Zap
+  Zap,
+  Tag,
+  Radio,
+  Compass
 } from "lucide-react";
 import eventsData, { EventItem } from "@/data/events";
 import { 
@@ -100,6 +103,8 @@ export function InteractiveEventCalendar({
     return filteredEvents[0] || initialEvents[0];
   }, [initialEvents, stagedEventId, filteredEvents]);
 
+  const stagedMeta = stagedEvent ? getCategoryMeta(stagedEvent.category) : null;
+
   return (
     <div className={`w-full bg-[#08080a] border border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden ${className}`}>
       {/* Background ambient mesh */}
@@ -156,87 +161,228 @@ export function InteractiveEventCalendar({
         </div>
       </div>
 
-      {/* CALENDAR BODY */}
-      <div className="mt-6 relative z-10">
-        {/* Weekday headers */}
-        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center">
-          {WEEKDAY_NAMES.map((dayName, idx) => (
-            <div 
-              key={dayName} 
-              className={`text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider py-1.5 ${
-                idx === 0 || idx === 6 ? "text-amber-400/70" : "text-zinc-500"
-              }`}
-            >
-              {dayName}
+      {/* TWO-COLUMN LAYOUT: CALENDAR GRID (LEFT) + STAGED EVENT CONSOLE (RIGHT) */}
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+        {/* LEFT COLUMN: MONTHLY CALENDAR GRID (7 COLUMNS) */}
+        <div className="lg:col-span-7 space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+              <CalendarIcon className="w-3.5 h-3.5 text-[#FFD60A]" />
+              Tournament Grid
+            </span>
+            <span className="text-[11px] font-mono text-zinc-500">
+              {filteredEvents.length} active events in scope
+            </span>
+          </div>
+
+          <div className="bg-black/40 border border-white/10 rounded-2xl p-3 sm:p-4">
+            {/* Weekday headers */}
+            <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center">
+              {WEEKDAY_NAMES.map((dayName, idx) => (
+                <div 
+                  key={dayName} 
+                  className={`text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider py-1.5 ${
+                    idx === 0 || idx === 6 ? "text-amber-400/70" : "text-zinc-500"
+                  }`}
+                >
+                  {dayName}
+                </div>
+              ))}
             </div>
-          ))}
+
+            {/* 7-Column Monthly Day Grid */}
+            <div className="grid grid-cols-7 gap-1 sm:gap-2">
+              {monthGrid.map((day: CalendarDay) => {
+                const isSelected = day.dateString === selectedDate;
+                const hasEvents = day.events.length > 0;
+                const primaryEvent = day.events[0];
+                const meta = primaryEvent ? getCategoryMeta(primaryEvent.category) : null;
+                const isOngoing = day.events.some((e) => e.status === "ONGOING");
+
+                return (
+                  <div
+                    key={day.dateString}
+                    className={`relative min-h-[64px] sm:min-h-[78px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group ${
+                      isSelected
+                        ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_20px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/50"
+                        : hasEvents
+                        ? "bg-zinc-900/60 border-white/15 hover:border-[#FFD60A]/50 hover:bg-white/[0.04]"
+                        : day.isCurrentMonth
+                        ? "bg-black/40 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
+                        : "bg-black/20 border-transparent opacity-30"
+                    }`}
+                  >
+                    {/* Day Header Row */}
+                    <div className="flex items-center justify-between">
+                      <span className={`text-xs sm:text-sm font-mono font-bold ${
+                        isSelected ? "text-[#FFD60A]" : day.isToday ? "text-white underline decoration-[#FFD60A] decoration-2 underline-offset-4" : "text-zinc-300"
+                      }`}>
+                        {day.dayNumber}
+                      </span>
+
+                      {/* Top corner indicators */}
+                      {hasEvents && (
+                        <div className="flex items-center gap-1">
+                          {isOngoing && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                          )}
+                          <span 
+                            className="w-2 h-2 rounded-full transition-transform group-hover:scale-125" 
+                            style={{ backgroundColor: meta?.dotColor || "#FFD60A" }} 
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Event previews in cell */}
+                    {hasEvents && primaryEvent && (
+                      <div className="mt-1 space-y-1 overflow-hidden">
+                        <div 
+                          className={`text-[9px] sm:text-[10px] font-mono font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded border ${
+                            isSelected 
+                              ? "bg-[#FFD60A] text-black border-[#FFD60A] font-bold" 
+                              : `${meta?.badgeBg} ${meta?.badgeText} ${meta?.badgeBorder}`
+                          }`}
+                        >
+                          {primaryEvent.category}
+                        </div>
+
+                        <p className="text-[10px] font-medium text-zinc-300 truncate hidden md:block group-hover:text-white transition-colors">
+                          {primaryEvent.name}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {/* 7-Column Monthly Day Grid */}
-        <div className="grid grid-cols-7 gap-1 sm:gap-2">
-          {monthGrid.map((day: CalendarDay) => {
-            const isSelected = day.dateString === selectedDate;
-            const hasEvents = day.events.length > 0;
-            const primaryEvent = day.events[0];
-            const meta = primaryEvent ? getCategoryMeta(primaryEvent.category) : null;
-            const isOngoing = day.events.some((e) => e.status === "ONGOING");
+        {/* RIGHT COLUMN: STAGED EVENT CONSOLE (5 COLUMNS) */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FFD60A] flex items-center gap-2">
+              <Radio className="w-3.5 h-3.5 text-[#FFD60A] animate-pulse" />
+              Staged Tournament Deck
+            </span>
+            <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400">
+              No Page Reload
+            </span>
+          </div>
 
-            return (
-              <div
-                key={day.dateString}
-                className={`relative min-h-[56px] sm:min-h-[76px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group ${
-                  isSelected
-                    ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_20px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/50"
-                    : hasEvents
-                    ? "bg-zinc-900/60 border-white/15 hover:border-[#FFD60A]/50 hover:bg-white/[0.04]"
-                    : day.isCurrentMonth
-                    ? "bg-black/40 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
-                    : "bg-black/20 border-transparent opacity-30"
-                }`}
-              >
-                {/* Day Header Row */}
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs sm:text-sm font-mono font-bold ${
-                    isSelected ? "text-[#FFD60A]" : day.isToday ? "text-white underline decoration-[#FFD60A] decoration-2 underline-offset-4" : "text-zinc-300"
-                  }`}>
-                    {day.dayNumber}
+          {stagedEvent ? (
+            <motion.div 
+              key={stagedEvent.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-zinc-950/80 border border-white/15 rounded-2xl p-5 sm:p-6 space-y-5 relative overflow-hidden backdrop-blur-xl shadow-2xl"
+            >
+              <div 
+                className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-20"
+                style={{ backgroundColor: stagedMeta?.dotColor || "#FFD60A" }}
+              />
+
+              {/* Status & Category Tag Row */}
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2">
+                  <span className={`text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${stagedMeta?.badgeBg} ${stagedMeta?.badgeText} ${stagedMeta?.badgeBorder}`}>
+                    {stagedEvent.category}
                   </span>
-
-                  {/* Top corner indicators */}
-                  {hasEvents && (
-                    <div className="flex items-center gap-1">
-                      {isOngoing && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                      )}
-                      <span 
-                        className="w-2 h-2 rounded-full transition-transform group-hover:scale-125" 
-                        style={{ backgroundColor: meta?.dotColor || "#FFD60A" }} 
-                      />
-                    </div>
-                  )}
+                  <span className={`text-[10px] font-mono font-black tracking-widest px-2.5 py-0.5 rounded-full border ${
+                    stagedEvent.status === "ONGOING"
+                      ? "border-emerald-400 text-emerald-400 bg-emerald-500/10"
+                      : stagedEvent.status === "UPCOMING"
+                      ? "border-[#FFD60A] text-[#FFD60A] bg-[#FFD60A]/10"
+                      : "border-zinc-700 text-zinc-500 bg-zinc-800/40"
+                  }`}>
+                    {stagedEvent.status}
+                  </span>
                 </div>
 
-                {/* Event previews in cell */}
-                {hasEvents && primaryEvent && (
-                  <div className="mt-1 space-y-1 overflow-hidden">
-                    <div 
-                      className={`text-[9px] sm:text-[10px] font-mono font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded border ${
-                        isSelected 
-                          ? "bg-[#FFD60A] text-black border-[#FFD60A] font-bold" 
-                          : `${meta?.badgeBg} ${meta?.badgeText} ${meta?.badgeBorder}`
-                      }`}
-                    >
-                      {primaryEvent.category}
-                    </div>
+                <div className="text-xs font-mono text-zinc-400 flex items-center gap-1.5">
+                  <CalendarIcon className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>{formatFriendlyDate(stagedEvent.date)}</span>
+                </div>
+              </div>
 
-                    <p className="text-[10px] font-medium text-zinc-300 truncate hidden md:block group-hover:text-white transition-colors">
-                      {primaryEvent.name}
-                    </p>
+              {/* Tournament Title */}
+              <div>
+                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-white leading-snug">
+                  {stagedEvent.name}
+                </h4>
+                {stagedEvent.time && (
+                  <div className="flex items-center gap-2 text-xs font-mono text-amber-400/90 mt-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-400" />
+                    <span>{stagedEvent.time}</span>
                   </div>
                 )}
               </div>
-            );
-          })}
+
+              {/* Specs Grid */}
+              <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+                <div className="bg-white/[0.03] border border-white/5 rounded-xl p-3 space-y-1">
+                  <span className="text-[10px] uppercase text-zinc-500 flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3 text-zinc-400" />
+                    Venue
+                  </span>
+                  <p className="font-semibold text-zinc-200 truncate">{stagedEvent.location}</p>
+                </div>
+
+                <div className="bg-white/[0.03] border border-white/5 rounded-xl p-3 space-y-1">
+                  <span className="text-[10px] uppercase text-zinc-500 flex items-center gap-1.5">
+                    <Trophy className="w-3 h-3 text-[#FFD60A]" />
+                    Prize Bounty
+                  </span>
+                  <p className="font-semibold text-[#FFD60A] truncate">{stagedEvent.prizePool || "Certificates + Honors"}</p>
+                </div>
+              </div>
+
+              {/* Summary */}
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
+                {stagedEvent.summary}
+              </p>
+
+              {/* Tracks */}
+              {stagedEvent.tracks && stagedEvent.tracks.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block">
+                    Tournament Tracks & Domains:
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {stagedEvent.tracks.map((track, i) => (
+                      <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-zinc-300">
+                        {track}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Schedule Highlights */}
+              {stagedEvent.schedule && stagedEvent.schedule.length > 0 && (
+                <div className="space-y-2 pt-2 border-t border-white/10">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block">
+                    Milestone Timeline:
+                  </span>
+                  <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                    {stagedEvent.schedule.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs font-mono">
+                        <span className="text-[#FFD60A] shrink-0 font-bold">{item.time}:</span>
+                        <span className="text-zinc-300 font-sans text-xs">{item.activity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <div className="bg-zinc-950/60 border border-white/10 rounded-2xl p-8 text-center text-zinc-400 space-y-3">
+              <Compass className="w-8 h-8 text-zinc-600 mx-auto" />
+              <p className="text-sm font-medium">Select any tournament date from the calendar to stage its battle brief.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
