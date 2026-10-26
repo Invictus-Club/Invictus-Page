@@ -17,7 +17,8 @@ import {
   Sparkles, 
   ArrowUpRight,
   Flame,
-  Layers
+  Layers,
+  Zap
 } from "lucide-react";
 import eventsData, { EventItem } from "@/data/events";
 import { 
@@ -176,25 +177,63 @@ export function InteractiveEventCalendar({
           {monthGrid.map((day: CalendarDay) => {
             const isSelected = day.dateString === selectedDate;
             const hasEvents = day.events.length > 0;
+            const primaryEvent = day.events[0];
+            const meta = primaryEvent ? getCategoryMeta(primaryEvent.category) : null;
+            const isOngoing = day.events.some((e) => e.status === "ONGOING");
 
             return (
               <div
                 key={day.dateString}
-                className={`relative min-h-[56px] sm:min-h-[76px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border ${
+                className={`relative min-h-[56px] sm:min-h-[76px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group ${
                   isSelected
                     ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_20px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/50"
+                    : hasEvents
+                    ? "bg-zinc-900/60 border-white/15 hover:border-[#FFD60A]/50 hover:bg-white/[0.04]"
                     : day.isCurrentMonth
                     ? "bg-black/40 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
                     : "bg-black/20 border-transparent opacity-30"
                 }`}
               >
+                {/* Day Header Row */}
                 <div className="flex items-center justify-between">
                   <span className={`text-xs sm:text-sm font-mono font-bold ${
                     isSelected ? "text-[#FFD60A]" : day.isToday ? "text-white underline decoration-[#FFD60A] decoration-2 underline-offset-4" : "text-zinc-300"
                   }`}>
                     {day.dayNumber}
                   </span>
+
+                  {/* Top corner indicators */}
+                  {hasEvents && (
+                    <div className="flex items-center gap-1">
+                      {isOngoing && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                      )}
+                      <span 
+                        className="w-2 h-2 rounded-full transition-transform group-hover:scale-125" 
+                        style={{ backgroundColor: meta?.dotColor || "#FFD60A" }} 
+                      />
+                    </div>
+                  )}
                 </div>
+
+                {/* Event previews in cell */}
+                {hasEvents && primaryEvent && (
+                  <div className="mt-1 space-y-1 overflow-hidden">
+                    <div 
+                      className={`text-[9px] sm:text-[10px] font-mono font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded border ${
+                        isSelected 
+                          ? "bg-[#FFD60A] text-black border-[#FFD60A] font-bold" 
+                          : `${meta?.badgeBg} ${meta?.badgeText} ${meta?.badgeBorder}`
+                      }`}
+                    >
+                      {primaryEvent.category}
+                    </div>
+
+                    <p className="text-[10px] font-medium text-zinc-300 truncate hidden md:block group-hover:text-white transition-colors">
+                      {primaryEvent.name}
+                    </p>
+                  </div>
+                )}
               </div>
             );
           })}
