@@ -21,7 +21,8 @@ import {
   Zap,
   Tag,
   Radio,
-  Compass
+  Compass,
+  ArrowRight
 } from "lucide-react";
 import eventsData, { EventItem } from "@/data/events";
 import { 
@@ -96,6 +97,39 @@ export function InteractiveEventCalendar({
     setStagedEventId("event-midnight-hacker-jam");
   };
 
+  // Handler: click on any calendar day cell
+  const handleDayClick = (day: CalendarDay) => {
+    setSelectedDate(day.dateString);
+
+    // If day belongs to another month, sync viewDate to that month
+    const [y, m] = day.dateString.split("-").map(Number);
+    if (m - 1 !== currentMonthIdx || y !== currentYear) {
+      setViewDate(new Date(y, m - 1, 1));
+    }
+
+    if (day.events.length > 0) {
+      setStagedEventId(day.events[0].id);
+    } else {
+      // Find nearest event to stage
+      const nearest = findNearestUpcomingEvent(filteredEvents, day.dateString);
+      if (nearest) {
+        setStagedEventId(nearest.id);
+      }
+    }
+  };
+
+  // Handler: click directly on an event badge
+  const handleEventBadgeClick = (e: React.MouseEvent, event: EventItem) => {
+    e.stopPropagation();
+    setSelectedDate(event.date);
+    setStagedEventId(event.id);
+
+    const [y, m] = event.date.split("-").map(Number);
+    if (m - 1 !== currentMonthIdx || y !== currentYear) {
+      setViewDate(new Date(y, m - 1, 1));
+    }
+  };
+
   // Staged event resolver
   const stagedEvent = useMemo(() => {
     const found = initialEvents.find((e) => e.id === stagedEventId);
@@ -104,6 +138,25 @@ export function InteractiveEventCalendar({
   }, [initialEvents, stagedEventId, filteredEvents]);
 
   const stagedMeta = stagedEvent ? getCategoryMeta(stagedEvent.category) : null;
+
+  // Staging next/previous event in list
+  const handleCycleEvent = (direction: "prev" | "next") => {
+    const list = filteredEvents.length > 0 ? filteredEvents : initialEvents;
+    const currentIndex = list.findIndex((e) => e.id === stagedEvent?.id);
+    if (currentIndex === -1) return;
+
+    let nextIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
+    if (nextIndex >= list.length) nextIndex = 0;
+    if (nextIndex < 0) nextIndex = list.length - 1;
+
+    const nextEvent = list[nextIndex];
+    if (nextEvent) {
+      setStagedEventId(nextEvent.id);
+      setSelectedDate(nextEvent.date);
+      const [y, m] = nextEvent.date.split("-").map(Number);
+      setViewDate(new Date(y, m - 1, 1));
+    }
+  };
 
   return (
     <div className={`w-full bg-[#08080a] border border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden ${className}`}>
@@ -132,7 +185,7 @@ export function InteractiveEventCalendar({
           <button
             type="button"
             onClick={handleJumpToActiveSprint}
-            className="px-3.5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white bg-white/5 hover:bg-[#FFD60A]/20 hover:text-[#FFD60A] border border-white/10 hover:border-[#FFD60A]/40 rounded-xl transition-all flex items-center gap-2"
+            className="px-3.5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white bg-white/5 hover:bg-[#FFD60A]/20 hover:text-[#FFD60A] border border-white/10 hover:border-[#FFD60A]/40 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
           >
             <Flame className="w-3.5 h-3.5 text-[#FFD60A]" />
             Active Sprint
@@ -142,7 +195,7 @@ export function InteractiveEventCalendar({
               type="button"
               onClick={handlePrevMonth}
               aria-label="Previous Month"
-              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -153,7 +206,7 @@ export function InteractiveEventCalendar({
               type="button"
               onClick={handleNextMonth}
               aria-label="Next Month"
-              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -202,7 +255,8 @@ export function InteractiveEventCalendar({
                 return (
                   <div
                     key={day.dateString}
-                    className={`relative min-h-[64px] sm:min-h-[78px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group ${
+                    onClick={() => handleDayClick(day)}
+                    className={`relative min-h-[64px] sm:min-h-[78px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group select-none ${
                       isSelected
                         ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_20px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/50"
                         : hasEvents
@@ -237,15 +291,17 @@ export function InteractiveEventCalendar({
                     {/* Event previews in cell */}
                     {hasEvents && primaryEvent && (
                       <div className="mt-1 space-y-1 overflow-hidden">
-                        <div 
-                          className={`text-[9px] sm:text-[10px] font-mono font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded border ${
+                        <button
+                          type="button"
+                          onClick={(e) => handleEventBadgeClick(e, primaryEvent)}
+                          className={`w-full text-left text-[9px] sm:text-[10px] font-mono font-semibold truncate px-1 sm:px-1.5 py-0.5 rounded border transition-colors cursor-pointer ${
                             isSelected 
                               ? "bg-[#FFD60A] text-black border-[#FFD60A] font-bold" 
                               : `${meta?.badgeBg} ${meta?.badgeText} ${meta?.badgeBorder}`
                           }`}
                         >
                           {primaryEvent.category}
-                        </div>
+                        </button>
 
                         <p className="text-[10px] font-medium text-zinc-300 truncate hidden md:block group-hover:text-white transition-colors">
                           {primaryEvent.name}
@@ -266,9 +322,24 @@ export function InteractiveEventCalendar({
               <Radio className="w-3.5 h-3.5 text-[#FFD60A] animate-pulse" />
               Staged Tournament Deck
             </span>
-            <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400">
-              No Page Reload
-            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleCycleEvent("prev")}
+                title="Stage Previous Event"
+                className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCycleEvent("next")}
+                title="Stage Next Event"
+                className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           {stagedEvent ? (
