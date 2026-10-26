@@ -22,7 +22,8 @@ import {
   Tag,
   Radio,
   Compass,
-  ArrowRight
+  ArrowRight,
+  ListOrdered
 } from "lucide-react";
 import eventsData, { EventItem } from "@/data/events";
 import { 
@@ -101,7 +102,6 @@ export function InteractiveEventCalendar({
   const handleDayClick = (day: CalendarDay) => {
     setSelectedDate(day.dateString);
 
-    // If day belongs to another month, sync viewDate to that month
     const [y, m] = day.dateString.split("-").map(Number);
     if (m - 1 !== currentMonthIdx || y !== currentYear) {
       setViewDate(new Date(y, m - 1, 1));
@@ -110,7 +110,6 @@ export function InteractiveEventCalendar({
     if (day.events.length > 0) {
       setStagedEventId(day.events[0].id);
     } else {
-      // Find nearest event to stage
       const nearest = findNearestUpcomingEvent(filteredEvents, day.dateString);
       if (nearest) {
         setStagedEventId(nearest.id);
@@ -121,6 +120,17 @@ export function InteractiveEventCalendar({
   // Handler: click directly on an event badge
   const handleEventBadgeClick = (e: React.MouseEvent, event: EventItem) => {
     e.stopPropagation();
+    setSelectedDate(event.date);
+    setStagedEventId(event.id);
+
+    const [y, m] = event.date.split("-").map(Number);
+    if (m - 1 !== currentMonthIdx || y !== currentYear) {
+      setViewDate(new Date(y, m - 1, 1));
+    }
+  };
+
+  // Handler: select from the roster list
+  const handleRosterSelect = (event: EventItem) => {
     setSelectedDate(event.date);
     setStagedEventId(event.id);
 
@@ -454,6 +464,69 @@ export function InteractiveEventCalendar({
               <p className="text-sm font-medium">Select any tournament date from the calendar to stage its battle brief.</p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* QUICK ROSTER STRIP: CLICKABLE TOURNAMENT SQUAD LIST */}
+      <div className="mt-8 pt-6 border-t border-white/10 relative z-10 space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+            <ListOrdered className="w-3.5 h-3.5 text-[#FFD60A]" />
+            Direct Stage Roster ({filteredEvents.length})
+          </span>
+          <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">
+            Click any entry to jump calendar & stage console
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          {filteredEvents.slice(0, 6).map((ev) => {
+            const isStaged = stagedEvent?.id === ev.id;
+            const meta = getCategoryMeta(ev.category);
+
+            return (
+              <div
+                key={ev.id}
+                onClick={() => handleRosterSelect(ev)}
+                className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 group select-none ${
+                  isStaged
+                    ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_15px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/40"
+                    : "bg-black/40 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
+                }`}
+              >
+                <div className="min-w-0 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono text-zinc-500">
+                      {formatFriendlyDate(ev.date).split(",")[1]}
+                    </span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder}`}>
+                      {ev.category}
+                    </span>
+                  </div>
+                  <h5 className={`text-xs font-bold truncate transition-colors ${
+                    isStaged ? "text-[#FFD60A]" : "text-zinc-200 group-hover:text-white"
+                  }`}>
+                    {ev.name}
+                  </h5>
+                </div>
+
+                <div className="shrink-0 flex items-center gap-1.5">
+                  <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                    ev.status === "ONGOING"
+                      ? "border-emerald-400 text-emerald-400 bg-emerald-500/10"
+                      : ev.status === "UPCOMING"
+                      ? "border-amber-400 text-amber-400 bg-amber-500/10"
+                      : "border-zinc-700 text-zinc-500"
+                  }`}>
+                    {ev.status}
+                  </span>
+                  <ChevronRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 ${
+                    isStaged ? "text-[#FFD60A]" : "text-zinc-600"
+                  }`} />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
