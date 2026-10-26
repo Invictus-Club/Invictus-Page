@@ -47,6 +47,15 @@ const MONTH_NAMES = [
 
 const WEEKDAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+const FILTER_CATEGORIES = [
+  "ALL",
+  "HACKATHON",
+  "BUILD",
+  "RESEARCH",
+  "WORKSHOP",
+  "PROJECTS"
+];
+
 export function InteractiveEventCalendar({
   initialEvents = eventsData,
   className = "",
@@ -221,6 +230,46 @@ export function InteractiveEventCalendar({
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* FILTER PILLS STRIP */}
+      <div className="py-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/5 relative z-10">
+        {/* Category Filters */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          {FILTER_CATEGORIES.map((cat) => {
+            const isActive = categoryFilter === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCategoryFilter(cat)}
+                className={`text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-[#FFD60A] text-black border-[#FFD60A] font-bold shadow-[0_0_12px_rgba(255,214,10,0.3)]"
+                    : "bg-white/5 border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Status Filters */}
+        <div className="flex items-center bg-black/60 border border-white/10 rounded-xl p-1 text-[10px] font-mono">
+          {(["ALL", "UPCOMING", "ONGOING", "PAST"] as const).map((st) => (
+            <button
+              key={st}
+              type="button"
+              onClick={() => setStatusFilter(st)}
+              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                statusFilter === st ? "bg-white/15 text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              {st}
+            </button>
+          ))}
         </div>
       </div>
 
