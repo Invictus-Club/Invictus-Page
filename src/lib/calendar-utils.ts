@@ -202,6 +202,47 @@ export function formatFriendlyDate(dateStr: string): string {
 }
 
 /**
+ * Generate Google Calendar one-click direct template URL
+ */
+export function generateGoogleCalendarUrl(event: EventItem): string {
+  const title = encodeURIComponent(`Invictus: ${event.name}`);
+  const details = encodeURIComponent(
+    `${event.summary}\n\nCategory: ${event.category}\nVenue: ${event.location}\nPrize Pool: ${event.prizePool || "N/A"}\nMore info: https://invictus-vtu.org/events`
+  );
+  const location = encodeURIComponent(event.location);
+
+  // Format date as YYYYMMDD
+  const cleanDate = event.date.replace(/-/g, "");
+  const nextDay = new Date(event.date);
+  nextDay.setDate(nextDay.getDate() + 1);
+  const cleanEndDate = formatIsoDate(nextDay).replace(/-/g, "");
+
+  const datesParam = `${cleanDate}/${cleanEndDate}`;
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${datesParam}`;
+}
+
+/**
+ * Format full event brief for copying to clipboard
+ */
+export function formatEventBriefText(event: EventItem): string {
+  return [
+    `🏆 INVICTUS EVENT BRIEF: ${event.name}`,
+    `📅 Date: ${formatFriendlyDate(event.date)}${event.time ? ` (${event.time})` : ""}`,
+    `📍 Location: ${event.location}`,
+    `⚡ Category: ${event.category} [${event.status}]`,
+    event.prizePool ? `💰 Prize Pool: ${event.prizePool}` : null,
+    event.teamSize ? `👥 Team Size: ${event.teamSize}` : null,
+    ``,
+    `📝 Summary:`,
+    event.summary,
+    ``,
+    event.tracks?.length ? `🎯 Focus Tracks: ${event.tracks.join(", ")}` : null,
+    `🔗 Club Portal: https://invictus-vtu.org/`
+  ].filter(Boolean).join("\n");
+}
+
+/**
  * Find the closest upcoming event from an array
  */
 export function findNearestUpcomingEvent(
@@ -211,7 +252,6 @@ export function findNearestUpcomingEvent(
   const upcoming = events.filter((ev) => ev.status === "UPCOMING" || ev.status === "ONGOING");
   if (upcoming.length === 0) return events[0] || null;
 
-  // Prefer events closest to or after currentDateIso
   const sorted = [...upcoming].sort((a, b) => {
     return Math.abs(new Date(a.date).getTime() - new Date(currentDateIso).getTime()) -
       Math.abs(new Date(b.date).getTime() - new Date(currentDateIso).getTime());

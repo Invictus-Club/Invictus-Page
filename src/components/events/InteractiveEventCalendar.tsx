@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -23,7 +24,8 @@ import {
   Radio,
   Compass,
   ArrowRight,
-  ListOrdered
+  ListOrdered,
+  Copy
 } from "lucide-react";
 import eventsData, { EventItem } from "@/data/events";
 import { 
@@ -32,6 +34,8 @@ import {
   formatFriendlyDate, 
   getCategoryMeta, 
   findNearestUpcomingEvent,
+  generateGoogleCalendarUrl,
+  formatEventBriefText,
   CalendarDay 
 } from "@/lib/calendar-utils";
 
@@ -67,6 +71,7 @@ export function InteractiveEventCalendar({
   const [stagedEventId, setStagedEventId] = useState<string>("event-midnight-hacker-jam");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<"ALL" | "UPCOMING" | "ONGOING" | "PAST">("ALL");
+  const [copiedBrief, setCopiedBrief] = useState(false);
 
   useEffect(() => {
     const now = new Date();
@@ -175,6 +180,16 @@ export function InteractiveEventCalendar({
       const [y, m] = nextEvent.date.split("-").map(Number);
       setViewDate(new Date(y, m - 1, 1));
     }
+  };
+
+  // Copy Brief Handler
+  const handleCopyBrief = () => {
+    if (!stagedEvent) return;
+    const text = formatEventBriefText(stagedEvent);
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedBrief(true);
+      setTimeout(() => setCopiedBrief(false), 2200);
+    }).catch(() => {});
   };
 
   return (
@@ -506,6 +521,45 @@ export function InteractiveEventCalendar({
                   </div>
                 </div>
               )}
+
+              {/* DIRECT ACTION BUTTONS: Add to Calendar & Copy Brief */}
+              <div className="pt-3 border-t border-white/10 flex flex-wrap items-center gap-2">
+                <a
+                  href={generateGoogleCalendarUrl(stagedEvent)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 min-w-[140px] px-3.5 py-2.5 rounded-xl bg-[#FFD60A] hover:bg-[#ffe14d] text-black font-mono font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(255,214,10,0.2)] cursor-pointer"
+                >
+                  <CalendarIcon className="w-3.5 h-3.5 text-black" />
+                  Add to Calendar
+                </a>
+
+                <button
+                  type="button"
+                  onClick={handleCopyBrief}
+                  className="px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 font-mono text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  {copiedBrief ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="text-emerald-400">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-zinc-400" />
+                      <span>Copy Brief</span>
+                    </>
+                  )}
+                </button>
+
+                <Link
+                  href="/events"
+                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/10 transition-colors"
+                  title="Open Dedicated Archive Page"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </motion.div>
           ) : (
             <div className="bg-zinc-950/60 border border-white/10 rounded-2xl p-8 text-center text-zinc-400 space-y-3">
