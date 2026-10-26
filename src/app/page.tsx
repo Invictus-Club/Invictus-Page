@@ -14,6 +14,7 @@ import { ArrowRight, ChevronRight, Menu, X, User } from "lucide-react";
 import Lenis from "lenis";
 import winsData from "@/data/wins";
 import eventsData from "@/data/events";
+import { InteractiveEventCalendar } from "@/components/events/InteractiveEventCalendar";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -733,32 +734,22 @@ export default function PremiumInvictus() {
         </div>
       </section>
 
-      {/* 8. EVENTS (Premium Listing) */}
+      {/* 8. EVENTS (Interactive Calendar & Mission Staging Deck) */}
       <section id="events" className="py-20 sm:py-32 px-6 md:px-16">
-        <div className="flex items-end justify-between mb-12 sm:mb-20">
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase">Events</h2>
+        <div className="flex items-end justify-between mb-8 sm:mb-12">
+          <div>
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-[#FFD60A] block mb-2">
+              RADAR // SCHEDULE
+            </span>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase">Events</h2>
+          </div>
           <Link href="/events" className="text-xs sm:text-sm font-bold tracking-widest hover:text-[#FFD60A] transition-colors flex items-center gap-2">
-            SEE ALL <ArrowRight size={16} />
+            FULL ARCHIVE <ArrowRight size={16} />
           </Link>
         </div>
 
-        <div className="border-t border-gray-800 relative z-10">
-          {eventsData.slice(0, 3).map((ev, i) => (
-            <Link key={i} href="/events" className="event-item flex flex-col md:flex-row items-start md:items-center py-6 sm:py-8 border-b border-gray-800 group hover:bg-[#111] transition-colors px-4 -mx-4 cursor-pointer relative overflow-hidden block">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FFD60A]/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
-              <div className="w-full md:w-1/6 text-base sm:text-xl font-bold tracking-tighter text-gray-400 group-hover:text-[#FFD60A] transition-colors relative z-10">
-                {new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase()}
-              </div>
-              <div className="w-full md:w-3/6 text-2xl sm:text-3xl font-black tracking-tighter mt-1 md:mt-0 text-stroke relative z-10">{ev.name}</div>
-              <div className="w-full md:w-1/6 text-xs font-bold tracking-widest text-gray-500 mt-2 md:mt-0 relative z-10">{ev.category}</div>
-              <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center mt-4 md:mt-0 relative z-10">
-                <span className={`text-[10px] sm:text-xs font-bold tracking-widest px-3 py-1 rounded-full border ${ev.status === 'ONGOING' || ev.status === 'UPCOMING' ? 'border-[#FFD60A] text-[#FFD60A]' : 'border-gray-700 text-gray-500'}`}>
-                  {ev.status}
-                </span>
-                <ChevronRight className="hidden md:block ml-4 text-gray-600 group-hover:text-[#FFD60A] transition-colors" />
-              </div>
-            </Link>
-          ))}
+        <div className="relative z-10">
+          <InteractiveEventCalendar initialEvents={eventsData} />
         </div>
       </section>
 
