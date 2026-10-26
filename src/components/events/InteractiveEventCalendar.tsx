@@ -39,6 +39,8 @@ const MONTH_NAMES = [
   "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 ];
 
+const WEEKDAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
 export function InteractiveEventCalendar({
   initialEvents = eventsData,
   className = "",
@@ -52,7 +54,6 @@ export function InteractiveEventCalendar({
   const [statusFilter, setStatusFilter] = useState<"ALL" | "UPCOMING" | "ONGOING" | "PAST">("ALL");
 
   useEffect(() => {
-    // If running in browser, sync actual date if desired, but keep 2026 context stable
     const now = new Date();
     setTodayIso(formatIsoDate(now));
   }, []);
@@ -68,6 +69,11 @@ export function InteractiveEventCalendar({
       return matchCat && matchStatus;
     });
   }, [initialEvents, categoryFilter, statusFilter]);
+
+  // Generate 35/42 month cells
+  const monthGrid = useMemo(() => {
+    return generateMonthGrid(currentYear, currentMonthIdx, filteredEvents, todayIso);
+  }, [currentYear, currentMonthIdx, filteredEvents, todayIso]);
 
   // Navigate to previous month
   const handlePrevMonth = () => {
@@ -146,6 +152,52 @@ export function InteractiveEventCalendar({
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* CALENDAR BODY */}
+      <div className="mt-6 relative z-10">
+        {/* Weekday headers */}
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 text-center">
+          {WEEKDAY_NAMES.map((dayName, idx) => (
+            <div 
+              key={dayName} 
+              className={`text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider py-1.5 ${
+                idx === 0 || idx === 6 ? "text-amber-400/70" : "text-zinc-500"
+              }`}
+            >
+              {dayName}
+            </div>
+          ))}
+        </div>
+
+        {/* 7-Column Monthly Day Grid */}
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
+          {monthGrid.map((day: CalendarDay) => {
+            const isSelected = day.dateString === selectedDate;
+            const hasEvents = day.events.length > 0;
+
+            return (
+              <div
+                key={day.dateString}
+                className={`relative min-h-[56px] sm:min-h-[76px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border ${
+                  isSelected
+                    ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_20px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/50"
+                    : day.isCurrentMonth
+                    ? "bg-black/40 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
+                    : "bg-black/20 border-transparent opacity-30"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs sm:text-sm font-mono font-bold ${
+                    isSelected ? "text-[#FFD60A]" : day.isToday ? "text-white underline decoration-[#FFD60A] decoration-2 underline-offset-4" : "text-zinc-300"
+                  }`}>
+                    {day.dayNumber}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
