@@ -1,8 +1,21 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Check, Copy, Calendar as CalendarIcon, CornerDownRight } from "lucide-react";
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Calendar as CalendarIcon, 
+  MapPin, 
+  Trophy, 
+  Users, 
+  Clock, 
+  Copy, 
+  Check, 
+  ArrowUpRight,
+  ArrowRight
+} from "lucide-react";
 import eventsData, { EventItem } from "@/data/events";
 import { 
   generateMonthGrid, 
@@ -19,17 +32,17 @@ interface InteractiveEventCalendarProps {
 }
 
 const MONTHS = [
-  "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
-  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
 ];
 
-const WEEKDAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function InteractiveEventCalendar({
   initialEvents = eventsData,
   className = "",
 }: InteractiveEventCalendarProps) {
-  // Safe SSR date (default October 2026)
+  // Safe default date: October 2026
   const [viewDate, setViewDate] = useState<Date>(() => new Date(2026, 9, 1));
   const [todayIso, setTodayIso] = useState<string>("2026-10-26");
   const [selectedDate, setSelectedDate] = useState<string>("2026-10-26");
@@ -44,33 +57,19 @@ export function InteractiveEventCalendar({
   const currentYear = viewDate.getFullYear();
   const currentMonthIdx = viewDate.getMonth();
 
-  // Month grid matrix
+  // 35 or 42 grid cells
   const monthGrid = useMemo(() => {
     return generateMonthGrid(currentYear, currentMonthIdx, initialEvents, todayIso);
   }, [currentYear, currentMonthIdx, initialEvents, todayIso]);
 
-  // Current staged event
+  // Staged event resolver
   const stagedEvent = useMemo(() => {
     const found = initialEvents.find((e) => e.id === stagedEventId);
     if (found) return found;
-    return initialEvents.find((e) => e.date === selectedDate) || null;
+    return initialEvents.find((e) => e.date === selectedDate) || initialEvents[0];
   }, [initialEvents, stagedEventId, selectedDate]);
 
-  // Days that have events this month
-  const eventsInCurrentMonth = useMemo(() => {
-    return initialEvents.filter((e) => {
-      const [y, m] = e.date.split("-").map(Number);
-      return y === currentYear && m - 1 === currentMonthIdx;
-    });
-  }, [initialEvents, currentYear, currentMonthIdx]);
-
-  // Nearest event lookup if selected day is empty
-  const nearestUpcoming = useMemo(() => {
-    const upcoming = initialEvents.filter((e) => e.status !== "PAST");
-    if (upcoming.length === 0) return initialEvents[0] || null;
-    return upcoming.sort((a, b) => a.date.localeCompare(b.date))[0] || null;
-  }, [initialEvents]);
-
+  // Quick navigation
   const handlePrevMonth = () => {
     setViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
@@ -79,7 +78,7 @@ export function InteractiveEventCalendar({
     setViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
-  const handleResetCurrent = () => {
+  const handleToday = () => {
     setViewDate(new Date(2026, 9, 1));
     setSelectedDate("2026-10-26");
     setStagedEventId("event-midnight-hacker-jam");
@@ -97,16 +96,7 @@ export function InteractiveEventCalendar({
     }
   };
 
-  const handleSelectEventDirect = (ev: EventItem) => {
-    setSelectedDate(ev.date);
-    setStagedEventId(ev.id);
-    const [y, m] = ev.date.split("-").map(Number);
-    if (m - 1 !== currentMonthIdx || y !== currentYear) {
-      setViewDate(new Date(y, m - 1, 1));
-    }
-  };
-
-  const handleCopyIntel = () => {
+  const handleCopy = () => {
     if (!stagedEvent) return;
     const brief = formatEventBriefText(stagedEvent);
     navigator.clipboard.writeText(brief).then(() => {
@@ -116,283 +106,291 @@ export function InteractiveEventCalendar({
   };
 
   return (
-    <div className={`w-full bg-black text-white border-2 border-white/20 p-4 sm:p-6 md:p-8 font-sans ${className}`}>
+    <div className={`w-full bg-[#0a0a0c] border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl ${className}`}>
       
-      {/* BRUTALIST TOP BAR: SYSTEM STATUS & MONTH NAVIGATION */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b-2 border-white/20">
-        <div className="flex items-center gap-3">
-          <div className="w-2.5 h-2.5 bg-[#FFD60A]" />
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#FFD60A] font-bold">
-            SCHEDULE // RADAR TERMINAL
-          </span>
-          <span className="text-zinc-600 font-mono text-xs">/</span>
-          <span className="font-mono text-xs text-zinc-400 uppercase tracking-widest">
-            {eventsInCurrentMonth.length} DEPLOYMENTS THIS MONTH
-          </span>
+      {/* HEADER / NAVIGATION BAR */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-5 border-b border-zinc-800/80 gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#FFD60A]" />
+            <span className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 font-semibold">
+              Event Calendar
+            </span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white mt-1">
+            {MONTHS[currentMonthIdx]} <span className="text-zinc-500 font-normal">{currentYear}</span>
+          </h3>
         </div>
 
-        {/* CONTROLS */}
-        <div className="flex items-center gap-2 font-mono text-xs">
+        {/* Minimal Nav Arrows + Reset */}
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={handleResetCurrent}
-            className="px-3 py-1.5 border border-white/30 hover:border-[#FFD60A] hover:text-[#FFD60A] uppercase transition-colors"
+            onClick={handleToday}
+            className="px-3 py-1.5 text-xs font-mono text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg transition-colors cursor-pointer"
           >
-            CURRENT SPRINT
+            Today
           </button>
-          <div className="flex items-center border border-white/30 divide-x divide-white/30">
+          <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5">
             <button
               type="button"
               onClick={handlePrevMonth}
               aria-label="Previous Month"
-              className="px-3 py-1.5 hover:bg-white hover:text-black transition-colors"
+              className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors cursor-pointer"
             >
-              PREV
+              <ChevronLeft className="w-4 h-4" />
             </button>
-            <div className="px-4 py-1.5 font-bold uppercase tracking-widest text-[#FFD60A] bg-zinc-950">
-              {MONTHS[currentMonthIdx]} {currentYear}
-            </div>
             <button
               type="button"
               onClick={handleNextMonth}
               aria-label="Next Month"
-              className="px-3 py-1.5 hover:bg-white hover:text-black transition-colors"
+              className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors cursor-pointer"
             >
-              NEXT
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* ARCHITECTURAL CALENDAR GRID */}
-      <div className="pt-6">
-        {/* WEEKDAYS HEADER */}
-        <div className="grid grid-cols-7 border-t border-l border-white/20">
-          {WEEKDAYS.map((wd) => (
-            <div
-              key={wd}
-              className="border-r border-b border-white/20 p-2 text-center font-mono text-[11px] font-bold tracking-widest text-zinc-400 bg-zinc-950/60 uppercase"
-            >
-              {wd}
-            </div>
-          ))}
-        </div>
-
-        {/* DAY CELLS */}
-        <div className="grid grid-cols-7 border-l border-white/20">
-          {monthGrid.map((day: CalendarDay) => {
-            const isSelected = day.dateString === selectedDate;
-            const hasEvents = day.events.length > 0;
-            const isOngoing = day.events.some((e) => e.status === "ONGOING");
-            const firstEvent = day.events[0];
-
-            return (
+      {/* MAIN BODY: 2-COLUMN SPLIT (GRID ON LEFT, STAGED EVENT ON RIGHT) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-zinc-800/80">
+        
+        {/* LEFT COLUMN: THE PERFECT SQUARE CALENDAR GRID */}
+        <div className="lg:col-span-7 p-4 sm:p-6">
+          {/* Weekday Labels */}
+          <div className="grid grid-cols-7 mb-2">
+            {WEEKDAYS.map((day) => (
               <div
-                key={day.dateString}
-                onClick={() => handleSelectDay(day)}
-                className={`min-h-[72px] sm:min-h-[88px] md:min-h-[104px] p-2 border-r border-b border-white/20 transition-colors flex flex-col justify-between cursor-pointer relative select-none ${
-                  isSelected
-                    ? "bg-[#FFD60A] text-black font-black"
-                    : hasEvents
-                    ? "bg-zinc-900/80 hover:bg-zinc-800 text-white"
-                    : day.isCurrentMonth
-                    ? "bg-black hover:bg-zinc-950 text-zinc-400"
-                    : "bg-black/40 text-zinc-700 opacity-40"
-                }`}
+                key={day}
+                className="text-center text-[11px] font-mono uppercase tracking-wider text-zinc-500 py-1 font-semibold"
               >
-                {/* Top: Day Number + Status marker */}
-                <div className="flex items-center justify-between">
-                  <span className={`font-mono text-xs sm:text-sm font-bold ${
-                    isSelected ? "text-black font-black" : day.isToday ? "text-[#FFD60A] underline underline-offset-4" : ""
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Day Grid with true Square Aspect Ratio */}
+          <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
+            {monthGrid.map((day: CalendarDay) => {
+              const isSelected = day.dateString === selectedDate;
+              const hasEvents = day.events.length > 0;
+              const isOngoing = day.events.some((e) => e.status === "ONGOING");
+
+              return (
+                <button
+                  key={day.dateString}
+                  type="button"
+                  onClick={() => handleSelectDay(day)}
+                  className={`aspect-square relative rounded-xl p-1.5 sm:p-2 flex flex-col justify-between items-start transition-all duration-200 cursor-pointer text-left group focus:outline-none ${
+                    !day.isCurrentMonth
+                      ? "opacity-25 hover:opacity-50 text-zinc-600"
+                      : "text-zinc-300 hover:text-white"
+                  }`}
+                >
+                  {/* Active Selection Background with Framer Motion spring */}
+                  {isSelected && (
+                    <motion.div
+                      layoutId="active-calendar-day"
+                      transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                      className="absolute inset-0 bg-zinc-800/90 border border-[#FFD60A] rounded-xl shadow-[0_0_20px_rgba(255,214,10,0.12)] z-0"
+                    />
+                  )}
+
+                  {/* Day Number */}
+                  <span className={`text-xs sm:text-sm font-mono font-medium relative z-10 transition-colors ${
+                    isSelected
+                      ? "text-[#FFD60A] font-bold"
+                      : day.isToday
+                      ? "text-white font-bold"
+                      : ""
                   }`}>
-                    {String(day.dayNumber).padStart(2, "0")}
+                    {day.dayNumber}
                   </span>
 
-                  {hasEvents && (
-                    <span className={`font-mono text-[9px] font-black tracking-widest px-1 py-0.5 uppercase ${
-                      isSelected 
-                        ? "bg-black text-[#FFD60A]" 
-                        : isOngoing
-                        ? "bg-emerald-400 text-black"
-                        : "bg-[#FFD60A] text-black"
-                    }`}>
-                      {isOngoing ? "LIVE" : "EVENT"}
+                  {/* Event Marker at Bottom of Square */}
+                  <div className="w-full flex items-center justify-between relative z-10">
+                    {hasEvents ? (
+                      <div className="flex items-center gap-1">
+                        <span className={`w-1.5 h-1.5 rounded-full transition-transform group-hover:scale-125 ${
+                          isSelected
+                            ? "bg-[#FFD60A]"
+                            : isOngoing
+                            ? "bg-emerald-400"
+                            : "bg-[#FFD60A]"
+                        }`} />
+                        {day.events.length > 1 && (
+                          <span className="text-[9px] font-mono text-zinc-500 font-bold hidden sm:inline">
+                            +{day.events.length - 1}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span />
+                    )}
+
+                    {day.isToday && !isSelected && (
+                      <span className="w-1 h-1 rounded-full bg-zinc-500" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Minimalist Legend Footer */}
+          <div className="flex items-center justify-between pt-4 mt-3 border-t border-zinc-800/60 text-[11px] font-mono text-zinc-500">
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FFD60A]" />
+                Event
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                Active Sprint
+              </span>
+            </div>
+            <span>Click any day to inspect</span>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: STAGED EVENT INSPECTOR */}
+        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-black/40">
+          <AnimatePresence mode="wait">
+            {stagedEvent ? (
+              <motion.div
+                key={stagedEvent.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-6"
+              >
+                {/* Meta Header */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    <span className="text-[#FFD60A] font-bold tracking-widest uppercase">
+                      {stagedEvent.category}
                     </span>
-                  )}
+                    <span className="text-zinc-600">•</span>
+                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${
+                      stagedEvent.status === "ONGOING"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : stagedEvent.status === "UPCOMING"
+                        ? "bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20"
+                        : "bg-zinc-800 text-zinc-400"
+                    }`}>
+                      {stagedEvent.status}
+                    </span>
+                  </div>
+
+                  <h4 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
+                    {stagedEvent.name}
+                  </h4>
+
+                  <div className="flex items-center gap-2 text-xs font-mono text-zinc-400 pt-1">
+                    <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                    <span>{formatFriendlyDate(stagedEvent.date)}</span>
+                    {stagedEvent.time && <span>• {stagedEvent.time}</span>}
+                  </div>
                 </div>
 
-                {/* Bottom: Event Title preview */}
-                {hasEvents && firstEvent && (
-                  <div className="mt-1">
-                    <p className={`font-mono text-[10px] sm:text-[11px] font-bold uppercase truncate leading-tight ${
-                      isSelected ? "text-black" : "text-[#FFD60A]"
-                    }`}>
-                      {firstEvent.category}
-                    </p>
-                    <p className={`text-[10px] truncate leading-tight mt-0.5 hidden sm:block ${
-                      isSelected ? "text-black/80 font-semibold" : "text-zinc-300"
-                    }`}>
-                      {firstEvent.name}
-                    </p>
+                {/* Key Metrics */}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded-xl space-y-1">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3 text-zinc-400" />
+                      Venue
+                    </div>
+                    <div className="text-xs font-medium text-zinc-200 truncate">
+                      {stagedEvent.location}
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded-xl space-y-1">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+                      <Trophy className="w-3 h-3 text-[#FFD60A]" />
+                      Bounty / Prize
+                    </div>
+                    <div className="text-xs font-bold text-[#FFD60A] truncate">
+                      {stagedEvent.prizePool || "Official Honors"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-zinc-400 leading-relaxed font-normal">
+                  {stagedEvent.summary}
+                </p>
+
+                {/* Tracks Chips (Clean Monospace) */}
+                {stagedEvent.tracks && stagedEvent.tracks.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">
+                      Tracks
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {stagedEvent.tracks.map((track, i) => (
+                        <span
+                          key={i}
+                          className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300"
+                        >
+                          {track}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 )}
+              </motion.div>
+            ) : (
+              <div className="py-12 text-center text-zinc-500 space-y-2 font-mono text-xs">
+                <CalendarIcon className="w-8 h-8 text-zinc-600 mx-auto" />
+                <p>No events scheduled for this date.</p>
               </div>
-            );
-          })}
-        </div>
-      </div>
+            )}
+          </AnimatePresence>
 
-      {/* STAGED EVENT CONSOLE: BRUTALIST RAW READOUT */}
-      <div className="mt-8 pt-8 border-t-2 border-white/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#FFD60A]">
-            <CornerDownRight className="w-4 h-4 text-[#FFD60A]" />
-            <span>STAGED EVENT INSPECTOR</span>
-          </div>
-          <span className="font-mono text-[11px] text-zinc-500 uppercase">
-            TARGET DATE: {selectedDate}
-          </span>
-        </div>
-
-        {stagedEvent ? (
-          <div className="border border-white/20 bg-zinc-950 p-5 sm:p-6 space-y-6">
-            {/* Header: Date + Title */}
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                <span className="bg-white text-black font-black px-2 py-0.5 uppercase">
-                  {stagedEvent.category}
-                </span>
-                <span className={`px-2 py-0.5 uppercase font-bold border ${
-                  stagedEvent.status === "ONGOING"
-                    ? "border-emerald-400 text-emerald-400"
-                    : stagedEvent.status === "UPCOMING"
-                    ? "border-[#FFD60A] text-[#FFD60A]"
-                    : "border-zinc-700 text-zinc-500"
-                }`}>
-                  [{stagedEvent.status}]
-                </span>
-                <span className="text-zinc-400">
-                  // {formatFriendlyDate(stagedEvent.date).toUpperCase()}{stagedEvent.time ? ` • ${stagedEvent.time}` : ""}
-                </span>
-              </div>
-
-              <h4 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-white">
-                {stagedEvent.name}
-              </h4>
-            </div>
-
-            {/* Brutalist Metadata Bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-b border-white/20 divide-y sm:divide-y-0 sm:divide-x divide-white/20 py-3 font-mono text-xs">
-              <div className="py-2 sm:py-0 sm:px-3 first:pl-0">
-                <span className="text-zinc-500 uppercase block text-[10px]">VENUE // LOCATION</span>
-                <span className="text-zinc-200 font-bold truncate block">{stagedEvent.location}</span>
-              </div>
-              <div className="py-2 sm:py-0 sm:px-3">
-                <span className="text-zinc-500 uppercase block text-[10px]">BOUNTY // PRIZE</span>
-                <span className="text-[#FFD60A] font-bold truncate block">{stagedEvent.prizePool || "OFFICIAL RECOGNITION"}</span>
-              </div>
-              <div className="py-2 sm:py-0 sm:px-3">
-                <span className="text-zinc-500 uppercase block text-[10px]">SQUAD CAPACITY</span>
-                <span className="text-zinc-200 font-bold truncate block">{stagedEvent.teamSize || "OPEN"}</span>
-              </div>
-              <div className="py-2 sm:py-0 sm:px-3">
-                <span className="text-zinc-500 uppercase block text-[10px]">EXECUTION STAGE</span>
-                <span className="text-zinc-200 font-bold truncate block">{stagedEvent.status}</span>
-              </div>
-            </div>
-
-            {/* Concise Summary */}
-            <p className="text-sm sm:text-base text-zinc-300 font-normal leading-relaxed max-w-4xl">
-              {stagedEvent.summary}
-            </p>
-
-            {/* Action Bar */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+          {/* Action Buttons */}
+          {stagedEvent && (
+            <div className="pt-6 border-t border-zinc-800/80 flex flex-wrap items-center gap-3">
               <a
                 href={generateGoogleCalendarUrl(stagedEvent)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 bg-[#FFD60A] text-black font-mono font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors"
+                className="flex-1 min-w-[140px] px-4 py-2.5 bg-white hover:bg-zinc-200 text-black font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
               >
-                + ADD TO CALENDAR
+                <CalendarIcon className="w-3.5 h-3.5" />
+                <span>Add to Calendar</span>
               </a>
 
               <button
                 type="button"
-                onClick={handleCopyIntel}
-                className="px-5 py-2.5 border border-white/30 text-white font-mono font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-black transition-colors flex items-center gap-2 cursor-pointer"
+                onClick={handleCopy}
+                className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 text-xs font-mono rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
               >
                 {copied ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>COPIED</span>
+                    <span className="text-emerald-400 font-medium">Copied</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    <span>COPY BRIEF</span>
+                    <span>Copy</span>
                   </>
                 )}
               </button>
 
               <Link
                 href="/events"
-                className="px-5 py-2.5 border border-white/10 text-zinc-400 font-mono text-xs uppercase tracking-wider hover:border-white/30 hover:text-white transition-colors flex items-center gap-1.5"
+                className="p-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 rounded-xl transition-colors"
+                title="Full Event Directory"
               >
-                <span>FULL TIMELINE</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
-          </div>
-        ) : (
-          <div className="border border-white/20 bg-zinc-950 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
-            <div className="space-y-1">
-              <span className="text-zinc-500 uppercase block">NO SCHEDULED OPERATIONS</span>
-              <p className="text-zinc-300">
-                NO TOURNAMENTS CONFIGURED FOR {selectedDate}.
-              </p>
-            </div>
-            {nearestUpcoming && (
-              <button
-                type="button"
-                onClick={() => handleSelectEventDirect(nearestUpcoming)}
-                className="px-4 py-2 border border-[#FFD60A] text-[#FFD60A] hover:bg-[#FFD60A] hover:text-black uppercase font-bold transition-colors cursor-pointer"
-              >
-                STAGE NEXT: {nearestUpcoming.name} ({nearestUpcoming.date})
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* QUICK DEPLOYMENTS STRIP: ARCHITECTURAL MONO LIST */}
-      <div className="mt-8 pt-6 border-t border-white/10">
-        <div className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500 mb-3">
-          ACTIVE DEPLOYMENTS // DIRECT SELECT
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-          {initialEvents.slice(0, 4).map((ev) => {
-            const isStaged = stagedEvent?.id === ev.id;
-            return (
-              <button
-                key={ev.id}
-                type="button"
-                onClick={() => handleSelectEventDirect(ev)}
-                className={`p-3 border text-left font-mono transition-all cursor-pointer ${
-                  isStaged
-                    ? "border-[#FFD60A] bg-zinc-900 text-[#FFD60A]"
-                    : "border-white/10 hover:border-white/40 bg-black text-zinc-300 hover:text-white"
-                }`}
-              >
-                <div className="flex items-center justify-between text-[10px] text-zinc-500 uppercase mb-1">
-                  <span>{ev.date}</span>
-                  <span className="font-bold">{ev.category}</span>
-                </div>
-                <div className="text-xs font-bold uppercase truncate">{ev.name}</div>
-              </button>
-            );
-          })}
-        </div>
       </div>
 
     </div>
