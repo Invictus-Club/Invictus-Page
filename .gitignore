@@ -54,3 +54,9 @@ tools/
 invictus-admin-web/
 launch_admin_web.bat
 
+
+# agent & local IDE tooling
+.agents/
+.claude/
+skills-lock.json
+src/components/iso/

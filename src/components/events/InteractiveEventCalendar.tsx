@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -113,7 +113,7 @@ export function InteractiveEventCalendar({
   };
 
   // Handler: click on any calendar day cell
-  const handleDayClick = (day: CalendarDay) => {
+  const handleDayClick = useCallback((day: CalendarDay) => {
     setSelectedDate(day.dateString);
 
     const [y, m] = day.dateString.split("-").map(Number);
@@ -129,7 +129,7 @@ export function InteractiveEventCalendar({
         setStagedEventId(nearest.id);
       }
     }
-  };
+  }, [currentMonthIdx, currentYear, filteredEvents]);
 
   // Handler: click directly on an event badge
   const handleEventBadgeClick = (e: React.MouseEvent, event: EventItem) => {
@@ -193,7 +193,11 @@ export function InteractiveEventCalendar({
   };
 
   return (
-    <div className={`w-full bg-[#08080a] border border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden ${className}`}>
+    <div 
+      role="region" 
+      aria-label="Tournament Calendar & Mission Radar"
+      className={`w-full bg-[#08080a] border border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden backdrop-blur-xl ${className}`}
+    >
       {/* Background ambient mesh */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD60A]/5 blur-3xl pointer-events-none rounded-full" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-500/5 blur-3xl pointer-events-none rounded-full" />
@@ -219,7 +223,7 @@ export function InteractiveEventCalendar({
           <button
             type="button"
             onClick={handleJumpToActiveSprint}
-            className="px-3.5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white bg-white/5 hover:bg-[#FFD60A]/20 hover:text-[#FFD60A] border border-white/10 hover:border-[#FFD60A]/40 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
+            className="px-3.5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white bg-white/5 hover:bg-[#FFD60A]/20 hover:text-[#FFD60A] border border-white/10 hover:border-[#FFD60A]/40 rounded-xl transition-all flex items-center gap-2 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
           >
             <Flame className="w-3.5 h-3.5 text-[#FFD60A]" />
             Active Sprint
@@ -229,7 +233,7 @@ export function InteractiveEventCalendar({
               type="button"
               onClick={handlePrevMonth}
               aria-label="Previous Month"
-              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -240,7 +244,7 @@ export function InteractiveEventCalendar({
               type="button"
               onClick={handleNextMonth}
               aria-label="Next Month"
-              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+              className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -259,7 +263,7 @@ export function InteractiveEventCalendar({
                 key={cat}
                 type="button"
                 onClick={() => setCategoryFilter(cat)}
-                className={`text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                className={`text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A] ${
                   isActive
                     ? "bg-[#FFD60A] text-black border-[#FFD60A] font-bold shadow-[0_0_12px_rgba(255,214,10,0.3)]"
                     : "bg-white/5 border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
@@ -278,7 +282,7 @@ export function InteractiveEventCalendar({
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer focus:outline-none ${
                 statusFilter === st ? "bg-white/15 text-white font-bold" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
@@ -329,8 +333,17 @@ export function InteractiveEventCalendar({
                 return (
                   <div
                     key={day.dateString}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${day.dateString}${hasEvents ? `, ${day.events.length} events` : ""}`}
                     onClick={() => handleDayClick(day)}
-                    className={`relative min-h-[64px] sm:min-h-[78px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group select-none ${
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleDayClick(day);
+                      }
+                    }}
+                    className={`relative min-h-[64px] sm:min-h-[78px] md:min-h-[92px] p-1.5 sm:p-2 rounded-xl transition-all flex flex-col justify-between border cursor-pointer group select-none focus:outline-none focus:ring-1 focus:ring-[#FFD60A] ${
                       isSelected
                         ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_20px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/50"
                         : hasEvents
@@ -401,7 +414,7 @@ export function InteractiveEventCalendar({
                 type="button"
                 onClick={() => handleCycleEvent("prev")}
                 title="Stage Previous Event"
-                className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
@@ -409,7 +422,7 @@ export function InteractiveEventCalendar({
                 type="button"
                 onClick={() => handleCycleEvent("next")}
                 title="Stage Next Event"
-                className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
@@ -528,7 +541,7 @@ export function InteractiveEventCalendar({
                   href={generateGoogleCalendarUrl(stagedEvent)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 min-w-[140px] px-3.5 py-2.5 rounded-xl bg-[#FFD60A] hover:bg-[#ffe14d] text-black font-mono font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(255,214,10,0.2)] cursor-pointer"
+                  className="flex-1 min-w-[140px] px-3.5 py-2.5 rounded-xl bg-[#FFD60A] hover:bg-[#ffe14d] text-black font-mono font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(255,214,10,0.2)] cursor-pointer focus:outline-none focus:ring-1 focus:ring-black"
                 >
                   <CalendarIcon className="w-3.5 h-3.5 text-black" />
                   Add to Calendar
@@ -537,7 +550,7 @@ export function InteractiveEventCalendar({
                 <button
                   type="button"
                   onClick={handleCopyBrief}
-                  className="px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 font-mono text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
+                  className="px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 font-mono text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
                 >
                   {copiedBrief ? (
                     <>
@@ -554,7 +567,7 @@ export function InteractiveEventCalendar({
 
                 <Link
                   href="/events"
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/10 transition-colors"
+                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/10 transition-colors focus:outline-none focus:ring-1 focus:ring-[#FFD60A]"
                   title="Open Dedicated Archive Page"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -590,8 +603,16 @@ export function InteractiveEventCalendar({
             return (
               <div
                 key={ev.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => handleRosterSelect(ev)}
-                className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 group select-none ${
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleRosterSelect(ev);
+                  }
+                }}
+                className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 group select-none focus:outline-none focus:ring-1 focus:ring-[#FFD60A] ${
                   isStaged
                     ? "bg-[#FFD60A]/10 border-[#FFD60A] shadow-[0_0_15px_rgba(255,214,10,0.15)] ring-1 ring-[#FFD60A]/40"
                     : "bg-black/40 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
